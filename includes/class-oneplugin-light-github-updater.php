@@ -28,9 +28,9 @@ final class OnePlugin_Light_GitHub_Updater {
 
         add_filter('pre_set_site_transient_update_plugins', [$this, 'filter_update_plugins_transient']);
         add_filter('plugins_api', [$this, 'filter_plugins_api'], 20, 3);
-        add_filter('auto_update_plugin', [$this, 'filter_auto_update_plugin'], 10, 2);
         add_filter('http_request_args', [$this, 'add_github_auth_header'], 10, 2);
         add_action('upgrader_process_complete', [$this, 'clear_release_cache'], 10, 2);
+        add_action('admin_init', [$this, 'ensure_native_auto_updates_enabled'], 1);
         add_action('admin_init', [$this, 'clear_cache_on_forced_update_check']);
     }
 
@@ -56,14 +56,6 @@ final class OnePlugin_Light_GitHub_Updater {
         unset($transient->no_update[$this->plugin_basename]);
 
         return $transient;
-    }
-
-    public function filter_auto_update_plugin($update, $item) {
-        if (!is_object($item) || empty($item->plugin) || $item->plugin !== $this->plugin_basename) {
-            return $update;
-        }
-
-        return true;
     }
 
     public function filter_plugins_api($result, $action, $args) {
@@ -130,6 +122,22 @@ final class OnePlugin_Light_GitHub_Updater {
         }
 
         delete_site_transient(self::TRANSIENT_KEY);
+    }
+
+    public function ensure_native_auto_updates_enabled() {
+        if (!current_user_can('update_plugins')) {
+            return;
+        }
+
+        $auto_updates = (array) get_site_option('auto_update_plugins', []);
+        if (in_array($this->plugin_basename, $auto_updates, true)) {
+            return;
+        }
+
+        $auto_updates[] = $this->plugin_basename;
+        $auto_updates = array_values(array_unique(array_filter($auto_updates)));
+
+        update_site_option('auto_update_plugins', $auto_updates);
     }
 
     private function get_latest_release() {
