@@ -28,6 +28,7 @@ final class OnePlugin_Light_GitHub_Updater {
 
         add_filter('pre_set_site_transient_update_plugins', [$this, 'filter_update_plugins_transient']);
         add_filter('plugins_api', [$this, 'filter_plugins_api'], 20, 3);
+        add_filter('auto_update_plugin', [$this, 'filter_auto_update_plugin'], 10, 2);
         add_filter('http_request_args', [$this, 'add_github_auth_header'], 10, 2);
         add_action('upgrader_process_complete', [$this, 'clear_release_cache'], 10, 2);
         add_action('admin_init', [$this, 'clear_cache_on_forced_update_check']);
@@ -43,24 +44,26 @@ final class OnePlugin_Light_GitHub_Updater {
             return $transient;
         }
 
+        $payload = $this->build_update_payload($release);
+
         if (!version_compare($release['version'], ONEPLUGIN_LIGHT_VERSION, '>')) {
             unset($transient->response[$this->plugin_basename]);
+            $transient->no_update[$this->plugin_basename] = $payload;
             return $transient;
         }
 
-        $transient->response[$this->plugin_basename] = (object) [
-            'id' => $this->plugin_basename,
-            'slug' => $this->slug,
-            'plugin' => $this->plugin_basename,
-            'new_version' => $release['version'],
-            'url' => $release['html_url'],
-            'package' => $release['package'],
-            'tested' => isset($release['tested']) ? $release['tested'] : '',
-            'requires' => isset($release['requires']) ? $release['requires'] : '',
-            'requires_php' => isset($release['requires_php']) ? $release['requires_php'] : '',
-        ];
+        $transient->response[$this->plugin_basename] = $payload;
+        unset($transient->no_update[$this->plugin_basename]);
 
         return $transient;
+    }
+
+    public function filter_auto_update_plugin($update, $item) {
+        if (!is_object($item) || empty($item->plugin) || $item->plugin !== $this->plugin_basename) {
+            return $update;
+        }
+
+        return true;
     }
 
     public function filter_plugins_api($result, $action, $args) {
@@ -187,6 +190,20 @@ final class OnePlugin_Light_GitHub_Updater {
             'requires' => '',
             'tested' => '',
             'requires_php' => '',
+        ];
+    }
+
+    private function build_update_payload($release) {
+        return (object) [
+            'id' => $this->plugin_basename,
+            'slug' => $this->slug,
+            'plugin' => $this->plugin_basename,
+            'new_version' => $release['version'],
+            'url' => $release['html_url'],
+            'package' => $release['package'],
+            'tested' => isset($release['tested']) ? $release['tested'] : '',
+            'requires' => isset($release['requires']) ? $release['requires'] : '',
+            'requires_php' => isset($release['requires_php']) ? $release['requires_php'] : '',
         ];
     }
 

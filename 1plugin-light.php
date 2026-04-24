@@ -2,16 +2,17 @@
 /**
  * Plugin Name: 1Plugin Light
  * Description: Lightweight site tools plugin with company data, shortcodes, sticky mobile footer, page keyword fields, and custom code tools.
- * Version: 2.5.2
+ * Version: 2.5.5
  * Author: Cristian
  * Text Domain: oneplugin-light-site-tools
+ * Update URI: https://github.com/crim13/1Plugin
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-define('ONEPLUGIN_LIGHT_VERSION', '2.5.2');
+define('ONEPLUGIN_LIGHT_VERSION', '2.5.5');
 define('ONEPLUGIN_LIGHT_PATH', plugin_dir_path(__FILE__));
 define('ONEPLUGIN_LIGHT_URL', plugin_dir_url(__FILE__));
 if (!defined('ONEPLUGIN_LIGHT_GITHUB_OWNER')) {
