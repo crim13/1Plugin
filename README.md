@@ -1,6 +1,6 @@
-# 1Plugin Light
+# 1Plugin
 
-Lightweight WordPress plugin with company data, shortcodes, sticky mobile footer, page keyword fields, custom code tools, and GitHub release updates.
+WordPress plugin with company data, shortcodes, sticky mobile footer, page keyword fields, custom code tools, and GitHub release updates.
 
 ## GitHub updater
 
@@ -18,7 +18,7 @@ Release flow:
 
 1. Update the plugin version in the plugin header and `ONEPLUGIN_LIGHT_VERSION`.
 2. Build `1plugin-light.zip` with the same archive structure as the installed plugin. Current site installs use a flat zip with `1plugin-light.php` and `includes/` directly at the zip root.
-3. Create a GitHub release tagged like `v2.5.2`.
+3. Create a GitHub release tagged like `v2.6`.
 4. Upload `1plugin-light.zip` as a release asset.
 
 Sites that already run a version without this updater need one manual install of this build. Future versions can then be updated through the WordPress plugins screen.

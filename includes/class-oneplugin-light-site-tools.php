@@ -136,8 +136,8 @@ final class OnePlugin_Light_Site_Tools {
 
     public function register_admin_menu() {
         add_menu_page(
-            __('1Plugin Light', 'oneplugin-light-site-tools'),
-            __('1Plugin Light', 'oneplugin-light-site-tools'),
+            __('1Plugin', 'oneplugin-light-site-tools'),
+            __('1Plugin', 'oneplugin-light-site-tools'),
             'manage_options',
             self::MENU_SLUG,
             [$this, 'render_settings_page'],
@@ -268,8 +268,18 @@ final class OnePlugin_Light_Site_Tools {
         ?>
         <div class="wrap">
             <?php $this->render_admin_page_styles(); ?>
-            <h1><?php esc_html_e('1Plugin Light', 'oneplugin-light-site-tools'); ?></h1>
-            <p><?php esc_html_e('Manage global company details, footer content, sticky mobile footer, shortcode data, and lightweight site tools from one place.', 'oneplugin-light-site-tools'); ?></p>
+            <div class="oneplugin-admin-shell">
+                <div class="oneplugin-admin-hero">
+                    <div>
+                        <span class="oneplugin-admin-hero__eyebrow"><?php esc_html_e('Site Control Panel', 'oneplugin-light-site-tools'); ?></span>
+                        <h1><?php echo esc_html(sprintf(__('1Plugin - v%s', 'oneplugin-light-site-tools'), self::VERSION)); ?></h1>
+                        <p><?php esc_html_e('Manage company details, shortcodes, layout tools, mobile actions, and custom code from one place.', 'oneplugin-light-site-tools'); ?></p>
+                    </div>
+                    <div class="oneplugin-admin-hero__version" aria-label="<?php esc_attr_e('Installed version', 'oneplugin-light-site-tools'); ?>">
+                        <span><?php esc_html_e('Version', 'oneplugin-light-site-tools'); ?></span>
+                        <strong><?php echo esc_html(self::VERSION); ?></strong>
+                    </div>
+                </div>
 
             <?php if ($import_status === 'success') : ?>
                 <div class="notice notice-success is-dismissible"><p><?php esc_html_e('Settings imported successfully.', 'oneplugin-light-site-tools'); ?></p></div>
@@ -492,6 +502,7 @@ final class OnePlugin_Light_Site_Tools {
                         <?php submit_button(__('Import JSON', 'oneplugin-light-site-tools'), 'secondary', 'submit', false); ?>
                     </form>
                 </div>
+            </div>
             </div>
         </div>
         <?php
@@ -743,7 +754,78 @@ final class OnePlugin_Light_Site_Tools {
         ?>
         <style>
             .wrap {
-                max-width: 1220px;
+                max-width: 1240px;
+            }
+            .wrap:has(.oneplugin-admin-shell) {
+                color: #111827;
+            }
+            .oneplugin-admin-shell {
+                margin-top: 18px;
+                padding: 2px 0 28px;
+            }
+            .oneplugin-admin-hero {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 24px;
+                margin: 8px 0 20px;
+                padding: 28px 30px;
+                border: 1px solid #d7dee8;
+                border-radius: 18px;
+                background:
+                    linear-gradient(135deg, rgba(255,255,255,.96), rgba(245,248,252,.94)),
+                    #ffffff;
+                box-shadow: 0 18px 48px rgba(15, 23, 42, .08);
+            }
+            .oneplugin-admin-hero__eyebrow {
+                display: inline-flex;
+                align-items: center;
+                margin-bottom: 10px;
+                padding: 5px 10px;
+                border: 1px solid #c9d4e5;
+                border-radius: 999px;
+                background: #f7fafc;
+                color: #475569;
+                font-size: 12px;
+                font-weight: 700;
+                line-height: 1.2;
+                text-transform: uppercase;
+            }
+            .oneplugin-admin-hero h1 {
+                margin: 0;
+                color: #0f172a;
+                font-size: 32px;
+                font-weight: 750;
+                line-height: 1.15;
+            }
+            .oneplugin-admin-hero p {
+                margin: 10px 0 0;
+                max-width: 760px;
+                color: #526070;
+                font-size: 15px;
+                line-height: 1.6;
+            }
+            .oneplugin-admin-hero__version {
+                display: grid;
+                gap: 4px;
+                min-width: 112px;
+                padding: 14px 16px;
+                border: 1px solid #d7dee8;
+                border-radius: 14px;
+                background: #0f172a;
+                color: #ffffff;
+                text-align: right;
+                box-shadow: 0 14px 34px rgba(15,23,42,.18);
+            }
+            .oneplugin-admin-hero__version span {
+                color: #cbd5e1;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+            .oneplugin-admin-hero__version strong {
+                font-size: 22px;
+                line-height: 1;
             }
             .oneplugin-admin-form {
                 display: grid;
@@ -751,14 +833,14 @@ final class OnePlugin_Light_Site_Tools {
                 margin-top: 16px;
             }
             .oneplugin-card {
-                border: 1px solid #dcdcde;
-                border-radius: 16px;
-                box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+                border: 1px solid #d7dee8;
+                border-radius: 14px;
+                box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
                 overflow: hidden;
                 background: #fff;
             }
             .oneplugin-card__inside {
-                padding: 22px 24px;
+                padding: 24px 26px;
             }
             .oneplugin-collapsible__header {
                 display: flex;
@@ -824,16 +906,16 @@ final class OnePlugin_Light_Site_Tools {
                 margin-bottom: 16px;
             }
             .oneplugin-tabs__tab {
-                border: 1px solid #d0d7de;
-                background: #fff;
-                border-radius: 999px;
-                padding: 8px 14px;
+                border: 1px solid #d7dee8;
+                background: #f8fafc;
+                border-radius: 10px;
+                padding: 9px 14px;
                 cursor: pointer;
                 font-weight: 600;
             }
             .oneplugin-tabs__tab.is-active {
-                background: #1d2327;
-                border-color: #1d2327;
+                background: #0f172a;
+                border-color: #0f172a;
                 color: #fff;
             }
             .oneplugin-tabs__panel[hidden] {
@@ -841,14 +923,15 @@ final class OnePlugin_Light_Site_Tools {
             }
             .oneplugin-card h2 {
                 margin-top: 0;
-                margin-bottom: 6px;
-                font-size: 24px;
+                margin-bottom: 8px;
+                color: #0f172a;
+                font-size: 22px;
                 line-height: 1.2;
             }
             .oneplugin-card p {
                 margin-top: 0;
                 margin-bottom: 18px;
-                color: #50575e;
+                color: #526070;
                 max-width: 760px;
             }
             .oneplugin-shortcodes {
@@ -861,8 +944,8 @@ final class OnePlugin_Light_Site_Tools {
                 align-items: center;
                 justify-content: center;
                 padding: 6px 9px;
-                background: #f6f7f7;
-                border: 1px solid #dcdcde;
+                background: #f8fafc;
+                border: 1px solid #d7dee8;
                 border-radius: 8px;
                 font-family: monospace;
                 font-size: 12px;
@@ -871,8 +954,8 @@ final class OnePlugin_Light_Site_Tools {
                 transition: background .15s ease, border-color .15s ease, color .15s ease;
             }
             .oneplugin-shortcode-copy:hover {
-                background: #eef2f7;
-                border-color: #c3c4c7;
+                background: #eef4ff;
+                border-color: #b8c7df;
             }
             .oneplugin-shortcode-copy.is-copied {
                 background: #e7f5ea;
@@ -902,16 +985,26 @@ final class OnePlugin_Light_Site_Tools {
             .oneplugin-card input[type="url"],
             .oneplugin-card select {
                 min-height: 42px;
-                border-radius: 10px;
+                border-color: #cbd5e1;
+                border-radius: 9px;
                 padding-inline: 12px;
+                box-shadow: none;
             }
             .oneplugin-card textarea {
-                border-radius: 10px;
+                border-color: #cbd5e1;
+                border-radius: 9px;
+                box-shadow: none;
             }
             .oneplugin-card .button {
-                border-radius: 10px;
+                border-radius: 9px;
                 min-height: 38px;
                 padding-inline: 14px;
+            }
+            .oneplugin-card .button-primary,
+            .oneplugin-savebar .button-primary {
+                border-color: #0f172a;
+                background: #0f172a;
+                color: #fff;
             }
             .oneplugin-card table[role="presentation"] td {
                 vertical-align: top;
@@ -977,10 +1070,10 @@ final class OnePlugin_Light_Site_Tools {
                 gap: 12px;
                 padding: 12px 14px;
                 border: 1px solid #dcdcde;
-                border-radius: 14px;
+                border-radius: 13px;
                 background: rgba(255,255,255,0.92);
                 backdrop-filter: blur(8px);
-                box-shadow: 0 8px 24px rgba(16,24,40,.08);
+                box-shadow: 0 12px 32px rgba(15,23,42,.10);
             }
             .oneplugin-savebar__hint {
                 color: #50575e;
@@ -1001,6 +1094,15 @@ final class OnePlugin_Light_Site_Tools {
                 box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
             }
             @media (max-width: 1100px) {
+                .oneplugin-admin-hero {
+                    align-items: flex-start;
+                    flex-direction: column;
+                    padding: 24px;
+                }
+                .oneplugin-admin-hero__version {
+                    width: 100%;
+                    text-align: left;
+                }
                 .oneplugin-card table[role="presentation"],
                 .oneplugin-card table[role="presentation"] tbody,
                 .oneplugin-card table[role="presentation"] tr,

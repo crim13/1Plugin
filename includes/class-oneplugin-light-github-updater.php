@@ -69,7 +69,7 @@ final class OnePlugin_Light_GitHub_Updater {
         }
 
         return (object) [
-            'name' => '1Plugin Light',
+            'name' => '1Plugin',
             'slug' => $this->slug,
             'version' => isset($release['version']) ? $release['version'] : ONEPLUGIN_LIGHT_VERSION,
             'author' => '<a href="https://github.com/' . esc_attr($this->get_owner()) . '">Cristian</a>',
@@ -80,7 +80,7 @@ final class OnePlugin_Light_GitHub_Updater {
             'requires_php' => isset($release['requires_php']) ? $release['requires_php'] : '',
             'last_updated' => isset($release['published_at']) ? $release['published_at'] : '',
             'sections' => [
-                'description' => 'Lightweight site tools plugin with company data, shortcodes, sticky mobile footer, page keyword fields, and custom code tools.',
+                'description' => 'Site tools plugin with company data, shortcodes, sticky mobile footer, page keyword fields, and custom code tools.',
                 'changelog' => !empty($release['body']) ? wp_kses_post(wpautop($release['body'])) : 'See the latest GitHub release for changes.',
             ],
         ];
