@@ -24,7 +24,7 @@ final class OnePlugin_Light_GitHub_Updater {
     private function __construct($plugin_file) {
         $this->plugin_file = $plugin_file;
         $this->plugin_basename = plugin_basename($plugin_file);
-        $this->slug = dirname($this->plugin_basename);
+        $this->slug = $this->get_plugin_slug();
 
         add_filter('pre_set_site_transient_update_plugins', [$this, 'filter_update_plugins_transient']);
         add_filter('plugins_api', [$this, 'filter_plugins_api'], 20, 3);
@@ -171,6 +171,15 @@ final class OnePlugin_Light_GitHub_Updater {
         }
 
         return $release;
+    }
+
+    private function get_plugin_slug() {
+        $directory = dirname($this->plugin_basename);
+        if ($directory !== '.' && $directory !== '') {
+            return $directory;
+        }
+
+        return basename($this->plugin_basename, '.php');
     }
 
     private function normalize_release_data($data) {

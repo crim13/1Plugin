@@ -17,7 +17,7 @@ define('ONEPLUGIN_LIGHT_GITHUB_ASSET', '1plugin-light.zip');
 Release flow:
 
 1. Update the plugin version in the plugin header and `ONEPLUGIN_LIGHT_VERSION`.
-2. Build `1plugin-light.zip` with the plugin folder as the zip root.
+2. Build `1plugin-light.zip` with the same archive structure as the installed plugin. Current site installs use a flat zip with `1plugin-light.php` and `includes/` directly at the zip root.
 3. Create a GitHub release tagged like `v2.5.2`.
 4. Upload `1plugin-light.zip` as a release asset.
 
