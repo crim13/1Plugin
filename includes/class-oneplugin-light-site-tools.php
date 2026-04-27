@@ -37,9 +37,9 @@ final class OnePlugin_Light_Site_Tools {
         'reddit_url' => '',
         'booking_url' => '',
         'sticky_enabled' => '1',
-        'sticky_bg_color' => '#ffffff',
-        'sticky_icon_color' => '#333333',
-        'sticky_text_color' => '#333333',
+        'sticky_bg_color' => '#0f0f0f',
+        'sticky_icon_color' => '#ffffff',
+        'sticky_text_color' => '#ffffff',
         'sticky_social_media' => 'none',
         'hide_image_alt_text' => '0',
         'fix_image_alt_text' => '0',
@@ -49,6 +49,9 @@ final class OnePlugin_Light_Site_Tools {
         'masonry_gallery_enabled' => '0',
         'masonry_gallery_layout' => 'square',
         'hide_default_footer' => '0',
+        'balance_advanced_tabs_items' => '0',
+        'style_formidable' => '1',
+        'formidable_accent_color' => '#fa1e9a',
         'project_palette' => [],
         'custom_code_css' => '',
         'custom_code_js' => '',
@@ -206,6 +209,7 @@ final class OnePlugin_Light_Site_Tools {
             'sticky_bg_color',
             'sticky_icon_color',
             'sticky_text_color',
+            'formidable_accent_color',
         ];
 
         foreach ($text_fields as $field) {
@@ -237,6 +241,8 @@ final class OnePlugin_Light_Site_Tools {
             $output['masonry_gallery_layout'] = 'square';
         }
         $output['hide_default_footer'] = !empty($input['hide_default_footer']) ? '1' : '0';
+        $output['balance_advanced_tabs_items'] = !empty($input['balance_advanced_tabs_items']) ? '1' : '0';
+        $output['style_formidable'] = !empty($input['style_formidable']) ? '1' : '0';
         $output['project_palette'] = $this->sanitize_project_palette(isset($input['project_palette']) ? $input['project_palette'] : []);
         $output['custom_code_css'] = $this->sanitize_code_snippet(isset($input['custom_code_css']) ? $input['custom_code_css'] : '');
         $output['custom_code_js'] = $this->sanitize_code_snippet(isset($input['custom_code_js']) ? $input['custom_code_js'] : '');
@@ -271,13 +277,23 @@ final class OnePlugin_Light_Site_Tools {
             <div class="oneplugin-admin-shell">
                 <div class="oneplugin-admin-hero">
                     <div>
-                        <span class="oneplugin-admin-hero__eyebrow"><?php esc_html_e('Site Control Panel', 'oneplugin-light-site-tools'); ?></span>
-                        <h1><?php echo esc_html(sprintf(__('1Plugin - v%s', 'oneplugin-light-site-tools'), self::VERSION)); ?></h1>
-                        <p><?php esc_html_e('Manage company details, shortcodes, layout tools, mobile actions, and custom code from one place.', 'oneplugin-light-site-tools'); ?></p>
+                        <h1>
+                            <?php esc_html_e('1Plugin', 'oneplugin-light-site-tools'); ?>
+                            <span><?php echo esc_html('v' . self::VERSION); ?></span>
+                        </h1>
                     </div>
-                    <div class="oneplugin-admin-hero__version" aria-label="<?php esc_attr_e('Installed version', 'oneplugin-light-site-tools'); ?>">
-                        <span><?php esc_html_e('Version', 'oneplugin-light-site-tools'); ?></span>
-                        <strong><?php echo esc_html(self::VERSION); ?></strong>
+                    <div class="oneplugin-admin-hero__actions">
+                        <a class="button button-secondary oneplugin-hero-button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=oneplugin_light_export_settings'), 'oneplugin_light_export_settings')); ?>">
+                            <?php esc_html_e('Export', 'oneplugin-light-site-tools'); ?>
+                        </a>
+                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" enctype="multipart/form-data" class="oneplugin-hero-import-form">
+                            <input type="hidden" name="action" value="oneplugin_light_import_settings" />
+                            <?php wp_nonce_field('oneplugin_light_import_settings'); ?>
+                            <input type="file" name="oneplugin_light_import_file" id="oneplugin-light-import-file" accept=".json,application/json" hidden />
+                            <button type="button" class="button button-secondary oneplugin-hero-button" id="oneplugin-light-import-button">
+                                <?php esc_html_e('Import', 'oneplugin-light-site-tools'); ?>
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -292,160 +308,104 @@ final class OnePlugin_Light_Site_Tools {
 
                 <div class="postbox oneplugin-card oneplugin-card--identity">
                     <div class="inside oneplugin-card__inside">
-                        <h2><?php esc_html_e('Site Identity', 'oneplugin-light-site-tools'); ?></h2>
-                        <table role="presentation" style="width:100%; border-collapse:collapse;">
-                            <tr>
-                                <td style="width:33.33%; vertical-align:top; padding-right:12px;">
-                                    <?php $this->render_compact_field('site_title', __('Site title', 'oneplugin-light-site-tools'), $settings); ?>
-                                </td>
-                                <td style="width:33.33%; vertical-align:top; padding-left:6px; padding-right:6px;">
-                                    <?php $this->render_site_icon_field($settings); ?>
-                                </td>
-                                <td style="width:33.33%; vertical-align:top; padding-left:12px;">
-                                    <?php $this->render_site_logo_field($settings); ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="postbox oneplugin-card">
-                    <div class="inside oneplugin-card__inside">
-                        <h2><?php esc_html_e('Image & Layout Tweaks', 'oneplugin-light-site-tools'); ?></h2>
-                        <p><?php esc_html_e('Small frontend adjustments for image behavior and default theme layout elements.', 'oneplugin-light-site-tools'); ?></p>
-                        <div class="oneplugin-option-grid">
-                        <?php
-                        $this->render_compact_checkbox_field('hide_image_alt_text', __('Hide Image Alt-text', 'oneplugin-light-site-tools'), $settings);
-                        $this->render_compact_checkbox_field('fix_image_alt_text', __('Fix Image Alt-text', 'oneplugin-light-site-tools'), $settings);
-                        $this->render_compact_checkbox_field('header_glass_effect', __('Header glass effect', 'oneplugin-light-site-tools'), $settings);
-                        $this->render_compact_checkbox_field('cover_images', __('Cover images (.cover-img)', 'oneplugin-light-site-tools'), $settings);
-                        $this->render_compact_checkbox_field('apply_cover_to_tabs_image', __('Apply cover to tabs image', 'oneplugin-light-site-tools'), $settings);
-                        $this->render_compact_checkbox_field('masonry_gallery_enabled', __('Masonry Gallery layout', 'oneplugin-light-site-tools'), $settings);
-                        ?>
-                        <div id="oneplugin-masonry-gallery-layout-wrap" class="oneplugin-option-grid__item oneplugin-option-grid__item--select" <?php echo empty($settings['masonry_gallery_enabled']) ? 'hidden' : ''; ?>>
-                            <?php
-                            $this->render_compact_select_field('masonry_gallery_layout', __('Masonry layout type', 'oneplugin-light-site-tools'), $settings, [
-                                'square' => __('Square', 'oneplugin-light-site-tools'),
-                                'asymetric' => __('Asymetric', 'oneplugin-light-site-tools'),
-                            ]);
-                            ?>
-                        </div>
-                        <?php
-                        $this->render_compact_checkbox_field('hide_default_footer', __('Hide default footer', 'oneplugin-light-site-tools'), $settings);
-                        ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="postbox oneplugin-card oneplugin-card--company">
-                    <div class="inside oneplugin-card__inside">
-                        <h2><?php esc_html_e('Company Details', 'oneplugin-light-site-tools'); ?></h2>
-                        <table role="presentation" style="width:100%; border-collapse:collapse;">
-                            <tr>
-                                <td style="width:33.33%; vertical-align:top; padding-right:12px;">
+                        <h2><?php esc_html_e('Project Identity', 'oneplugin-light-site-tools'); ?></h2>
+                        <div class="oneplugin-project-identity">
+                            <div class="oneplugin-project-identity__top">
+                                <?php
+                                $this->render_site_icon_field($settings);
+                                $this->render_site_logo_field($settings);
+                                $this->render_compact_field('site_title', __('Site title', 'oneplugin-light-site-tools'), $settings);
+                                ?>
+                            </div>
+                            <div class="oneplugin-project-identity__details">
+                                <div class="oneplugin-project-field-grid">
                                     <?php
                                     $this->render_compact_field('company_name', __('Foretagsnamn', 'oneplugin-light-site-tools'), $settings);
                                     $this->render_compact_field('organization_number', __('Organisationsnummer', 'oneplugin-light-site-tools'), $settings);
+                                    $this->render_compact_field('website', __('Hemsida', 'oneplugin-light-site-tools'), $settings, 'url');
                                     $this->render_compact_field('street_address', __('Adress', 'oneplugin-light-site-tools'), $settings);
                                     $this->render_compact_field('postal_code', __('Postnummer', 'oneplugin-light-site-tools'), $settings);
                                     $this->render_compact_field('city', __('Ort', 'oneplugin-light-site-tools'), $settings);
-                                    ?>
-                                </td>
-                                <td style="width:33.33%; vertical-align:top; padding-left:6px; padding-right:6px;">
-                                    <?php
                                     $this->render_compact_field('phone_primary', __('Telefon', 'oneplugin-light-site-tools'), $settings);
                                     $this->render_compact_field('email', __('E-post', 'oneplugin-light-site-tools'), $settings, 'email');
                                     $this->render_compact_field('form_email', __('Mail formular', 'oneplugin-light-site-tools'), $settings);
-                                    $this->render_compact_field('website', __('Hemsida', 'oneplugin-light-site-tools'), $settings, 'url');
-                                    $this->render_compact_field('facebook_url', __('Facebook', 'oneplugin-light-site-tools'), $settings, 'url');
                                     ?>
-                                </td>
-                                <td style="width:33.33%; vertical-align:top; padding-left:12px;">
-                                    <?php
-                                    $this->render_compact_field('instagram_url', __('Instagram', 'oneplugin-light-site-tools'), $settings, 'url');
-                                    $this->render_compact_field('linkedin_url', __('LinkedIn', 'oneplugin-light-site-tools'), $settings, 'url');
-                                    $this->render_compact_field('youtube_url', __('YouTube', 'oneplugin-light-site-tools'), $settings, 'url');
-                                    $this->render_compact_field('x_url', __('X', 'oneplugin-light-site-tools'), $settings, 'url');
-                                    $this->render_compact_field('reddit_url', __('Reddit', 'oneplugin-light-site-tools'), $settings, 'url');
-                                    $this->render_compact_field('booking_url', __('BokaDirekt', 'oneplugin-light-site-tools'), $settings, 'url');
-                                    ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="postbox oneplugin-card oneplugin-card--footer">
-                    <div class="inside oneplugin-card__inside">
-                        <div class="oneplugin-collapsible__header">
-                            <div>
-                                <h2><?php esc_html_e('Sticky Mobile Footer', 'oneplugin-light-site-tools'); ?></h2>
+                                </div>
                             </div>
-                            <label class="oneplugin-collapsible__switch" for="sticky_enabled">
-                                <input
-                                    name="<?php echo esc_attr(self::OPTION_KEY . '[sticky_enabled]'); ?>"
-                                    id="sticky_enabled"
-                                    type="checkbox"
-                                    value="1"
-                                    <?php checked(!empty($settings['sticky_enabled'])); ?>
-                                />
-                                <span><?php esc_html_e('Enabled', 'oneplugin-light-site-tools'); ?></span>
-                            </label>
+                            <div class="oneplugin-project-identity__social">
+                                <?php $this->render_social_links_section($settings); ?>
+                            </div>
                         </div>
-                        <table role="presentation" style="width:100%; border-collapse:collapse;">
-                            <tr>
-                                <td id="oneplugin-sticky-edit-col" style="width:50%; vertical-align:top; padding-right:16px;">
-                                    <?php
-                                    $this->render_compact_color_field('sticky_bg_color', __('Bakgrundsfarg', 'oneplugin-light-site-tools'), $settings);
-                                    $this->render_compact_color_field('sticky_icon_color', __('Ikonfarg', 'oneplugin-light-site-tools'), $settings);
-                                    $this->render_compact_color_field('sticky_text_color', __('Textfarg', 'oneplugin-light-site-tools'), $settings);
-                                    $this->render_compact_select_field('sticky_social_media', __('Social media', 'oneplugin-light-site-tools'), $settings, $social_media_choices);
-                                    ?>
-                                </td>
-                                <td id="oneplugin-sticky-preview-col" style="width:50%; vertical-align:top; padding-left:16px;">
-                                    <h3><?php esc_html_e('Preview', 'oneplugin-light-site-tools'); ?></h3>
-                                    <p><?php esc_html_e('This is how the sticky mobile footer will be assembled from the current settings.', 'oneplugin-light-site-tools'); ?></p>
-                                    <?php $this->render_admin_footer_preview($settings); ?>
-                                </td>
-                            </tr>
-                        </table>
                     </div>
                 </div>
 
-                <div class="postbox oneplugin-card">
-                    <div class="inside oneplugin-card__inside">
-                        <h2><?php esc_html_e('Help', 'oneplugin-light-site-tools'); ?></h2>
-                        <p><?php esc_html_e('Click any shortcode or helper class to copy it.', 'oneplugin-light-site-tools'); ?></p>
-                        <h3><?php esc_html_e('Shortcodes', 'oneplugin-light-site-tools'); ?></h3>
-                        <div class="oneplugin-shortcodes">
+                <div class="oneplugin-admin-two-column">
+                    <div class="postbox oneplugin-card">
+                        <div class="inside oneplugin-card__inside">
+                            <h2><?php esc_html_e('Image & Layout Tweaks', 'oneplugin-light-site-tools'); ?></h2>
+                            <div class="oneplugin-option-grid">
                             <?php
-                            $shortcodes = [
-                                '[foretag]', '[gata]', '[postkod]', '[ort]', '[mobil1]', '[orgnr]', '[mail]',
-                                '[kontakt]', '[formular id="123"]', '[kundens_mail]', '[kundens_epost]',
-                                '[kundens_foretag]', '[kundens_adress]', '[kundens_telefon]', '[karta]',
-                                '[hemsida]', '[kundens_hemsida]', '[kundens_facebook]', '[kundens_instagram]',
-                                '[kundens_linkedin]', '[kundens_youtube]', '[kundens_x]', '[kundens_reddit]',
-                                '[kundens_bokadirekt]',
-                                '[sokordets_tjanst_rubrik]', '[sokordets_ort_rubrik]',
-                                '[sokordets_tjanst_brodtext]', '[sokordets_ort_brodtext]',
-                            ];
-                            foreach ($shortcodes as $shortcode) {
-                                echo '<button type="button" class="oneplugin-shortcode-copy" data-shortcode="' . esc_attr($shortcode) . '">' . esc_html($shortcode) . '</button> ';
-                            }
+                            $this->render_compact_checkbox_field('hide_image_alt_text', __('Hide Image Alt-text', 'oneplugin-light-site-tools'), $settings);
+                            $this->render_compact_checkbox_field('fix_image_alt_text', __('Fix Image Alt-text', 'oneplugin-light-site-tools'), $settings);
+                            $this->render_compact_checkbox_field('header_glass_effect', __('Header glass effect', 'oneplugin-light-site-tools'), $settings);
+                            $this->render_compact_checkbox_field('cover_images', __('Cover images (.cover-img)', 'oneplugin-light-site-tools'), $settings);
+                            $this->render_compact_checkbox_field('apply_cover_to_tabs_image', __('Apply cover to tabs image', 'oneplugin-light-site-tools'), $settings);
+                            $this->render_compact_checkbox_field('masonry_gallery_enabled', __('Masonry Gallery layout', 'oneplugin-light-site-tools'), $settings);
                             ?>
+                            <div id="oneplugin-masonry-gallery-layout-wrap" class="oneplugin-option-grid__item oneplugin-option-grid__item--select" <?php echo empty($settings['masonry_gallery_enabled']) ? 'hidden' : ''; ?>>
+                                <?php
+                                $this->render_compact_select_field('masonry_gallery_layout', __('Masonry layout type', 'oneplugin-light-site-tools'), $settings, [
+                                    'square' => __('Square', 'oneplugin-light-site-tools'),
+                                    'asymetric' => __('Asymetric', 'oneplugin-light-site-tools'),
+                                ]);
+                                ?>
+                            </div>
+                            <?php
+                            $this->render_compact_checkbox_field('hide_default_footer', __('Hide default footer', 'oneplugin-light-site-tools'), $settings);
+                            $this->render_compact_checkbox_field('balance_advanced_tabs_items', __('Balance AdvancedTabs Items', 'oneplugin-light-site-tools'), $settings);
+                            $this->render_compact_checkbox_field('style_formidable', __('Style Formidable', 'oneplugin-light-site-tools'), $settings);
+                            ?>
+                            <div id="oneplugin-formidable-accent-wrap" class="oneplugin-option-grid__item oneplugin-option-grid__item--color oneplugin-option-grid__item--full" <?php echo empty($settings['style_formidable']) ? 'hidden' : ''; ?>>
+                                <?php $this->render_compact_color_field('formidable_accent_color', __('Formidable accent color', 'oneplugin-light-site-tools'), $settings); ?>
+                            </div>
+                            </div>
                         </div>
-                        <h3 style="margin-top:22px;"><?php esc_html_e('Helper Classes', 'oneplugin-light-site-tools'); ?></h3>
-                        <div class="oneplugin-shortcodes">
-                            <button type="button" class="oneplugin-shortcode-copy" data-shortcode=".cover-img">.cover-img</button>
+                    </div>
+
+                    <div class="postbox oneplugin-card oneplugin-card--footer">
+                        <div class="inside oneplugin-card__inside">
+                            <div class="oneplugin-sticky-header">
+                                <div class="oneplugin-sticky-title-row">
+                                    <h2><?php esc_html_e('Sticky Mobile Footer', 'oneplugin-light-site-tools'); ?></h2>
+                                    <label class="oneplugin-collapsible__switch" for="sticky_enabled">
+                                        <input
+                                            name="<?php echo esc_attr(self::OPTION_KEY . '[sticky_enabled]'); ?>"
+                                            id="sticky_enabled"
+                                            type="checkbox"
+                                            value="1"
+                                            <?php checked(!empty($settings['sticky_enabled'])); ?>
+                                        />
+                                        <span><?php esc_html_e('Enabled', 'oneplugin-light-site-tools'); ?></span>
+                                    </label>
+                                </div>
+                                <?php $this->render_admin_footer_preview($settings); ?>
+                            </div>
+                            <div class="oneplugin-sticky-fields">
+                                <?php
+                                $this->render_compact_select_field('sticky_social_media', __('Social media', 'oneplugin-light-site-tools'), $settings, $social_media_choices);
+                                $this->render_compact_color_field('sticky_bg_color', __('Bakgrundsfarg', 'oneplugin-light-site-tools'), $settings);
+                                $this->render_compact_color_field('sticky_icon_color', __('Ikonfarg', 'oneplugin-light-site-tools'), $settings);
+                                $this->render_compact_color_field('sticky_text_color', __('Textfarg', 'oneplugin-light-site-tools'), $settings);
+                                ?>
+                            </div>
                         </div>
-                        <p style="margin-top:10px;"><?php esc_html_e('Use .cover-img on an image module to make the image cover the full available space without distortion. When "Apply cover to tabs image" is enabled, this class is added automatically to img.dipi-at-panel-image.', 'oneplugin-light-site-tools'); ?></p>
                     </div>
                 </div>
 
                 <div class="postbox oneplugin-card">
                     <div class="inside oneplugin-card__inside">
                         <h2><?php esc_html_e('Custom Code', 'oneplugin-light-site-tools'); ?></h2>
-                        <div class="oneplugin-tabs" data-tabs>
+                        <div class="oneplugin-tabs oneplugin-tabs--sidebar" data-tabs>
                             <div class="oneplugin-tabs__nav" role="tablist" aria-label="<?php esc_attr_e('Custom code tabs', 'oneplugin-light-site-tools'); ?>">
                                 <button type="button" class="oneplugin-tabs__tab is-active" data-tab-trigger="custom-code-css" role="tab" aria-selected="true"><?php esc_html_e('CSS', 'oneplugin-light-site-tools'); ?></button>
                                 <button type="button" class="oneplugin-tabs__tab" data-tab-trigger="custom-code-js" role="tab" aria-selected="false"><?php esc_html_e('JavaScript', 'oneplugin-light-site-tools'); ?></button>
@@ -455,21 +415,58 @@ final class OnePlugin_Light_Site_Tools {
                             </div>
                             <div class="oneplugin-tabs__panels">
                                 <div class="oneplugin-tabs__panel is-active" data-tab-panel="custom-code-css" role="tabpanel">
-                                    <?php $this->render_compact_textarea_field('custom_code_css', __('Global CSS', 'oneplugin-light-site-tools'), $settings, 14, __('Applied across the site inside a style tag.', 'oneplugin-light-site-tools')); ?>
+                                    <?php $this->render_compact_textarea_field('custom_code_css', '', $settings, 14); ?>
                                 </div>
                                 <div class="oneplugin-tabs__panel" data-tab-panel="custom-code-js" role="tabpanel" hidden>
-                                    <?php $this->render_compact_textarea_field('custom_code_js', __('Global JavaScript', 'oneplugin-light-site-tools'), $settings, 14, __('Printed in the frontend footer inside a script tag.', 'oneplugin-light-site-tools')); ?>
+                                    <?php $this->render_compact_textarea_field('custom_code_js', '', $settings, 14); ?>
                                 </div>
                                 <div class="oneplugin-tabs__panel" data-tab-panel="custom-code-php-head" role="tabpanel" hidden>
-                                    <?php $this->render_compact_textarea_field('custom_code_php_head', __('PHP for head', 'oneplugin-light-site-tools'), $settings, 14, __('Executed in wp_head on the frontend. Use PHP only.', 'oneplugin-light-site-tools')); ?>
+                                    <?php $this->render_compact_textarea_field('custom_code_php_head', '', $settings, 14); ?>
                                 </div>
                                 <div class="oneplugin-tabs__panel" data-tab-panel="custom-code-php-body" role="tabpanel" hidden>
-                                    <?php $this->render_compact_textarea_field('custom_code_php_body', __('PHP for body', 'oneplugin-light-site-tools'), $settings, 14, __('Executed in wp_body_open on the frontend. Use PHP only.', 'oneplugin-light-site-tools')); ?>
+                                    <?php $this->render_compact_textarea_field('custom_code_php_body', '', $settings, 14); ?>
                                 </div>
                                 <div class="oneplugin-tabs__panel" data-tab-panel="custom-code-php-footer" role="tabpanel" hidden>
-                                    <?php $this->render_compact_textarea_field('custom_code_php_footer', __('PHP for footer', 'oneplugin-light-site-tools'), $settings, 14, __('Executed in wp_footer on the frontend. Use PHP only.', 'oneplugin-light-site-tools')); ?>
+                                    <?php $this->render_compact_textarea_field('custom_code_php_footer', '', $settings, 14); ?>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="postbox oneplugin-card oneplugin-collapsible">
+                    <div class="inside oneplugin-card__inside">
+                        <div class="oneplugin-collapsible__header">
+                            <button type="button" class="oneplugin-collapsible__toggle" data-collapsible-toggle aria-expanded="false">
+                                <span><?php esc_html_e('Help', 'oneplugin-light-site-tools'); ?></span>
+                                <span class="oneplugin-collapsible__chevron" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="oneplugin-collapsible__content" data-collapsible-content hidden>
+                            <p><?php esc_html_e('Click any shortcode or helper class to copy it.', 'oneplugin-light-site-tools'); ?></p>
+                            <h3><?php esc_html_e('Shortcodes', 'oneplugin-light-site-tools'); ?></h3>
+                            <div class="oneplugin-shortcodes">
+                                <?php
+                                $shortcodes = [
+                                    '[foretag]', '[gata]', '[postkod]', '[ort]', '[mobil1]', '[orgnr]', '[mail]',
+                                    '[kontakt]', '[formular id="123"]', '[kundens_mail]', '[kundens_epost]',
+                                    '[kundens_foretag]', '[kundens_adress]', '[kundens_telefon]', '[karta]',
+                                    '[hemsida]', '[kundens_hemsida]', '[kundens_facebook]', '[kundens_instagram]',
+                                    '[kundens_linkedin]', '[kundens_youtube]', '[kundens_x]', '[kundens_reddit]',
+                                    '[kundens_bokadirekt]',
+                                    '[sokordets_tjanst_rubrik]', '[sokordets_ort_rubrik]',
+                                    '[sokordets_tjanst_brodtext]', '[sokordets_ort_brodtext]',
+                                ];
+                                foreach ($shortcodes as $shortcode) {
+                                    echo '<button type="button" class="oneplugin-shortcode-copy" data-shortcode="' . esc_attr($shortcode) . '">' . esc_html($shortcode) . '</button> ';
+                                }
+                                ?>
+                            </div>
+                            <h3 style="margin-top:22px;"><?php esc_html_e('Helper Classes', 'oneplugin-light-site-tools'); ?></h3>
+                            <div class="oneplugin-shortcodes">
+                                <button type="button" class="oneplugin-shortcode-copy" data-shortcode=".cover-img">.cover-img</button>
+                            </div>
+                            <p style="margin-top:10px;"><?php esc_html_e('Use .cover-img on an image module to make the image cover the full available space without distortion. When "Apply cover to tabs image" is enabled, this class is added automatically to img.dipi-at-panel-image.', 'oneplugin-light-site-tools'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -481,28 +478,6 @@ final class OnePlugin_Light_Site_Tools {
                     </div>
                 </div>
             </form>
-
-            <hr />
-
-            <div class="postbox oneplugin-card">
-                <div class="inside oneplugin-card__inside">
-                    <h2><?php esc_html_e('Export / Import', 'oneplugin-light-site-tools'); ?></h2>
-                    <p><?php esc_html_e('Export all plugin fields and values as JSON, or import them from a previous backup.', 'oneplugin-light-site-tools'); ?></p>
-
-                    <p class="oneplugin-export-row">
-                        <a class="button button-secondary" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=oneplugin_light_export_settings'), 'oneplugin_light_export_settings')); ?>">
-                            <?php esc_html_e('Export JSON', 'oneplugin-light-site-tools'); ?>
-                        </a>
-                    </p>
-
-                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" enctype="multipart/form-data" class="oneplugin-import-row">
-                        <input type="hidden" name="action" value="oneplugin_light_import_settings" />
-                        <?php wp_nonce_field('oneplugin_light_import_settings'); ?>
-                        <input type="file" name="oneplugin_light_import_file" accept=".json,application/json" required />
-                        <?php submit_button(__('Import JSON', 'oneplugin-light-site-tools'), 'secondary', 'submit', false); ?>
-                    </form>
-                </div>
-            </div>
             </div>
         </div>
         <?php
@@ -543,11 +518,55 @@ final class OnePlugin_Light_Site_Tools {
         <?php
     }
 
+    private function render_social_links_section($settings) {
+        $social_fields = $this->get_social_link_fields();
+        ?>
+        <div class="oneplugin-social-panel">
+            <div class="oneplugin-social-panel__header">
+                <h3><?php esc_html_e('Social Links', 'oneplugin-light-site-tools'); ?></h3>
+                <select id="oneplugin-add-social-link" class="oneplugin-social-panel__add" aria-label="<?php esc_attr_e('Add social link', 'oneplugin-light-site-tools'); ?>">
+                    <option value=""><?php esc_html_e('Add social link', 'oneplugin-light-site-tools'); ?></option>
+                    <?php foreach ($social_fields as $key => $label) : ?>
+                        <?php if (empty($settings[$key])) : ?>
+                            <option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="oneplugin-social-fields">
+                <?php foreach ($social_fields as $key => $label) : ?>
+                    <?php
+                    $value = isset($settings[$key]) ? $settings[$key] : '';
+                    $is_visible = $value !== '';
+                    ?>
+                    <div class="oneplugin-social-field" data-social-field="<?php echo esc_attr($key); ?>" <?php echo $is_visible ? '' : 'hidden'; ?>>
+                        <?php $this->render_compact_field($key, $label, $settings, 'url'); ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function get_social_link_fields() {
+        return [
+            'facebook_url' => __('Facebook', 'oneplugin-light-site-tools'),
+            'instagram_url' => __('Instagram', 'oneplugin-light-site-tools'),
+            'linkedin_url' => __('LinkedIn', 'oneplugin-light-site-tools'),
+            'youtube_url' => __('YouTube', 'oneplugin-light-site-tools'),
+            'x_url' => __('X', 'oneplugin-light-site-tools'),
+            'reddit_url' => __('Reddit', 'oneplugin-light-site-tools'),
+            'booking_url' => __('BokaDirekt', 'oneplugin-light-site-tools'),
+        ];
+    }
+
     private function render_compact_textarea_field($key, $label, $settings, $rows = 10, $description = '') {
         $value = isset($settings[$key]) ? $settings[$key] : '';
         ?>
         <div style="margin-bottom:14px;">
-            <label for="<?php echo esc_attr($key); ?>" style="display:block; margin-bottom:6px; font-weight:600;"><?php echo esc_html($label); ?></label>
+            <?php if ($label !== '') : ?>
+                <label for="<?php echo esc_attr($key); ?>" style="display:block; margin-bottom:6px; font-weight:600;"><?php echo esc_html($label); ?></label>
+            <?php endif; ?>
             <?php if ($description !== '') : ?>
                 <p style="margin:0 0 8px; color:#50575e;"><?php echo esc_html($description); ?></p>
             <?php endif; ?>
@@ -662,14 +681,15 @@ final class OnePlugin_Light_Site_Tools {
     private function render_compact_color_field($key, $label, $settings) {
         $value = isset($settings[$key]) ? $settings[$key] : '';
         $swatch_value = preg_match('/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $value) ? $value : '#000000';
+        $css_variable_choices = $this->get_css_variable_color_choices();
         ?>
         <div style="margin-bottom:14px;">
             <label for="<?php echo esc_attr($key); ?>" style="display:block; margin-bottom:6px; font-weight:600;"><?php echo esc_html($label); ?></label>
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:grid; grid-template-columns:32px minmax(0,1fr) minmax(150px,180px); align-items:center; gap:8px;">
                 <input
                     type="color"
                     value="<?php echo esc_attr($swatch_value); ?>"
-                    oninput="document.getElementById('<?php echo esc_attr($key); ?>').value=this.value;"
+                    oninput="var field=document.getElementById('<?php echo esc_attr($key); ?>'); field.value=this.value; field.dispatchEvent(new Event('input', {bubbles:true}));"
                     style="width:32px; min-width:32px; height:32px; padding:0; border:0; background:none;"
                 />
                 <input
@@ -680,9 +700,28 @@ final class OnePlugin_Light_Site_Tools {
                     style="flex:1;"
                     value="<?php echo esc_attr($value); ?>"
                 />
+                <select
+                    aria-label="<?php echo esc_attr(sprintf(__('CSS variable for %s', 'oneplugin-light-site-tools'), $label)); ?>"
+                    onchange="if(this.value){var field=document.getElementById('<?php echo esc_attr($key); ?>'); field.value=this.value; field.dispatchEvent(new Event('input', {bubbles:true}));}"
+                    style="width:100%;"
+                >
+                    <option value=""><?php esc_html_e('CSS variable', 'oneplugin-light-site-tools'); ?></option>
+                    <?php foreach ($css_variable_choices as $variable) : ?>
+                        <option value="<?php echo esc_attr('var(' . $variable . ')'); ?>" <?php selected($value, 'var(' . $variable . ')'); ?>><?php echo esc_html($variable); ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
         </div>
         <?php
+    }
+
+    private function get_css_variable_color_choices() {
+        return [
+            '--gcid-primary-color',
+            '--gcid-secondary-color',
+            '--gcid-heading-color',
+            '--gcid-link-color',
+        ];
     }
 
     private function render_site_icon_field($settings) {
@@ -692,16 +731,14 @@ final class OnePlugin_Light_Site_Tools {
         <div style="margin-bottom:14px;">
             <label for="site_icon_id" style="display:block; margin-bottom:6px; font-weight:600;"><?php esc_html_e('Favicon', 'oneplugin-light-site-tools'); ?></label>
             <div class="oneplugin-media-field">
-                <div id="oneplugin-site-icon-preview" class="oneplugin-media-field__preview oneplugin-media-field__preview--icon">
+                <button type="button" id="oneplugin-site-icon-preview" class="oneplugin-media-field__preview oneplugin-media-field__preview--icon" aria-label="<?php esc_attr_e('Choose or remove favicon', 'oneplugin-light-site-tools'); ?>">
                     <?php if ($site_icon_url) : ?>
                         <img src="<?php echo esc_url($site_icon_url); ?>" alt="" style="max-width:100%; max-height:100%;" />
+                    <?php else : ?>
+                        <span><?php esc_html_e('Fav', 'oneplugin-light-site-tools'); ?></span>
                     <?php endif; ?>
-                </div>
-                <div class="oneplugin-media-field__actions">
-                    <input type="hidden" name="<?php echo esc_attr(self::OPTION_KEY . '[site_icon_id]'); ?>" id="site_icon_id" value="<?php echo esc_attr($site_icon_id); ?>" />
-                    <button type="button" class="button" id="oneplugin2-select-site-icon"><?php esc_html_e('Select favicon', 'oneplugin-light-site-tools'); ?></button>
-                    <button type="button" class="button" id="oneplugin-remove-site-icon"><?php esc_html_e('Remove', 'oneplugin-light-site-tools'); ?></button>
-                </div>
+                </button>
+                <input type="hidden" name="<?php echo esc_attr(self::OPTION_KEY . '[site_icon_id]'); ?>" id="site_icon_id" value="<?php echo esc_attr($site_icon_id); ?>" />
             </div>
         </div>
         <?php
@@ -714,16 +751,14 @@ final class OnePlugin_Light_Site_Tools {
         <div style="margin-bottom:14px;">
             <label for="site_logo_id" style="display:block; margin-bottom:6px; font-weight:600;"><?php esc_html_e('Logo', 'oneplugin-light-site-tools'); ?></label>
             <div class="oneplugin-media-field">
-                <div id="oneplugin-site-logo-preview" class="oneplugin-media-field__preview oneplugin-media-field__preview--logo">
+                <button type="button" id="oneplugin-site-logo-preview" class="oneplugin-media-field__preview oneplugin-media-field__preview--logo" aria-label="<?php esc_attr_e('Choose or remove logo', 'oneplugin-light-site-tools'); ?>">
                     <?php if ($site_logo_url) : ?>
                         <img src="<?php echo esc_url($site_logo_url); ?>" alt="" style="max-width:100%; max-height:100%;" />
+                    <?php else : ?>
+                        <span><?php esc_html_e('Logo', 'oneplugin-light-site-tools'); ?></span>
                     <?php endif; ?>
-                </div>
-                <div class="oneplugin-media-field__actions">
-                    <input type="hidden" name="<?php echo esc_attr(self::OPTION_KEY . '[site_logo_id]'); ?>" id="site_logo_id" value="<?php echo esc_attr($site_logo_id); ?>" />
-                    <button type="button" class="button" id="oneplugin2-select-site-logo"><?php esc_html_e('Select logo', 'oneplugin-light-site-tools'); ?></button>
-                    <button type="button" class="button" id="oneplugin-remove-site-logo"><?php esc_html_e('Remove', 'oneplugin-light-site-tools'); ?></button>
-                </div>
+                </button>
+                <input type="hidden" name="<?php echo esc_attr(self::OPTION_KEY . '[site_logo_id]'); ?>" id="site_logo_id" value="<?php echo esc_attr($site_logo_id); ?>" />
             </div>
         </div>
         <?php
@@ -765,11 +800,11 @@ final class OnePlugin_Light_Site_Tools {
             }
             .oneplugin-admin-hero {
                 display: flex;
-                align-items: flex-end;
+                align-items: center;
                 justify-content: space-between;
                 gap: 24px;
                 margin: 8px 0 20px;
-                padding: 28px 30px;
+                padding: 18px 22px;
                 border: 1px solid #d7dee8;
                 border-radius: 18px;
                 background:
@@ -798,39 +833,114 @@ final class OnePlugin_Light_Site_Tools {
                 font-weight: 750;
                 line-height: 1.15;
             }
-            .oneplugin-admin-hero p {
-                margin: 10px 0 0;
-                max-width: 760px;
-                color: #526070;
-                font-size: 15px;
-                line-height: 1.6;
-            }
-            .oneplugin-admin-hero__version {
-                display: grid;
-                gap: 4px;
-                min-width: 112px;
-                padding: 14px 16px;
-                border: 1px solid #d7dee8;
-                border-radius: 14px;
-                background: #0f172a;
-                color: #ffffff;
-                text-align: right;
-                box-shadow: 0 14px 34px rgba(15,23,42,.18);
-            }
-            .oneplugin-admin-hero__version span {
-                color: #cbd5e1;
-                font-size: 12px;
+            .oneplugin-admin-hero h1 span {
+                margin-left: 8px;
+                color: #64748b;
+                font-size: 14px;
                 font-weight: 600;
-                text-transform: uppercase;
+                vertical-align: baseline;
             }
-            .oneplugin-admin-hero__version strong {
-                font-size: 22px;
-                line-height: 1;
+            .oneplugin-admin-hero__actions {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 8px;
+            }
+            .oneplugin-hero-import-form {
+                margin: 0;
+            }
+            .oneplugin-hero-button {
+                min-height: 32px !important;
+                padding: 3px 10px !important;
+                border-radius: 8px !important;
+                background: #ffffff !important;
+                color: #334155 !important;
+                line-height: 24px !important;
+                transition: border-color .15s ease, background .15s ease, color .15s ease;
+            }
+            .oneplugin-hero-button.is-dragover {
+                border-color: #0f172a !important;
+                background: #eef4ff !important;
+                color: #0f172a !important;
             }
             .oneplugin-admin-form {
                 display: grid;
                 gap: 18px;
                 margin-top: 16px;
+            }
+            .oneplugin-admin-form + .oneplugin-card {
+                margin-top: 18px;
+            }
+            .oneplugin-admin-two-column {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 18px;
+                align-items: stretch;
+            }
+            .oneplugin-admin-two-column > .postbox {
+                margin-bottom: 0;
+            }
+            .oneplugin-admin-two-column > .postbox > .inside {
+                height: 100%;
+            }
+            .oneplugin-project-identity {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 18px;
+                align-items: start;
+            }
+            .oneplugin-project-identity__top {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-end;
+                gap: 14px;
+                justify-content: flex-start;
+                max-width: 760px;
+            }
+            .oneplugin-project-identity__top > div {
+                margin-bottom: 0 !important;
+            }
+            .oneplugin-project-identity__top > div:last-child {
+                flex: 1 1 320px;
+                min-width: 260px;
+            }
+            .oneplugin-project-identity__details {
+                min-width: 0;
+            }
+            .oneplugin-project-field-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0 16px;
+            }
+            .oneplugin-project-identity__social {
+                min-width: 0;
+                padding-top: 4px;
+                border-top: 1px solid #e2e8f0;
+            }
+            .oneplugin-social-panel__header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+            .oneplugin-social-panel__header h3 {
+                margin: 0;
+                color: #0f172a;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            .oneplugin-social-panel__add {
+                max-width: 190px;
+            }
+            .oneplugin-social-fields {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0 16px;
+            }
+            .oneplugin-social-field[hidden] {
+                display: none !important;
             }
             .oneplugin-card {
                 border: 1px solid #d7dee8;
@@ -899,13 +1009,45 @@ final class OnePlugin_Light_Site_Tools {
             .oneplugin-collapsible__content[hidden] {
                 display: none !important;
             }
+            .oneplugin-sticky-header {
+                display: grid;
+                gap: 14px;
+                margin-bottom: 18px;
+            }
+            .oneplugin-sticky-title-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+            .oneplugin-sticky-title-row h2 {
+                margin: 0;
+            }
             .oneplugin-tabs__nav {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
                 margin-bottom: 16px;
             }
+            .oneplugin-tabs--sidebar {
+                display: grid;
+                grid-template-columns: minmax(180px, 30%) minmax(0, 1fr);
+                gap: 18px;
+                align-items: start;
+            }
+            .oneplugin-tabs--sidebar .oneplugin-tabs__nav {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                margin-bottom: 0;
+            }
+            .oneplugin-tabs--sidebar .oneplugin-tabs__tab {
+                justify-content: flex-start;
+                text-align: left;
+                width: 100%;
+            }
             .oneplugin-tabs__tab {
+                display: flex;
+                align-items: center;
                 border: 1px solid #d7dee8;
                 background: #f8fafc;
                 border-radius: 10px;
@@ -974,11 +1116,29 @@ final class OnePlugin_Light_Site_Tools {
             .oneplugin-option-grid__item--select {
                 grid-column: span 1;
             }
+            .oneplugin-option-grid__item--full {
+                grid-column: 1 / -1;
+            }
+            #oneplugin-formidable-accent-wrap {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+            #oneplugin-formidable-accent-wrap > div {
+                width: 100%;
+                margin-bottom: 0 !important;
+            }
+            #oneplugin-formidable-accent-wrap input[type="text"] {
+                width: 100%;
+            }
             .oneplugin-compact-checkbox {
                 display: inline-flex;
                 align-items: center;
                 gap: 8px;
                 min-height: 38px;
+            }
+            .oneplugin-sticky-fields {
+                display: grid;
+                gap: 0;
             }
             .oneplugin-card input[type="text"],
             .oneplugin-card input[type="email"],
@@ -1029,6 +1189,18 @@ final class OnePlugin_Light_Site_Tools {
                 overflow: hidden;
                 background: #f8f9fb;
                 flex-shrink: 0;
+                color: #64748b;
+                cursor: pointer;
+                font-weight: 700;
+                padding: 0;
+                transition: border-color .15s ease, background .15s ease, color .15s ease;
+            }
+            .oneplugin-media-field__preview:hover,
+            .oneplugin-media-field__preview:focus {
+                border-color: #94a3b8;
+                background: #eef4ff;
+                color: #0f172a;
+                outline: none;
             }
             .oneplugin-media-field__preview--icon {
                 width: 56px;
@@ -1043,19 +1215,6 @@ final class OnePlugin_Light_Site_Tools {
                 flex-wrap: wrap;
                 gap: 8px;
                 align-items: center;
-            }
-            .oneplugin-export-row {
-                margin-bottom: 14px;
-            }
-            .oneplugin-import-row {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                align-items: center;
-            }
-            .oneplugin-import-row input[type="file"] {
-                min-height: 38px;
-                padding: 6px 0;
             }
             .oneplugin-savebar {
                 position: sticky;
@@ -1080,6 +1239,8 @@ final class OnePlugin_Light_Site_Tools {
                 font-size: 13px;
             }
             #oneplugin-preview-root {
+                width: 100%;
+                box-sizing: border-box;
                 border-radius: 14px !important;
                 background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%) !important;
             }
@@ -1099,9 +1260,27 @@ final class OnePlugin_Light_Site_Tools {
                     flex-direction: column;
                     padding: 24px;
                 }
-                .oneplugin-admin-hero__version {
-                    width: 100%;
-                    text-align: left;
+                .oneplugin-admin-hero__actions {
+                    justify-content: flex-start;
+                }
+                .oneplugin-admin-two-column {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-project-identity {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-project-field-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+                .oneplugin-tabs--sidebar {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-tabs--sidebar .oneplugin-tabs__nav {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                .oneplugin-tabs--sidebar .oneplugin-tabs__tab {
+                    width: auto;
                 }
                 .oneplugin-card table[role="presentation"],
                 .oneplugin-card table[role="presentation"] tbody,
@@ -1120,9 +1299,27 @@ final class OnePlugin_Light_Site_Tools {
                     align-items: flex-start;
                     flex-direction: column;
                 }
+                .oneplugin-sticky-title-row {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
                 .oneplugin-savebar__inner {
                     align-items: flex-start;
                     flex-direction: column;
+                }
+            }
+            @media (max-width: 782px) {
+                .oneplugin-project-field-grid,
+                .oneplugin-social-fields {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-social-panel__header {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+                .oneplugin-social-panel__add {
+                    max-width: none;
+                    width: 100%;
                 }
             }
         </style>
@@ -1203,42 +1400,6 @@ final class OnePlugin_Light_Site_Tools {
         return trim($value);
     }
 
-    private function apply_palette_defaults($settings) {
-        $settings = is_array($settings) ? $settings : [];
-        $palette = $this->get_project_color_palette();
-        $palette_values = array_values(array_filter(array_map(static function ($swatch) {
-            return is_array($swatch) && !empty($swatch['value']) ? strtolower((string) $swatch['value']) : '';
-        }, $palette)));
-
-        if (empty($palette_values)) {
-            return $settings;
-        }
-
-        $legacy_defaults = [
-            'sticky_bg_color' => '#ffffff',
-            'sticky_icon_color' => '#333333',
-            'sticky_text_color' => '#333333',
-        ];
-
-        $palette_map = [
-            'sticky_bg_color' => 0,
-            'sticky_icon_color' => 1,
-            'sticky_text_color' => 1,
-        ];
-
-        foreach ($palette_map as $key => $index) {
-            $palette_value = isset($palette_values[$index]) ? $palette_values[$index] : $palette_values[0];
-            $current_value = isset($settings[$key]) ? strtolower((string) $settings[$key]) : '';
-            $legacy_value = isset($legacy_defaults[$key]) ? strtolower((string) $legacy_defaults[$key]) : '';
-
-            if ($current_value === '' || $current_value === $legacy_value) {
-                $settings[$key] = $palette_value;
-            }
-        }
-
-        return $settings;
-    }
-
     private function sanitize_project_palette($palette) {
         if (!is_array($palette)) {
             return [];
@@ -1279,9 +1440,9 @@ final class OnePlugin_Light_Site_Tools {
     private function render_admin_footer_preview($settings) {
         $phone = isset($settings['phone_primary']) ? $settings['phone_primary'] : '';
         $email = isset($settings['email']) ? $settings['email'] : '';
-        $bg = isset($settings['sticky_bg_color']) ? $settings['sticky_bg_color'] : '#ffffff';
-        $icon = isset($settings['sticky_icon_color']) ? $settings['sticky_icon_color'] : '#333333';
-        $text = isset($settings['sticky_text_color']) ? $settings['sticky_text_color'] : '#333333';
+        $bg = isset($settings['sticky_bg_color']) ? $settings['sticky_bg_color'] : '#0f0f0f';
+        $icon = isset($settings['sticky_icon_color']) ? $settings['sticky_icon_color'] : '#ffffff';
+        $text = isset($settings['sticky_text_color']) ? $settings['sticky_text_color'] : '#ffffff';
         $social = $this->get_sticky_social_item($settings);
         $items = [
             [
@@ -1308,7 +1469,7 @@ final class OnePlugin_Light_Site_Tools {
                     <div><code><?php echo esc_html($item['link']); ?></code></div>
                 <?php endforeach; ?>
             </div>
-            <div style="max-width:360px; margin-top:12px;">
+            <div style="width:100%; margin-top:12px;">
                 <div id="oneplugin-preview-bar" style="border:1px solid rgba(0,0,0,.08); border-radius:20px 20px 0 0; padding:10px 8px; background:<?php echo esc_attr($bg); ?>;">
                     <div style="display:flex; gap:10px; justify-content:space-around; align-items:center;">
                         <?php foreach ($items as $item) : ?>
@@ -1344,51 +1505,35 @@ final class OnePlugin_Light_Site_Tools {
             . "  var sanitizePhone = function(value) { return value.replace(/\\\\s+/g, ''); };\n"
             . "  var previewRoot = get('oneplugin-preview-root');\n"
             . "  var setupMedia = function() {\n"
-            . "    var selectBtn = get('oneplugin2-select-site-icon');\n"
-            . "    var removeBtn = get('oneplugin-remove-site-icon');\n"
             . "    var hiddenInput = get('site_icon_id');\n"
             . "    var preview = get('oneplugin-site-icon-preview');\n"
-            . "    if (!selectBtn || !hiddenInput || !preview || typeof wp === 'undefined' || !wp.media) { return; }\n"
-            . "    selectBtn.addEventListener('click', function(e) {\n"
-            . "      e.preventDefault();\n"
-            . "      var frame = wp.media({ title: 'Select favicon', button: { text: 'Use favicon' }, library: { type: 'image' }, multiple: false });\n"
-            . "      frame.on('select', function() {\n"
-            . "        var attachment = frame.state().get('selection').first().toJSON();\n"
-            . "        hiddenInput.value = attachment.id || '';\n"
-            . "        var url = attachment.sizes && attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;\n"
-            . "        preview.innerHTML = url ? '<img src=\"' + url + '\" alt=\"\" style=\"max-width:100%;max-height:100%;\" />' : '';\n"
-            . "      });\n"
-            . "      frame.open();\n"
-            . "    });\n"
-            . "    if (removeBtn) {\n"
-            . "      removeBtn.addEventListener('click', function(e) {\n"
-            . "        e.preventDefault();\n"
-            . "        hiddenInput.value = '';\n"
-            . "        preview.innerHTML = '';\n"
-            . "      });\n"
-            . "    }\n"
-            . "    var selectLogoBtn = get('oneplugin2-select-site-logo');\n"
-            . "    var removeLogoBtn = get('oneplugin-remove-site-logo');\n"
             . "    var logoInput = get('site_logo_id');\n"
             . "    var logoPreview = get('oneplugin-site-logo-preview');\n"
-            . "    if (selectLogoBtn && logoInput && logoPreview) {\n"
-            . "      selectLogoBtn.addEventListener('click', function(e) {\n"
+            . "    var openMedia = function(input, target, title, buttonText, sizeName, emptyText) {\n"
+            . "      if (input.value) {\n"
+            . "        input.value = '';\n"
+            . "        target.innerHTML = '<span>' + emptyText + '</span>';\n"
+            . "        return;\n"
+            . "      }\n"
+            . "      var frame = wp.media({ title: title, button: { text: buttonText }, library: { type: 'image' }, multiple: false });\n"
+            . "      frame.on('select', function() {\n"
+            . "        var attachment = frame.state().get('selection').first().toJSON();\n"
+            . "        input.value = attachment.id || '';\n"
+            . "        var url = attachment.sizes && attachment.sizes[sizeName] ? attachment.sizes[sizeName].url : attachment.url;\n"
+            . "        target.innerHTML = url ? '<img src=\"' + url + '\" alt=\"\" style=\"max-width:100%;max-height:100%;\" />' : '<span>' + emptyText + '</span>';\n"
+            . "      });\n"
+            . "      frame.open();\n"
+            . "    };\n"
+            . "    if (hiddenInput && preview && typeof wp !== 'undefined' && wp.media) {\n"
+            . "      preview.addEventListener('click', function(e) {\n"
             . "        e.preventDefault();\n"
-            . "        var logoFrame = wp.media({ title: 'Select logo', button: { text: 'Use logo' }, library: { type: 'image' }, multiple: false });\n"
-            . "        logoFrame.on('select', function() {\n"
-            . "          var attachment = logoFrame.state().get('selection').first().toJSON();\n"
-            . "          logoInput.value = attachment.id || '';\n"
-            . "          var url = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;\n"
-            . "          logoPreview.innerHTML = url ? '<img src=\"' + url + '\" alt=\"\" style=\"max-width:100%;max-height:100%;\" />' : '';\n"
-            . "        });\n"
-            . "        logoFrame.open();\n"
+            . "        openMedia(hiddenInput, preview, 'Select favicon', 'Use favicon', 'thumbnail', 'Fav');\n"
             . "      });\n"
             . "    }\n"
-            . "    if (removeLogoBtn && logoInput && logoPreview) {\n"
-            . "      removeLogoBtn.addEventListener('click', function(e) {\n"
+            . "    if (logoInput && logoPreview && typeof wp !== 'undefined' && wp.media) {\n"
+            . "      logoPreview.addEventListener('click', function(e) {\n"
             . "        e.preventDefault();\n"
-            . "        logoInput.value = '';\n"
-            . "        logoPreview.innerHTML = '';\n"
+            . "        openMedia(logoInput, logoPreview, 'Select logo', 'Use logo', 'medium', 'Logo');\n"
             . "      });\n"
             . "    }\n"
             . "  };\n"
@@ -1440,6 +1585,58 @@ final class OnePlugin_Light_Site_Tools {
             . "      });\n"
             . "    });\n"
             . "  };\n"
+            . "  var setupSocialLinks = function() {\n"
+            . "    var addSelect = get('oneplugin-add-social-link');\n"
+            . "    if (!addSelect) { return; }\n"
+            . "    addSelect.addEventListener('change', function() {\n"
+            . "      var key = addSelect.value;\n"
+            . "      if (!key) { return; }\n"
+            . "      var field = document.querySelector('[data-social-field=\"' + key + '\"]');\n"
+            . "      var input = get(key);\n"
+            . "      if (field) { field.hidden = false; }\n"
+            . "      if (input) { input.focus(); }\n"
+            . "      var selectedOption = addSelect.querySelector('option[value=\"' + key + '\"]');\n"
+            . "      if (selectedOption) { selectedOption.hidden = true; }\n"
+            . "      addSelect.value = '';\n"
+            . "    });\n"
+            . "  };\n"
+            . "  var setupHeaderImport = function() {\n"
+            . "    var form = document.querySelector('.oneplugin-hero-import-form');\n"
+            . "    var button = get('oneplugin-light-import-button');\n"
+            . "    var input = get('oneplugin-light-import-file');\n"
+            . "    if (!form || !button || !input) { return; }\n"
+            . "    var submitIfJson = function(file) {\n"
+            . "      if (!file) { return; }\n"
+            . "      if (!/\\.json$/i.test(file.name || '')) { return; }\n"
+            . "      var transfer = new DataTransfer();\n"
+            . "      transfer.items.add(file);\n"
+            . "      input.files = transfer.files;\n"
+            . "      form.submit();\n"
+            . "    };\n"
+            . "    button.addEventListener('click', function(e) {\n"
+            . "      e.preventDefault();\n"
+            . "      input.click();\n"
+            . "    });\n"
+            . "    input.addEventListener('change', function() {\n"
+            . "      if (input.files && input.files[0]) { form.submit(); }\n"
+            . "    });\n"
+            . "    ['dragenter','dragover'].forEach(function(eventName) {\n"
+            . "      button.addEventListener(eventName, function(e) {\n"
+            . "        e.preventDefault();\n"
+            . "        button.classList.add('is-dragover');\n"
+            . "      });\n"
+            . "    });\n"
+            . "    ['dragleave','drop'].forEach(function(eventName) {\n"
+            . "      button.addEventListener(eventName, function(e) {\n"
+            . "        e.preventDefault();\n"
+            . "        button.classList.remove('is-dragover');\n"
+            . "      });\n"
+            . "    });\n"
+            . "    button.addEventListener('drop', function(e) {\n"
+            . "      var file = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files[0] : null;\n"
+            . "      submitIfJson(file);\n"
+            . "    });\n"
+            . "  };\n"
             . "  var setupCollapsibles = function() {\n"
             . "    document.querySelectorAll('[data-collapsible-toggle]').forEach(function(toggle) {\n"
             . "      toggle.addEventListener('click', function() {\n"
@@ -1458,6 +1655,14 @@ final class OnePlugin_Light_Site_Tools {
             . "    var layoutWrap = get('oneplugin-masonry-gallery-layout-wrap');\n"
             . "    if (!checkbox || !layoutWrap) { return; }\n"
             . "    var sync = function() { layoutWrap.hidden = !checkbox.checked; };\n"
+            . "    checkbox.addEventListener('change', sync);\n"
+            . "    sync();\n"
+            . "  };\n"
+            . "  var setupStyleFormidableAccent = function() {\n"
+            . "    var checkbox = get('style_formidable');\n"
+            . "    var accentWrap = get('oneplugin-formidable-accent-wrap');\n"
+            . "    if (!checkbox || !accentWrap) { return; }\n"
+            . "    var sync = function() { accentWrap.hidden = !checkbox.checked; };\n"
             . "    checkbox.addEventListener('change', sync);\n"
             . "    sync();\n"
             . "  };\n"
@@ -1495,9 +1700,9 @@ final class OnePlugin_Light_Site_Tools {
             . "    var networkEl = get('sticky_social_media');\n"
             . "    var phone = phoneEl ? phoneEl.value : '';\n"
             . "    var email = emailEl ? emailEl.value : '';\n"
-            . "    var bg = bgEl ? bgEl.value : '#ffffff';\n"
-            . "    var iconColor = iconEl ? iconEl.value : '#333333';\n"
-            . "    var textColor = textEl ? textEl.value : '#333333';\n"
+            . "    var bg = bgEl ? bgEl.value : '#0f0f0f';\n"
+            . "    var iconColor = iconEl ? iconEl.value : '#ffffff';\n"
+            . "    var textColor = textEl ? textEl.value : '#ffffff';\n"
             . "    var network = networkEl ? networkEl.value : 'instagram';\n"
             . "    var preset = presets[network] || presets.instagram;\n"
             . "    var socialField = preset.linkField ? get(preset.linkField) : null;\n"
@@ -1535,8 +1740,11 @@ final class OnePlugin_Light_Site_Tools {
             . "  setupSaveShortcut();\n"
             . "  setupShortcodeCopy();\n"
             . "  setupTabs();\n"
+            . "  setupSocialLinks();\n"
+            . "  setupHeaderImport();\n"
             . "  setupCollapsibles();\n"
             . "  setupMasonryGalleryLayout();\n"
+            . "  setupStyleFormidableAccent();\n"
             . "  rebuild();\n"
             . "})();";
     }
@@ -1611,7 +1819,7 @@ final class OnePlugin_Light_Site_Tools {
             $settings['sticky_social_media'] = $this->get_preferred_sticky_social_media($settings);
         }
 
-        return $this->apply_palette_defaults($settings);
+        return $settings;
     }
 
     private function get_setting($key, $default = '') {
@@ -2293,9 +2501,9 @@ final class OnePlugin_Light_Site_Tools {
             '6.5.1'
         );
 
-        $bg = $this->get_setting('sticky_bg_color', '#ffffff');
-        $icon = $this->get_setting('sticky_icon_color', '#333333');
-        $text = $this->get_setting('sticky_text_color', '#333333');
+        $bg = $this->get_setting('sticky_bg_color', '#0f0f0f');
+        $icon = $this->get_setting('sticky_icon_color', '#ffffff');
+        $text = $this->get_setting('sticky_text_color', '#ffffff');
 
         $css = '
             .oneplugin-mobile-footer{
@@ -2411,6 +2619,56 @@ img.cover-img {
         if ($this->get_setting('hide_default_footer', '0') === '1') {
             $generated_css[] = 'footer#main-footer {
     display: none !important;
+}';
+        }
+        if ($this->get_setting('style_formidable', '0') === '1') {
+            $formidable_accent = $this->get_setting('formidable_accent_color', '#fa1e9a');
+            $generated_css[] = '.frm_form_field .frm_checkbox {
+    margin-top: 0;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    padding: 10px 5px 10px 10px;
+    border-radius: 8px;
+    border: 1px solid ' . $formidable_accent . ';
+    transition: background-color 0.3s ease;
+}
+
+.with_frm_style .frm_checkbox label {
+    font-size: var(--check-font-size);
+    color: #000000;
+    font-weight: var(--check-weight);
+    line-height: 1.3;
+}
+
+.with_frm_style .frm_checkbox input[type=checkbox] {
+    appearance: none;
+    background-color: ' . $formidable_accent . ';
+    flex: none;
+    display: inline-block !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    height: 16px !important;
+    color: var(--border-color);
+    border: 1px solid currentColor;
+    border-color: var(--border-color);
+    vertical-align: middle;
+    position: initial;
+    padding: 0;
+    margin: 0;
+}
+
+.with_frm_style .frm_checkbox:has(input:checked) {
+    background-color: ' . $formidable_accent . ';
+}
+
+.with_frm_style .frm_checkbox:has(input:checked) label {
+    color: #ffffff;
+}
+
+.frm_style_formidables-stilmall.with_frm_style .frm_error,
+.frm_style_formidables-stilmall.with_frm_style .frm_limit_error {
+    font-weight: bold;
+    color: #ffffff;
 }';
         }
 
