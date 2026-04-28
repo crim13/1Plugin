@@ -1,0 +1,535 @@
+.wrap {
+                max-width: 1240px;
+            }
+            .wrap:has(.oneplugin-admin-shell) {
+                color: #111827;
+            }
+            .oneplugin-admin-shell {
+                margin-top: 18px;
+                padding: 2px 0 28px;
+            }
+            .oneplugin-admin-hero {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 24px;
+                margin: 8px 0 20px;
+                padding: 18px 22px;
+                border: 1px solid #d7dee8;
+                border-radius: 18px;
+                background:
+                    linear-gradient(135deg, rgba(255,255,255,.96), rgba(245,248,252,.94)),
+                    #ffffff;
+                box-shadow: 0 18px 48px rgba(15, 23, 42, .08);
+            }
+            .oneplugin-admin-hero__eyebrow {
+                display: inline-flex;
+                align-items: center;
+                margin-bottom: 10px;
+                padding: 5px 10px;
+                border: 1px solid #c9d4e5;
+                border-radius: 999px;
+                background: #f7fafc;
+                color: #475569;
+                font-size: 12px;
+                font-weight: 700;
+                line-height: 1.2;
+                text-transform: uppercase;
+            }
+            .oneplugin-admin-hero h1 {
+                margin: 0;
+                color: #0f172a;
+                font-size: 32px;
+                font-weight: 750;
+                line-height: 1.15;
+            }
+            .oneplugin-admin-hero h1 span {
+                margin-left: 8px;
+                color: #64748b;
+                font-size: 14px;
+                font-weight: 600;
+                vertical-align: baseline;
+            }
+            .oneplugin-admin-hero__actions {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 8px;
+            }
+            .oneplugin-hero-import-form {
+                margin: 0;
+            }
+            .oneplugin-hero-button {
+                min-height: 32px !important;
+                padding: 3px 10px !important;
+                border-radius: 8px !important;
+                background: #ffffff !important;
+                color: #334155 !important;
+                line-height: 24px !important;
+                transition: border-color .15s ease, background .15s ease, color .15s ease;
+            }
+            .oneplugin-hero-button.is-dragover {
+                border-color: #0f172a !important;
+                background: #eef4ff !important;
+                color: #0f172a !important;
+            }
+            .oneplugin-admin-form {
+                display: grid;
+                gap: 18px;
+                margin-top: 16px;
+            }
+            .oneplugin-admin-form + .oneplugin-card {
+                margin-top: 18px;
+            }
+            .oneplugin-admin-two-column {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 18px;
+                align-items: stretch;
+            }
+            .oneplugin-admin-two-column > .postbox {
+                margin-bottom: 0;
+            }
+            .oneplugin-admin-two-column > .postbox > .inside {
+                height: 100%;
+            }
+            .oneplugin-project-identity {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 18px;
+                align-items: start;
+            }
+            .oneplugin-project-identity__top {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-end;
+                gap: 14px;
+                justify-content: flex-start;
+                max-width: 760px;
+            }
+            .oneplugin-project-identity__top > div {
+                margin-bottom: 0 !important;
+            }
+            .oneplugin-project-identity__top > div:last-child {
+                flex: 1 1 320px;
+                min-width: 260px;
+            }
+            .oneplugin-project-identity__details {
+                min-width: 0;
+            }
+            .oneplugin-project-field-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0 16px;
+            }
+            .oneplugin-project-identity__social {
+                min-width: 0;
+                padding-top: 4px;
+                border-top: 1px solid #e2e8f0;
+            }
+            .oneplugin-social-panel__header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+            .oneplugin-social-panel__header h3 {
+                margin: 0;
+                color: #0f172a;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            .oneplugin-social-panel__add {
+                max-width: 190px;
+            }
+            .oneplugin-social-fields {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0 16px;
+            }
+            .oneplugin-social-field[hidden] {
+                display: none !important;
+            }
+            .oneplugin-card {
+                border: 1px solid #d7dee8;
+                border-radius: 14px;
+                box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+                overflow: hidden;
+                background: #fff;
+            }
+            .oneplugin-card__inside {
+                padding: 24px 26px;
+            }
+            .oneplugin-collapsible__header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 18px;
+            }
+            .oneplugin-collapsible__header h2 {
+                margin: 0 0 6px;
+            }
+            .oneplugin-collapsible__header p {
+                margin: 0;
+            }
+            .oneplugin-collapsible__toggle {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                padding: 0;
+                border: 0;
+                background: transparent;
+                color: inherit;
+                cursor: pointer;
+                font: inherit;
+                text-align: left;
+            }
+            .oneplugin-collapsible__toggle span:first-child {
+                font-size: 24px;
+                font-weight: 700;
+                line-height: 1.2;
+            }
+            .oneplugin-collapsible__toggle[aria-disabled="true"] {
+                cursor: default;
+                opacity: .55;
+            }
+            .oneplugin-collapsible__chevron {
+                width: 10px;
+                height: 10px;
+                border-right: 2px solid #1d2327;
+                border-bottom: 2px solid #1d2327;
+                transform: rotate(45deg);
+                transition: transform .18s ease;
+            }
+            .oneplugin-collapsible.is-open .oneplugin-collapsible__chevron {
+                transform: rotate(225deg);
+            }
+            .oneplugin-collapsible__switch {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                flex-shrink: 0;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            .oneplugin-collapsible__content[hidden] {
+                display: none !important;
+            }
+            .oneplugin-sticky-header {
+                display: grid;
+                gap: 14px;
+                margin-bottom: 18px;
+            }
+            .oneplugin-sticky-title-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+            .oneplugin-sticky-title-row h2 {
+                margin: 0;
+            }
+            .oneplugin-tabs__nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+            .oneplugin-tabs--sidebar {
+                display: grid;
+                grid-template-columns: minmax(180px, 30%) minmax(0, 1fr);
+                gap: 18px;
+                align-items: start;
+            }
+            .oneplugin-tabs--sidebar .oneplugin-tabs__nav {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                margin-bottom: 0;
+            }
+            .oneplugin-tabs--sidebar .oneplugin-tabs__tab {
+                justify-content: flex-start;
+                text-align: left;
+                width: 100%;
+            }
+            .oneplugin-tabs__tab {
+                display: flex;
+                align-items: center;
+                border: 1px solid #d7dee8;
+                background: #f8fafc;
+                border-radius: 10px;
+                padding: 9px 14px;
+                cursor: pointer;
+                font-weight: 600;
+            }
+            .oneplugin-tabs__tab.is-active {
+                background: #0f172a;
+                border-color: #0f172a;
+                color: #fff;
+            }
+            .oneplugin-tabs__panel[hidden] {
+                display: none !important;
+            }
+            .oneplugin-card h2 {
+                margin-top: 0;
+                margin-bottom: 8px;
+                color: #0f172a;
+                font-size: 22px;
+                line-height: 1.2;
+            }
+            .oneplugin-card p {
+                margin-top: 0;
+                margin-bottom: 18px;
+                color: #526070;
+                max-width: 760px;
+            }
+            .oneplugin-shortcodes {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .oneplugin-shortcode-copy {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 6px 9px;
+                background: #f8fafc;
+                border: 1px solid #d7dee8;
+                border-radius: 8px;
+                font-family: monospace;
+                font-size: 12px;
+                line-height: 1.2;
+                cursor: pointer;
+                transition: background .15s ease, border-color .15s ease, color .15s ease;
+            }
+            .oneplugin-shortcode-copy:hover {
+                background: #eef4ff;
+                border-color: #b8c7df;
+            }
+            .oneplugin-shortcode-copy.is-copied {
+                background: #e7f5ea;
+                border-color: #7cc08a;
+                color: #136c2e;
+            }
+            .oneplugin-option-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 10px 14px;
+                align-items: start;
+            }
+            .oneplugin-option-grid__item {
+                min-width: 0;
+            }
+            .oneplugin-option-grid__item--select {
+                grid-column: span 1;
+            }
+            .oneplugin-option-grid__item--full {
+                grid-column: 1 / -1;
+            }
+            #oneplugin-formidable-accent-wrap {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+            #oneplugin-formidable-accent-wrap > div {
+                width: 100%;
+                margin-bottom: 0 !important;
+            }
+            #oneplugin-formidable-accent-wrap input[type="text"] {
+                width: 100%;
+            }
+            .oneplugin-compact-checkbox {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 38px;
+            }
+            .oneplugin-sticky-fields {
+                display: grid;
+                gap: 0;
+            }
+            .oneplugin-card input[type="text"],
+            .oneplugin-card input[type="email"],
+            .oneplugin-card input[type="url"],
+            .oneplugin-card select {
+                min-height: 42px;
+                border-color: #cbd5e1;
+                border-radius: 9px;
+                padding-inline: 12px;
+                box-shadow: none;
+            }
+            .oneplugin-card textarea {
+                border-color: #cbd5e1;
+                border-radius: 9px;
+                box-shadow: none;
+            }
+            .oneplugin-card .button {
+                border-radius: 9px;
+                min-height: 38px;
+                padding-inline: 14px;
+            }
+            .oneplugin-card .button-primary,
+            .oneplugin-savebar .button-primary {
+                border-color: #0f172a;
+                background: #0f172a;
+                color: #fff;
+            }
+            .oneplugin-card table[role="presentation"] td {
+                vertical-align: top;
+            }
+            .oneplugin-card--identity table[role="presentation"] td,
+            .oneplugin-card--company table[role="presentation"] td,
+            .oneplugin-card--footer table[role="presentation"] td {
+                padding-top: 4px;
+            }
+            .oneplugin-media-field {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                min-height: 64px;
+            }
+            .oneplugin-media-field__preview {
+                border: 1px solid #dcdcde;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                background: #f8f9fb;
+                flex-shrink: 0;
+                color: #64748b;
+                cursor: pointer;
+                font-weight: 700;
+                padding: 0;
+                transition: border-color .15s ease, background .15s ease, color .15s ease;
+            }
+            .oneplugin-media-field__preview:hover,
+            .oneplugin-media-field__preview:focus {
+                border-color: #94a3b8;
+                background: #eef4ff;
+                color: #0f172a;
+                outline: none;
+            }
+            .oneplugin-media-field__preview--icon {
+                width: 56px;
+                height: 56px;
+            }
+            .oneplugin-media-field__preview--logo {
+                width: 116px;
+                height: 56px;
+            }
+            .oneplugin-media-field__actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+            }
+            .oneplugin-savebar {
+                position: sticky;
+                bottom: 14px;
+                z-index: 20;
+                margin-top: 8px;
+            }
+            .oneplugin-savebar__inner {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 12px 14px;
+                border: 1px solid #dcdcde;
+                border-radius: 13px;
+                background: rgba(255,255,255,0.92);
+                backdrop-filter: blur(8px);
+                box-shadow: 0 12px 32px rgba(15,23,42,.10);
+            }
+            .oneplugin-savebar__hint {
+                color: #50575e;
+                font-size: 13px;
+            }
+            #oneplugin-preview-root {
+                width: 100%;
+                box-sizing: border-box;
+                border-radius: 14px !important;
+                background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%) !important;
+            }
+            #oneplugin-preview-links code {
+                display: inline-block;
+                margin-bottom: 6px;
+                padding: 3px 6px;
+                border-radius: 6px;
+                background: #f6f7f7;
+            }
+            #oneplugin-preview-bar {
+                box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+            }
+            @media (max-width: 1100px) {
+                .oneplugin-admin-hero {
+                    align-items: flex-start;
+                    flex-direction: column;
+                    padding: 24px;
+                }
+                .oneplugin-admin-hero__actions {
+                    justify-content: flex-start;
+                }
+                .oneplugin-admin-two-column {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-project-identity {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-project-field-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+                .oneplugin-tabs--sidebar {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-tabs--sidebar .oneplugin-tabs__nav {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                .oneplugin-tabs--sidebar .oneplugin-tabs__tab {
+                    width: auto;
+                }
+                .oneplugin-card table[role="presentation"],
+                .oneplugin-card table[role="presentation"] tbody,
+                .oneplugin-card table[role="presentation"] tr,
+                .oneplugin-card table[role="presentation"] td {
+                    display: block;
+                    width: 100% !important;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                }
+                .oneplugin-media-field {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+                .oneplugin-collapsible__header {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+                .oneplugin-sticky-title-row {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+                .oneplugin-savebar__inner {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+            }
+            @media (max-width: 782px) {
+                .oneplugin-project-field-grid,
+                .oneplugin-social-fields {
+                    grid-template-columns: 1fr;
+                }
+                .oneplugin-social-panel__header {
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+                .oneplugin-social-panel__add {
+                    max-width: none;
+                    width: 100%;
+                }
+            }
+

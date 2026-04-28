@@ -102,9 +102,7 @@ final class OnePlugin_Light_Site_Tools {
         add_action('admin_post_oneplugin_light_import_settings', [$this, 'handle_import_settings']);
         add_action('update_option_' . self::OPTION_KEY, [$this, 'mirror_legacy_option'], 10, 2);
         add_action('add_option_' . self::OPTION_KEY, [$this, 'mirror_legacy_option_on_add'], 10, 2);
-        add_action('init', [$this, 'register_shortcodes']);
         add_action('init', [$this, 'enable_shortcodes_in_divi_modules']);
-        add_action('init', [$this, 'remove_divi_test_cookies']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
         add_action('wp_head', [$this, 'render_custom_php_head'], 1);
@@ -112,20 +110,18 @@ final class OnePlugin_Light_Site_Tools {
         add_action('wp_body_open', [$this, 'render_custom_php_body'], 1);
         add_action('wp_footer', [$this, 'render_custom_php_footer'], 20);
         add_action('wp_footer', [$this, 'render_custom_js'], 100);
-        add_action('wp_footer', [$this, 'render_image_alt_fix_script'], 101);
-        add_action('wp_footer', [$this, 'render_tabs_image_cover_script'], 102);
-        add_action('wp_footer', [$this, 'render_masonry_gallery_layout_script'], 103);
-        add_action('wp_footer', [$this, 'render_active_menu_item_by_section_script'], 104);
         add_action('wp_footer', [$this, 'render_mobile_footer'], 9999);
-        add_action('add_meta_boxes', [$this, 'register_keyword_meta_box']);
-        add_action('save_post', [$this, 'save_keyword_meta_box']);
-        add_filter('the_posts', [$this, 'filter_global_modules']);
         add_filter('wp_get_attachment_image_attributes', [$this, 'filter_attachment_image_alt'], 20, 2);
         add_filter('the_content', [$this, 'replace_image_alt_in_html'], 20);
         add_filter('post_thumbnail_html', [$this, 'replace_image_alt_in_html'], 20);
 
         $this->menu_module = OnePlugin_Light_Menu_Module::instance();
         $this->menu_module->init();
+        OnePlugin_Light_Shortcodes::instance(function ($key, $default = '') {
+            return $this->get_setting($key, $default);
+        })->init();
+        OnePlugin_Light_Divi_Compatibility::instance()->init();
+        OnePlugin_Light_Keyword_Meta::instance()->init();
 
         if (!class_exists('DBDSE_EnableShortcodesInModuleFields')) {
             $divi_shortcode_support = new OnePlugin_Light_Divi_Shortcode_Support();
@@ -175,10 +171,21 @@ final class OnePlugin_Light_Site_Tools {
             [],
             '6.5.1'
         );
+        wp_enqueue_style(
+            'oneplugin-light-admin',
+            ONEPLUGIN_LIGHT_URL . 'assets/css/admin.css',
+            [],
+            self::VERSION
+        );
 
-        wp_register_script('oneplugin2-admin-preview', false, [], self::VERSION, true);
-        wp_enqueue_script('oneplugin2-admin-preview');
-        wp_add_inline_script('oneplugin2-admin-preview', $this->get_admin_script());
+        wp_enqueue_script(
+            'oneplugin2-admin-preview',
+            ONEPLUGIN_LIGHT_URL . 'assets/js/admin.js',
+            [],
+            self::VERSION,
+            true
+        );
+        wp_localize_script('oneplugin2-admin-preview', 'OnePluginLightAdmin', $this->get_admin_script_config());
     }
 
     public function sanitize_settings($input) {
@@ -276,7 +283,6 @@ final class OnePlugin_Light_Site_Tools {
         $import_status = isset($_GET['oneplugin2_import']) ? sanitize_text_field(wp_unslash($_GET['oneplugin2_import'])) : '';
         ?>
         <div class="wrap">
-            <?php $this->render_admin_page_styles(); ?>
             <div class="oneplugin-admin-shell">
                 <div class="oneplugin-admin-hero">
                     <div>
@@ -789,546 +795,6 @@ final class OnePlugin_Light_Site_Tools {
         <?php
     }
 
-    private function render_admin_page_styles() {
-        ?>
-        <style>
-            .wrap {
-                max-width: 1240px;
-            }
-            .wrap:has(.oneplugin-admin-shell) {
-                color: #111827;
-            }
-            .oneplugin-admin-shell {
-                margin-top: 18px;
-                padding: 2px 0 28px;
-            }
-            .oneplugin-admin-hero {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 24px;
-                margin: 8px 0 20px;
-                padding: 18px 22px;
-                border: 1px solid #d7dee8;
-                border-radius: 18px;
-                background:
-                    linear-gradient(135deg, rgba(255,255,255,.96), rgba(245,248,252,.94)),
-                    #ffffff;
-                box-shadow: 0 18px 48px rgba(15, 23, 42, .08);
-            }
-            .oneplugin-admin-hero__eyebrow {
-                display: inline-flex;
-                align-items: center;
-                margin-bottom: 10px;
-                padding: 5px 10px;
-                border: 1px solid #c9d4e5;
-                border-radius: 999px;
-                background: #f7fafc;
-                color: #475569;
-                font-size: 12px;
-                font-weight: 700;
-                line-height: 1.2;
-                text-transform: uppercase;
-            }
-            .oneplugin-admin-hero h1 {
-                margin: 0;
-                color: #0f172a;
-                font-size: 32px;
-                font-weight: 750;
-                line-height: 1.15;
-            }
-            .oneplugin-admin-hero h1 span {
-                margin-left: 8px;
-                color: #64748b;
-                font-size: 14px;
-                font-weight: 600;
-                vertical-align: baseline;
-            }
-            .oneplugin-admin-hero__actions {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 8px;
-            }
-            .oneplugin-hero-import-form {
-                margin: 0;
-            }
-            .oneplugin-hero-button {
-                min-height: 32px !important;
-                padding: 3px 10px !important;
-                border-radius: 8px !important;
-                background: #ffffff !important;
-                color: #334155 !important;
-                line-height: 24px !important;
-                transition: border-color .15s ease, background .15s ease, color .15s ease;
-            }
-            .oneplugin-hero-button.is-dragover {
-                border-color: #0f172a !important;
-                background: #eef4ff !important;
-                color: #0f172a !important;
-            }
-            .oneplugin-admin-form {
-                display: grid;
-                gap: 18px;
-                margin-top: 16px;
-            }
-            .oneplugin-admin-form + .oneplugin-card {
-                margin-top: 18px;
-            }
-            .oneplugin-admin-two-column {
-                display: grid;
-                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-                gap: 18px;
-                align-items: stretch;
-            }
-            .oneplugin-admin-two-column > .postbox {
-                margin-bottom: 0;
-            }
-            .oneplugin-admin-two-column > .postbox > .inside {
-                height: 100%;
-            }
-            .oneplugin-project-identity {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 18px;
-                align-items: start;
-            }
-            .oneplugin-project-identity__top {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: flex-end;
-                gap: 14px;
-                justify-content: flex-start;
-                max-width: 760px;
-            }
-            .oneplugin-project-identity__top > div {
-                margin-bottom: 0 !important;
-            }
-            .oneplugin-project-identity__top > div:last-child {
-                flex: 1 1 320px;
-                min-width: 260px;
-            }
-            .oneplugin-project-identity__details {
-                min-width: 0;
-            }
-            .oneplugin-project-field-grid {
-                display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-                gap: 0 16px;
-            }
-            .oneplugin-project-identity__social {
-                min-width: 0;
-                padding-top: 4px;
-                border-top: 1px solid #e2e8f0;
-            }
-            .oneplugin-social-panel__header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-                margin-bottom: 12px;
-            }
-            .oneplugin-social-panel__header h3 {
-                margin: 0;
-                color: #0f172a;
-                font-size: 14px;
-                font-weight: 700;
-            }
-            .oneplugin-social-panel__add {
-                max-width: 190px;
-            }
-            .oneplugin-social-fields {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 0 16px;
-            }
-            .oneplugin-social-field[hidden] {
-                display: none !important;
-            }
-            .oneplugin-card {
-                border: 1px solid #d7dee8;
-                border-radius: 14px;
-                box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
-                overflow: hidden;
-                background: #fff;
-            }
-            .oneplugin-card__inside {
-                padding: 24px 26px;
-            }
-            .oneplugin-collapsible__header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-                margin-bottom: 18px;
-            }
-            .oneplugin-collapsible__header h2 {
-                margin: 0 0 6px;
-            }
-            .oneplugin-collapsible__header p {
-                margin: 0;
-            }
-            .oneplugin-collapsible__toggle {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                width: 100%;
-                padding: 0;
-                border: 0;
-                background: transparent;
-                color: inherit;
-                cursor: pointer;
-                font: inherit;
-                text-align: left;
-            }
-            .oneplugin-collapsible__toggle span:first-child {
-                font-size: 24px;
-                font-weight: 700;
-                line-height: 1.2;
-            }
-            .oneplugin-collapsible__toggle[aria-disabled="true"] {
-                cursor: default;
-                opacity: .55;
-            }
-            .oneplugin-collapsible__chevron {
-                width: 10px;
-                height: 10px;
-                border-right: 2px solid #1d2327;
-                border-bottom: 2px solid #1d2327;
-                transform: rotate(45deg);
-                transition: transform .18s ease;
-            }
-            .oneplugin-collapsible.is-open .oneplugin-collapsible__chevron {
-                transform: rotate(225deg);
-            }
-            .oneplugin-collapsible__switch {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                flex-shrink: 0;
-                font-weight: 600;
-                white-space: nowrap;
-            }
-            .oneplugin-collapsible__content[hidden] {
-                display: none !important;
-            }
-            .oneplugin-sticky-header {
-                display: grid;
-                gap: 14px;
-                margin-bottom: 18px;
-            }
-            .oneplugin-sticky-title-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-            }
-            .oneplugin-sticky-title-row h2 {
-                margin: 0;
-            }
-            .oneplugin-tabs__nav {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                margin-bottom: 16px;
-            }
-            .oneplugin-tabs--sidebar {
-                display: grid;
-                grid-template-columns: minmax(180px, 30%) minmax(0, 1fr);
-                gap: 18px;
-                align-items: start;
-            }
-            .oneplugin-tabs--sidebar .oneplugin-tabs__nav {
-                flex-direction: column;
-                flex-wrap: nowrap;
-                margin-bottom: 0;
-            }
-            .oneplugin-tabs--sidebar .oneplugin-tabs__tab {
-                justify-content: flex-start;
-                text-align: left;
-                width: 100%;
-            }
-            .oneplugin-tabs__tab {
-                display: flex;
-                align-items: center;
-                border: 1px solid #d7dee8;
-                background: #f8fafc;
-                border-radius: 10px;
-                padding: 9px 14px;
-                cursor: pointer;
-                font-weight: 600;
-            }
-            .oneplugin-tabs__tab.is-active {
-                background: #0f172a;
-                border-color: #0f172a;
-                color: #fff;
-            }
-            .oneplugin-tabs__panel[hidden] {
-                display: none !important;
-            }
-            .oneplugin-card h2 {
-                margin-top: 0;
-                margin-bottom: 8px;
-                color: #0f172a;
-                font-size: 22px;
-                line-height: 1.2;
-            }
-            .oneplugin-card p {
-                margin-top: 0;
-                margin-bottom: 18px;
-                color: #526070;
-                max-width: 760px;
-            }
-            .oneplugin-shortcodes {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .oneplugin-shortcode-copy {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                padding: 6px 9px;
-                background: #f8fafc;
-                border: 1px solid #d7dee8;
-                border-radius: 8px;
-                font-family: monospace;
-                font-size: 12px;
-                line-height: 1.2;
-                cursor: pointer;
-                transition: background .15s ease, border-color .15s ease, color .15s ease;
-            }
-            .oneplugin-shortcode-copy:hover {
-                background: #eef4ff;
-                border-color: #b8c7df;
-            }
-            .oneplugin-shortcode-copy.is-copied {
-                background: #e7f5ea;
-                border-color: #7cc08a;
-                color: #136c2e;
-            }
-            .oneplugin-option-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                gap: 10px 14px;
-                align-items: start;
-            }
-            .oneplugin-option-grid__item {
-                min-width: 0;
-            }
-            .oneplugin-option-grid__item--select {
-                grid-column: span 1;
-            }
-            .oneplugin-option-grid__item--full {
-                grid-column: 1 / -1;
-            }
-            #oneplugin-formidable-accent-wrap {
-                grid-column: 1 / -1;
-                width: 100%;
-            }
-            #oneplugin-formidable-accent-wrap > div {
-                width: 100%;
-                margin-bottom: 0 !important;
-            }
-            #oneplugin-formidable-accent-wrap input[type="text"] {
-                width: 100%;
-            }
-            .oneplugin-compact-checkbox {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                min-height: 38px;
-            }
-            .oneplugin-sticky-fields {
-                display: grid;
-                gap: 0;
-            }
-            .oneplugin-card input[type="text"],
-            .oneplugin-card input[type="email"],
-            .oneplugin-card input[type="url"],
-            .oneplugin-card select {
-                min-height: 42px;
-                border-color: #cbd5e1;
-                border-radius: 9px;
-                padding-inline: 12px;
-                box-shadow: none;
-            }
-            .oneplugin-card textarea {
-                border-color: #cbd5e1;
-                border-radius: 9px;
-                box-shadow: none;
-            }
-            .oneplugin-card .button {
-                border-radius: 9px;
-                min-height: 38px;
-                padding-inline: 14px;
-            }
-            .oneplugin-card .button-primary,
-            .oneplugin-savebar .button-primary {
-                border-color: #0f172a;
-                background: #0f172a;
-                color: #fff;
-            }
-            .oneplugin-card table[role="presentation"] td {
-                vertical-align: top;
-            }
-            .oneplugin-card--identity table[role="presentation"] td,
-            .oneplugin-card--company table[role="presentation"] td,
-            .oneplugin-card--footer table[role="presentation"] td {
-                padding-top: 4px;
-            }
-            .oneplugin-media-field {
-                display: flex;
-                align-items: center;
-                gap: 14px;
-                min-height: 64px;
-            }
-            .oneplugin-media-field__preview {
-                border: 1px solid #dcdcde;
-                border-radius: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-                background: #f8f9fb;
-                flex-shrink: 0;
-                color: #64748b;
-                cursor: pointer;
-                font-weight: 700;
-                padding: 0;
-                transition: border-color .15s ease, background .15s ease, color .15s ease;
-            }
-            .oneplugin-media-field__preview:hover,
-            .oneplugin-media-field__preview:focus {
-                border-color: #94a3b8;
-                background: #eef4ff;
-                color: #0f172a;
-                outline: none;
-            }
-            .oneplugin-media-field__preview--icon {
-                width: 56px;
-                height: 56px;
-            }
-            .oneplugin-media-field__preview--logo {
-                width: 116px;
-                height: 56px;
-            }
-            .oneplugin-media-field__actions {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                align-items: center;
-            }
-            .oneplugin-savebar {
-                position: sticky;
-                bottom: 14px;
-                z-index: 20;
-                margin-top: 8px;
-            }
-            .oneplugin-savebar__inner {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-                padding: 12px 14px;
-                border: 1px solid #dcdcde;
-                border-radius: 13px;
-                background: rgba(255,255,255,0.92);
-                backdrop-filter: blur(8px);
-                box-shadow: 0 12px 32px rgba(15,23,42,.10);
-            }
-            .oneplugin-savebar__hint {
-                color: #50575e;
-                font-size: 13px;
-            }
-            #oneplugin-preview-root {
-                width: 100%;
-                box-sizing: border-box;
-                border-radius: 14px !important;
-                background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%) !important;
-            }
-            #oneplugin-preview-links code {
-                display: inline-block;
-                margin-bottom: 6px;
-                padding: 3px 6px;
-                border-radius: 6px;
-                background: #f6f7f7;
-            }
-            #oneplugin-preview-bar {
-                box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
-            }
-            @media (max-width: 1100px) {
-                .oneplugin-admin-hero {
-                    align-items: flex-start;
-                    flex-direction: column;
-                    padding: 24px;
-                }
-                .oneplugin-admin-hero__actions {
-                    justify-content: flex-start;
-                }
-                .oneplugin-admin-two-column {
-                    grid-template-columns: 1fr;
-                }
-                .oneplugin-project-identity {
-                    grid-template-columns: 1fr;
-                }
-                .oneplugin-project-field-grid {
-                    grid-template-columns: repeat(2, minmax(0, 1fr));
-                }
-                .oneplugin-tabs--sidebar {
-                    grid-template-columns: 1fr;
-                }
-                .oneplugin-tabs--sidebar .oneplugin-tabs__nav {
-                    flex-direction: row;
-                    flex-wrap: wrap;
-                }
-                .oneplugin-tabs--sidebar .oneplugin-tabs__tab {
-                    width: auto;
-                }
-                .oneplugin-card table[role="presentation"],
-                .oneplugin-card table[role="presentation"] tbody,
-                .oneplugin-card table[role="presentation"] tr,
-                .oneplugin-card table[role="presentation"] td {
-                    display: block;
-                    width: 100% !important;
-                    padding-left: 0 !important;
-                    padding-right: 0 !important;
-                }
-                .oneplugin-media-field {
-                    align-items: flex-start;
-                    flex-direction: column;
-                }
-                .oneplugin-collapsible__header {
-                    align-items: flex-start;
-                    flex-direction: column;
-                }
-                .oneplugin-sticky-title-row {
-                    align-items: flex-start;
-                    flex-direction: column;
-                }
-                .oneplugin-savebar__inner {
-                    align-items: flex-start;
-                    flex-direction: column;
-                }
-            }
-            @media (max-width: 782px) {
-                .oneplugin-project-field-grid,
-                .oneplugin-social-fields {
-                    grid-template-columns: 1fr;
-                }
-                .oneplugin-social-panel__header {
-                    align-items: flex-start;
-                    flex-direction: column;
-                }
-                .oneplugin-social-panel__add {
-                    max-width: none;
-                    width: 100%;
-                }
-            }
-        </style>
-        <?php
-    }
 
 
     private function get_social_media_choices() {
@@ -1489,268 +955,21 @@ final class OnePlugin_Light_Site_Tools {
         <?php
     }
 
-    private function get_admin_script() {
-        $presets = wp_json_encode([
-            'none' => ['linkField' => '', 'text' => '', 'icon' => ''],
-            'facebook' => ['linkField' => 'facebook_url', 'text' => 'Gilla', 'icon' => 'fa-brands fa-facebook'],
-            'instagram' => ['linkField' => 'instagram_url', 'text' => 'Folj', 'icon' => 'fa-brands fa-instagram'],
-            'linkedin' => ['linkField' => 'linkedin_url', 'text' => 'Connect', 'icon' => 'fa-brands fa-linkedin'],
-            'youtube' => ['linkField' => 'youtube_url', 'text' => 'Watch', 'icon' => 'fa-brands fa-youtube'],
-            'x' => ['linkField' => 'x_url', 'text' => 'Follow', 'icon' => 'fa-brands fa-x-twitter'],
-            'reddit' => ['linkField' => 'reddit_url', 'text' => 'Join', 'icon' => 'fa-brands fa-reddit'],
-            'booking' => ['linkField' => 'booking_url', 'text' => 'Boka', 'icon' => 'fa-solid fa-calendar-check'],
-            'website' => ['linkField' => 'website', 'text' => 'Besok', 'icon' => 'fa-solid fa-globe'],
-        ]);
-        $allChoices = wp_json_encode($this->get_social_media_choices());
-        return "(function() {\n"
-            . "  var presets = " . $presets . ";\n"
-            . "  var allChoices = " . $allChoices . ";\n"
-            . "  var get = function(id) { return document.getElementById(id); };\n"
-            . "  var sanitizePhone = function(value) { return value.replace(/\\\\s+/g, ''); };\n"
-            . "  var previewRoot = get('oneplugin-preview-root');\n"
-            . "  var setupMedia = function() {\n"
-            . "    var hiddenInput = get('site_icon_id');\n"
-            . "    var preview = get('oneplugin-site-icon-preview');\n"
-            . "    var logoInput = get('site_logo_id');\n"
-            . "    var logoPreview = get('oneplugin-site-logo-preview');\n"
-            . "    var openMedia = function(input, target, title, buttonText, sizeName, emptyText) {\n"
-            . "      if (input.value) {\n"
-            . "        input.value = '';\n"
-            . "        target.innerHTML = '<span>' + emptyText + '</span>';\n"
-            . "        return;\n"
-            . "      }\n"
-            . "      var frame = wp.media({ title: title, button: { text: buttonText }, library: { type: 'image' }, multiple: false });\n"
-            . "      frame.on('select', function() {\n"
-            . "        var attachment = frame.state().get('selection').first().toJSON();\n"
-            . "        input.value = attachment.id || '';\n"
-            . "        var url = attachment.sizes && attachment.sizes[sizeName] ? attachment.sizes[sizeName].url : attachment.url;\n"
-            . "        target.innerHTML = url ? '<img src=\"' + url + '\" alt=\"\" style=\"max-width:100%;max-height:100%;\" />' : '<span>' + emptyText + '</span>';\n"
-            . "      });\n"
-            . "      frame.open();\n"
-            . "    };\n"
-            . "    if (hiddenInput && preview && typeof wp !== 'undefined' && wp.media) {\n"
-            . "      preview.addEventListener('click', function(e) {\n"
-            . "        e.preventDefault();\n"
-            . "        openMedia(hiddenInput, preview, 'Select favicon', 'Use favicon', 'thumbnail', 'Fav');\n"
-            . "      });\n"
-            . "    }\n"
-            . "    if (logoInput && logoPreview && typeof wp !== 'undefined' && wp.media) {\n"
-            . "      logoPreview.addEventListener('click', function(e) {\n"
-            . "        e.preventDefault();\n"
-            . "        openMedia(logoInput, logoPreview, 'Select logo', 'Use logo', 'medium', 'Logo');\n"
-            . "      });\n"
-            . "    }\n"
-            . "  };\n"
-            . "  var setupSaveShortcut = function() {\n"
-            . "    document.addEventListener('keydown', function(e) {\n"
-            . "      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {\n"
-            . "        e.preventDefault();\n"
-            . "        var btn = get('oneplugin2-save-button');\n"
-            . "        if (btn) { btn.click(); }\n"
-            . "      }\n"
-            . "    });\n"
-            . "  };\n"
-            . "  var setupShortcodeCopy = function() {\n"
-            . "    var buttons = document.querySelectorAll('.oneplugin-shortcode-copy');\n"
-            . "    buttons.forEach(function(btn) {\n"
-            . "      btn.addEventListener('click', function() {\n"
-            . "        var shortcode = btn.getAttribute('data-shortcode') || '';\n"
-            . "        if (!shortcode || !navigator.clipboard) { return; }\n"
-            . "        navigator.clipboard.writeText(shortcode).then(function() {\n"
-            . "          btn.classList.add('is-copied');\n"
-            . "          var original = btn.textContent;\n"
-            . "          btn.textContent = 'Copied';\n"
-            . "          window.setTimeout(function() {\n"
-            . "            btn.classList.remove('is-copied');\n"
-            . "            btn.textContent = original;\n"
-            . "          }, 900);\n"
-            . "        });\n"
-            . "      });\n"
-            . "    });\n"
-            . "  };\n"
-            . "  var setupTabs = function() {\n"
-            . "    document.querySelectorAll('[data-tabs]').forEach(function(container) {\n"
-            . "      var tabs = container.querySelectorAll('[data-tab-trigger]');\n"
-            . "      var panels = container.querySelectorAll('[data-tab-panel]');\n"
-            . "      tabs.forEach(function(tab) {\n"
-            . "        tab.addEventListener('click', function() {\n"
-            . "          var target = tab.getAttribute('data-tab-trigger') || '';\n"
-            . "          tabs.forEach(function(item) {\n"
-            . "            var active = item === tab;\n"
-            . "            item.classList.toggle('is-active', active);\n"
-            . "            item.setAttribute('aria-selected', active ? 'true' : 'false');\n"
-            . "          });\n"
-            . "          panels.forEach(function(panel) {\n"
-            . "            var active = panel.getAttribute('data-tab-panel') === target;\n"
-            . "            panel.classList.toggle('is-active', active);\n"
-            . "            panel.hidden = !active;\n"
-            . "          });\n"
-            . "        });\n"
-            . "      });\n"
-            . "    });\n"
-            . "  };\n"
-            . "  var setupSocialLinks = function() {\n"
-            . "    var addSelect = get('oneplugin-add-social-link');\n"
-            . "    if (!addSelect) { return; }\n"
-            . "    addSelect.addEventListener('change', function() {\n"
-            . "      var key = addSelect.value;\n"
-            . "      if (!key) { return; }\n"
-            . "      var field = document.querySelector('[data-social-field=\"' + key + '\"]');\n"
-            . "      var input = get(key);\n"
-            . "      if (field) { field.hidden = false; }\n"
-            . "      if (input) { input.focus(); }\n"
-            . "      var selectedOption = addSelect.querySelector('option[value=\"' + key + '\"]');\n"
-            . "      if (selectedOption) { selectedOption.hidden = true; }\n"
-            . "      addSelect.value = '';\n"
-            . "    });\n"
-            . "  };\n"
-            . "  var setupHeaderImport = function() {\n"
-            . "    var form = document.querySelector('.oneplugin-hero-import-form');\n"
-            . "    var button = get('oneplugin-light-import-button');\n"
-            . "    var input = get('oneplugin-light-import-file');\n"
-            . "    if (!form || !button || !input) { return; }\n"
-            . "    var submitIfJson = function(file) {\n"
-            . "      if (!file) { return; }\n"
-            . "      if (!/\\.json$/i.test(file.name || '')) { return; }\n"
-            . "      var transfer = new DataTransfer();\n"
-            . "      transfer.items.add(file);\n"
-            . "      input.files = transfer.files;\n"
-            . "      form.submit();\n"
-            . "    };\n"
-            . "    button.addEventListener('click', function(e) {\n"
-            . "      e.preventDefault();\n"
-            . "      input.click();\n"
-            . "    });\n"
-            . "    input.addEventListener('change', function() {\n"
-            . "      if (input.files && input.files[0]) { form.submit(); }\n"
-            . "    });\n"
-            . "    ['dragenter','dragover'].forEach(function(eventName) {\n"
-            . "      button.addEventListener(eventName, function(e) {\n"
-            . "        e.preventDefault();\n"
-            . "        button.classList.add('is-dragover');\n"
-            . "      });\n"
-            . "    });\n"
-            . "    ['dragleave','drop'].forEach(function(eventName) {\n"
-            . "      button.addEventListener(eventName, function(e) {\n"
-            . "        e.preventDefault();\n"
-            . "        button.classList.remove('is-dragover');\n"
-            . "      });\n"
-            . "    });\n"
-            . "    button.addEventListener('drop', function(e) {\n"
-            . "      var file = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files[0] : null;\n"
-            . "      submitIfJson(file);\n"
-            . "    });\n"
-            . "  };\n"
-            . "  var setupCollapsibles = function() {\n"
-            . "    document.querySelectorAll('[data-collapsible-toggle]').forEach(function(toggle) {\n"
-            . "      toggle.addEventListener('click', function() {\n"
-            . "        var card = toggle.closest('.oneplugin-collapsible');\n"
-            . "        var content = card ? card.querySelector('[data-collapsible-content]') : null;\n"
-            . "        if (!card || !content) { return; }\n"
-            . "        var isOpen = card.classList.contains('is-open');\n"
-            . "        card.classList.toggle('is-open', !isOpen);\n"
-            . "        content.hidden = isOpen;\n"
-            . "        toggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');\n"
-            . "      });\n"
-            . "    });\n"
-            . "  };\n"
-            . "  var setupMasonryGalleryLayout = function() {\n"
-            . "    var checkbox = get('masonry_gallery_enabled');\n"
-            . "    var layoutWrap = get('oneplugin-masonry-gallery-layout-wrap');\n"
-            . "    if (!checkbox || !layoutWrap) { return; }\n"
-            . "    var sync = function() { layoutWrap.hidden = !checkbox.checked; };\n"
-            . "    checkbox.addEventListener('change', sync);\n"
-            . "    sync();\n"
-            . "  };\n"
-            . "  var setupStyleFormidableAccent = function() {\n"
-            . "    var checkbox = get('style_formidable');\n"
-            . "    var accentWrap = get('oneplugin-formidable-accent-wrap');\n"
-            . "    if (!checkbox || !accentWrap) { return; }\n"
-            . "    var sync = function() { accentWrap.hidden = !checkbox.checked; };\n"
-            . "    checkbox.addEventListener('change', sync);\n"
-            . "    sync();\n"
-            . "  };\n"
-            . "  var refreshSocialSelect = function() {\n"
-            . "    var select = get('sticky_social_media');\n"
-            . "    if (!select) { return; }\n"
-            . "    var current = select.value;\n"
-            . "    var choices = [{ value: 'none', label: allChoices.none }];\n"
-            . "    Object.keys(presets).forEach(function(key) {\n"
-            . "      if (key === 'none') { return; }\n"
-            . "      var field = presets[key].linkField ? get(presets[key].linkField) : null;\n"
-            . "      if (field && field.value) { choices.push({ value: key, label: allChoices[key] }); }\n"
-            . "    });\n"
-            . "    select.innerHTML = '';\n"
-            . "    choices.forEach(function(choice) {\n"
-            . "      var option = document.createElement('option');\n"
-            . "      option.value = choice.value;\n"
-            . "      option.textContent = choice.label;\n"
-            . "      select.appendChild(option);\n"
-            . "    });\n"
-            . "    var hasCurrent = choices.some(function(choice) { return choice.value === current; });\n"
-            . "    var preferred = 'none';\n"
-            . "    if (get('instagram_url') && get('instagram_url').value) { preferred = 'instagram'; }\n"
-            . "    else if (get('facebook_url') && get('facebook_url').value) { preferred = 'facebook'; }\n"
-            . "    select.value = hasCurrent ? current : preferred;\n"
-            . "  };\n"
-            . "  var rebuild = function() {\n"
-            . "    if (!previewRoot) { return; }\n"
-            . "    refreshSocialSelect();\n"
-            . "    var phoneEl = get('phone_primary');\n"
-            . "    var emailEl = get('email');\n"
-            . "    var bgEl = get('sticky_bg_color');\n"
-            . "    var iconEl = get('sticky_icon_color');\n"
-            . "    var textEl = get('sticky_text_color');\n"
-            . "    var networkEl = get('sticky_social_media');\n"
-            . "    var phone = phoneEl ? phoneEl.value : '';\n"
-            . "    var email = emailEl ? emailEl.value : '';\n"
-            . "    var bg = bgEl ? bgEl.value : '#0f0f0f';\n"
-            . "    var iconColor = iconEl ? iconEl.value : '#ffffff';\n"
-            . "    var textColor = textEl ? textEl.value : '#ffffff';\n"
-            . "    var network = networkEl ? networkEl.value : 'instagram';\n"
-            . "    var preset = presets[network] || presets.instagram;\n"
-            . "    var socialField = preset.linkField ? get(preset.linkField) : null;\n"
-            . "    var socialLink = socialField ? socialField.value : '';\n"
-            . "    var items = [];\n"
-            . "    if (phone) { items.push({ link: 'tel:' + sanitizePhone(phone), text: 'Ring', icon: 'fa-solid fa-phone' }); }\n"
-            . "    if (email) { items.push({ link: 'mailto:' + email, text: 'Maila', icon: 'fa-solid fa-envelope' }); }\n"
-            . "    if (socialLink && preset.icon) { items.push({ link: socialLink, text: preset.text, icon: preset.icon }); }\n"
-            . "    var links = get('oneplugin-preview-links');\n"
-            . "    if (links) {\n"
-            . "      var linksHtml = '<strong>Links used</strong>';\n"
-            . "      for (var i = 0; i < items.length; i++) { linksHtml += '<div><code>' + items[i].link + '</code></div>'; }\n"
-            . "      links.innerHTML = linksHtml;\n"
-            . "    }\n"
-            . "    var bar = get('oneplugin-preview-bar');\n"
-            . "    if (!bar) { return; }\n"
-            . "    bar.style.background = bg;\n"
-            . "    var inner = '';\n"
-            . "    for (var j = 0; j < items.length; j++) {\n"
-            . "      inner += '<a href=\"' + items[j].link + '\" class=\"oneplugin-preview-item\" style=\"text-decoration:none;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;min-width:64px;\">';\n"
-            . "      inner += '<i class=\"' + items[j].icon + '\" aria-hidden=\"true\" style=\"font-size:18px;line-height:1;color:' + iconColor + ';\"></i>';\n"
-            . "      inner += '<span style=\"font-size:12px;line-height:1;color:' + textColor + ' ;\">' + items[j].text + '</span>';\n"
-            . "      inner += '</a>';\n"
-            . "    }\n"
-            . "    bar.innerHTML = '<div style=\"display:flex; gap:10px; justify-content:space-around; align-items:center;\">' + inner + '</div>';\n"
-            . "  };\n"
-            . "  var fields = ['phone_primary','email','website','facebook_url','instagram_url','linkedin_url','youtube_url','x_url','reddit_url','booking_url','sticky_bg_color','sticky_icon_color','sticky_text_color','sticky_social_media','masonry_gallery_enabled','masonry_gallery_layout'];\n"
-            . "  for (var k = 0; k < fields.length; k++) {\n"
-            . "    var el = get(fields[k]);\n"
-            . "    if (!el) { continue; }\n"
-            . "    el.addEventListener('input', rebuild);\n"
-            . "    el.addEventListener('change', rebuild);\n"
-            . "  }\n"
-            . "  setupMedia();\n"
-            . "  setupSaveShortcut();\n"
-            . "  setupShortcodeCopy();\n"
-            . "  setupTabs();\n"
-            . "  setupSocialLinks();\n"
-            . "  setupHeaderImport();\n"
-            . "  setupCollapsibles();\n"
-            . "  setupMasonryGalleryLayout();\n"
-            . "  setupStyleFormidableAccent();\n"
-            . "  rebuild();\n"
-            . "})();";
+    private function get_admin_script_config() {
+        return [
+            'presets' => [
+                'none' => ['linkField' => '', 'text' => '', 'icon' => ''],
+                'facebook' => ['linkField' => 'facebook_url', 'text' => 'Gilla', 'icon' => 'fa-brands fa-facebook'],
+                'instagram' => ['linkField' => 'instagram_url', 'text' => 'Folj', 'icon' => 'fa-brands fa-instagram'],
+                'linkedin' => ['linkField' => 'linkedin_url', 'text' => 'Connect', 'icon' => 'fa-brands fa-linkedin'],
+                'youtube' => ['linkField' => 'youtube_url', 'text' => 'Watch', 'icon' => 'fa-brands fa-youtube'],
+                'x' => ['linkField' => 'x_url', 'text' => 'Follow', 'icon' => 'fa-brands fa-x-twitter'],
+                'reddit' => ['linkField' => 'reddit_url', 'text' => 'Join', 'icon' => 'fa-brands fa-reddit'],
+                'booking' => ['linkField' => 'booking_url', 'text' => 'Boka', 'icon' => 'fa-solid fa-calendar-check'],
+                'website' => ['linkField' => 'website', 'text' => 'Besok', 'icon' => 'fa-solid fa-globe'],
+            ],
+            'socialMediaChoices' => $this->get_social_media_choices(),
+        ];
     }
 
     private function sanitize_color_value($value, $default) {
@@ -2282,201 +1501,6 @@ final class OnePlugin_Light_Site_Tools {
         exit;
     }
 
-    public function register_shortcodes() {
-        $value_shortcodes = [
-            'foretag' => 'company_name',
-            'gata' => 'street_address',
-            'postkod' => 'postal_code',
-            'ort' => 'city',
-            'mobil1' => 'phone_primary',
-            'orgnr' => 'organization_number',
-            'mail' => 'email',
-        ];
-
-        foreach ($value_shortcodes as $shortcode => $setting_key) {
-            add_shortcode($shortcode, function () use ($setting_key) {
-                return esc_html($this->get_setting($setting_key));
-            });
-        }
-
-        add_shortcode('kontakt', [$this, 'shortcode_contact']);
-        add_shortcode('formular', [$this, 'shortcode_form']);
-        add_shortcode('kundens_mail', [$this, 'shortcode_customer_mail']);
-        add_shortcode('kundens_epost', [$this, 'shortcode_form_email']);
-        add_shortcode('kundens_foretag', [$this, 'shortcode_company']);
-        add_shortcode('kundens_adress', [$this, 'shortcode_address']);
-        add_shortcode('kundens_telefon', [$this, 'shortcode_phone']);
-        add_shortcode('karta', [$this, 'shortcode_map']);
-        add_shortcode('hemsida', [$this, 'shortcode_website_button']);
-        add_shortcode('kundens_hemsida', [$this, 'shortcode_website_link']);
-        add_shortcode('kundens_facebook', [$this, 'shortcode_social_facebook']);
-        add_shortcode('kundens_instagram', [$this, 'shortcode_social_instagram']);
-        add_shortcode('kundens_linkedin', [$this, 'shortcode_social_linkedin']);
-        add_shortcode('kundens_youtube', [$this, 'shortcode_social_youtube']);
-        add_shortcode('kundens_x', [$this, 'shortcode_social_x']);
-        add_shortcode('kundens_reddit', [$this, 'shortcode_social_reddit']);
-        add_shortcode('kundens_bokadirekt', [$this, 'shortcode_social_booking']);
-        add_shortcode('sokordets_tjanst_rubrik', [$this, 'shortcode_keyword_service_title']);
-        add_shortcode('sokordets_ort_rubrik', [$this, 'shortcode_keyword_city_title']);
-        add_shortcode('sokordets_tjanst_brodtext', [$this, 'shortcode_keyword_service_text']);
-        add_shortcode('sokordets_ort_brodtext', [$this, 'shortcode_keyword_city_text']);
-    }
-
-    public function shortcode_contact() {
-        $company = $this->get_setting('company_name');
-        $address = $this->get_setting('street_address');
-        $postal_code = $this->get_setting('postal_code');
-        $city = $this->get_setting('city');
-        $phone = $this->get_setting('phone_primary');
-        $email = $this->get_setting('email');
-
-        ob_start();
-        ?>
-        <div id="sidebar-kontakt">
-            <?php if ($company) : ?>
-                <h3 class="widget-title"><?php echo esc_html($company); ?></h3>
-            <?php endif; ?>
-
-            <?php if ($address || $postal_code || $city) : ?>
-                <div class="top-col">
-                    <i class="map black" aria-hidden="true"></i>
-                    <div>
-                        <?php echo esc_html($address); ?><br />
-                        <?php echo esc_html(trim($postal_code . ' ' . $city)); ?><br />
-                        <?php echo esc_html__('Sverige', 'oneplugin-light-site-tools'); ?>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($phone) : ?>
-                <div class="top-col">
-                    <i class="phone black" aria-hidden="true"></i>
-                    <div><a href="<?php echo esc_url('tel:' . preg_replace('/\s+/', '', $phone)); ?>"><?php echo esc_html($phone); ?></a></div>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($email) : ?>
-                <div class="top-col">
-                    <i class="mail black" aria-hidden="true"></i>
-                    <div><?php echo esc_html($email); ?></div>
-                </div>
-            <?php endif; ?>
-        </div>
-        <?php
-
-        return trim(ob_get_clean());
-    }
-
-    public function shortcode_form($atts) {
-        $atts = shortcode_atts(['id' => ''], $atts, 'formular');
-        $email = $this->get_setting('email');
-
-        if (empty($email) || empty($atts['id'])) {
-            return '';
-        }
-
-        return do_shortcode('[formidable id="' . sanitize_text_field($atts['id']) . '"]');
-    }
-
-    public function shortcode_customer_mail() {
-        $email = $this->get_setting('email');
-        if (!$email) {
-            return '';
-        }
-
-        return '<a href="' . esc_url('mailto:' . $email) . '">' . esc_html($email) . '</a>';
-    }
-
-    public function shortcode_form_email() {
-        return esc_html($this->get_setting('form_email'));
-    }
-
-    public function shortcode_company() {
-        return esc_html($this->get_setting('company_name'));
-    }
-
-    public function shortcode_address() {
-        $address = $this->get_setting('street_address');
-        $postal_code = $this->get_setting('postal_code');
-        $city = $this->get_setting('city');
-        $full_address = trim($address . ', ' . trim($postal_code . ' ' . $city), ' ,');
-
-        return esc_html($full_address);
-    }
-
-    public function shortcode_phone() {
-        return esc_html($this->get_setting('phone_primary'));
-    }
-
-    public function shortcode_map() {
-        $address = $this->get_setting('street_address');
-        $postal_code = $this->get_setting('postal_code');
-        $city = $this->get_setting('city');
-
-        if (!$address || !$postal_code || !$city) {
-            return '';
-        }
-
-        $query = urlencode($address . ', ' . $postal_code . ' ' . $city . ', Sverige');
-
-        return '<iframe width="100%" height="400" src="https://maps.google.com/maps?q=' . esc_attr($query) . '&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" loading="lazy"></iframe>';
-    }
-
-    public function shortcode_website_button() {
-        $website = $this->get_setting('website');
-        if (!$website) {
-            return '';
-        }
-
-        return '<a class="besok-hemsidan" href="' . esc_url($website) . '" target="_blank" rel="noopener">' . esc_html__('Besok hemsidan', 'oneplugin-light-site-tools') . '</a>';
-    }
-
-    public function shortcode_website_link() {
-        $website = $this->get_setting('website');
-        if (!$website) {
-            return '';
-        }
-
-        return '<a href="' . esc_url($website) . '" target="_blank" rel="noopener">' . esc_html($website) . '</a>';
-    }
-
-    public function shortcode_social_facebook() {
-        return $this->render_social_shortcode_link('facebook_url', 'Facebook');
-    }
-
-    public function shortcode_social_instagram() {
-        return $this->render_social_shortcode_link('instagram_url', 'Instagram');
-    }
-
-    public function shortcode_social_linkedin() {
-        return $this->render_social_shortcode_link('linkedin_url', 'LinkedIn');
-    }
-
-    public function shortcode_social_youtube() {
-        return $this->render_social_shortcode_link('youtube_url', 'YouTube');
-    }
-
-    public function shortcode_social_x() {
-        return $this->render_social_shortcode_link('x_url', 'X');
-    }
-
-    public function shortcode_social_reddit() {
-        return $this->render_social_shortcode_link('reddit_url', 'Reddit');
-    }
-
-    public function shortcode_social_booking() {
-        return $this->render_social_shortcode_link('booking_url', 'BokaDirekt');
-    }
-
-    private function render_social_shortcode_link($setting_key, $label) {
-        $url = $this->get_setting($setting_key);
-        if (!$url) {
-            return '';
-        }
-
-        return '<a href="' . esc_url($url) . '" target="_blank" rel="noopener">' . esc_html($label) . '</a>';
-    }
-
     public function enable_shortcodes_in_divi_modules() {
         $modules = [
             'et_pb_text',
@@ -2494,77 +1518,64 @@ final class OnePlugin_Light_Site_Tools {
     }
 
     public function enqueue_frontend_assets() {
-        if ($this->get_setting('sticky_enabled', '1') !== '1') {
-            return;
+        if ($this->get_setting('sticky_enabled', '1') === '1') {
+            wp_enqueue_style(
+                'oneplugin2-fontawesome',
+                'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+                [],
+                '6.5.1'
+            );
+            wp_enqueue_style(
+                'oneplugin2-mobile-footer-inline',
+                ONEPLUGIN_LIGHT_URL . 'assets/css/mobile-footer.css',
+                [],
+                self::VERSION
+            );
         }
 
-        wp_enqueue_style(
-            'oneplugin2-fontawesome',
-            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
-            [],
-            '6.5.1'
-        );
+        $company_name = $this->get_fixed_image_alt_text_value();
+        if ($this->get_setting('fix_image_alt_text', '0') === '1' && $company_name !== '') {
+            wp_enqueue_script(
+                'oneplugin-light-image-alt-fix',
+                ONEPLUGIN_LIGHT_URL . 'assets/js/image-alt-fix.js',
+                [],
+                self::VERSION,
+                true
+            );
+            wp_localize_script('oneplugin-light-image-alt-fix', 'OnePluginLightImageAltFix', [
+                'companyName' => $company_name,
+            ]);
+        }
 
-        $bg = $this->get_setting('sticky_bg_color', '#0f0f0f');
-        $icon = $this->get_setting('sticky_icon_color', '#ffffff');
-        $text = $this->get_setting('sticky_text_color', '#ffffff');
+        if ($this->get_setting('apply_cover_to_tabs_image', '0') === '1') {
+            wp_enqueue_script(
+                'oneplugin-light-tabs-image-cover',
+                ONEPLUGIN_LIGHT_URL . 'assets/js/tabs-image-cover.js',
+                [],
+                self::VERSION,
+                true
+            );
+        }
 
-        $css = '
-            .oneplugin-mobile-footer{
-                position:fixed;
-                left:0;
-                right:0;
-                bottom:0;
-                display:none;
-                z-index:999999;
-                border-top:1px solid rgba(0,0,0,.08);
-                padding:10px 8px;
-                max-width:90%;
-                margin:auto;
-                border-top-right-radius:20px;
-                border-top-left-radius:20px;
-                background:' . esc_html($bg) . ';
-            }
-            .oneplugin-mobile-footer__inner{
-                max-width:1100px;
-                margin:0 auto;
-                display:flex;
-                gap:10px;
-                justify-content:space-around;
-                align-items:center;
-            }
-            .oneplugin-mobile-footer a{
-                text-decoration:none;
-                display:flex;
-                flex-direction:column;
-                gap:6px;
-                align-items:center;
-                justify-content:center;
-                min-width:64px;
-                font-size:12px;
-                line-height:1;
-            }
-            .oneplugin-mobile-footer a i{
-                font-size:18px;
-                line-height:1;
-                color:' . esc_html($icon) . ';
-            }
-            .oneplugin-mobile-footer a span{
-                font-size:12px;
-                color:' . esc_html($text) . ';
-            }
-            @media (max-width:980px){
-                .oneplugin-mobile-footer{display:block;}
-                body{padding-bottom:68px;}
-            }
-            aside#moove_gdpr_cookie_info_bar {
-                z-index: 99999999 !important;
-            }
-        ';
+        if ($this->get_setting('masonry_gallery_enabled', '0') === '1' && $this->get_setting('masonry_gallery_layout', 'square') === 'asymetric') {
+            wp_enqueue_script(
+                'oneplugin-light-masonry-gallery-layout',
+                ONEPLUGIN_LIGHT_URL . 'assets/js/masonry-gallery-layout.js',
+                [],
+                self::VERSION,
+                true
+            );
+        }
 
-        wp_register_style('oneplugin2-mobile-footer-inline', false, [], '1.0.0');
-        wp_enqueue_style('oneplugin2-mobile-footer-inline');
-        wp_add_inline_style('oneplugin2-mobile-footer-inline', $css);
+        if ($this->get_setting('active_menu_item_by_section', '0') === '1') {
+            wp_enqueue_script(
+                'oneplugin-light-active-menu-item-by-section',
+                ONEPLUGIN_LIGHT_URL . 'assets/js/active-menu-item-by-section.js',
+                [],
+                self::VERSION,
+                true
+            );
+        }
     }
 
     public function render_custom_css() {
@@ -2739,329 +1750,6 @@ img.cover-img {
         }, $html);
     }
 
-    public function render_image_alt_fix_script() {
-        if (is_admin() || $this->get_setting('fix_image_alt_text', '0') !== '1') {
-            return;
-        }
-
-        $company_name = $this->get_fixed_image_alt_text_value();
-        if ($company_name === '') {
-            return;
-        }
-
-        ?>
-        <script id="oneplugin-light-image-alt-fix">
-        (function() {
-            var companyName = <?php echo wp_json_encode($company_name); ?>;
-            if (!companyName) {
-                return;
-            }
-
-            var applyAltText = function(root) {
-                var scope = root && root.querySelectorAll ? root : document;
-                scope.querySelectorAll('img').forEach(function(img) {
-                    img.setAttribute('alt', companyName);
-                    img.setAttribute('title', companyName);
-                    if (img.closest('a')) {
-                        img.closest('a').setAttribute('title', companyName);
-                    }
-                });
-            };
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    applyAltText(document);
-                });
-            } else {
-                applyAltText(document);
-            }
-
-            if (window.MutationObserver) {
-                var observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        mutation.addedNodes.forEach(function(node) {
-                            if (!node || node.nodeType !== 1) {
-                                return;
-                            }
-
-                            if (node.tagName && node.tagName.toLowerCase() === 'img') {
-                                node.setAttribute('alt', companyName);
-                            }
-
-                            applyAltText(node);
-                        });
-                    });
-                });
-
-                observer.observe(document.documentElement, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-        })();
-        </script>
-        <?php
-    }
-
-    public function render_tabs_image_cover_script() {
-        if (is_admin() || $this->get_setting('apply_cover_to_tabs_image', '0') !== '1') {
-            return;
-        }
-
-        ?>
-        <script id="oneplugin-light-tabs-image-cover">
-        (function() {
-            var selector = 'img.dipi-at-panel-image';
-            var applyCoverClass = function(root) {
-                var scope = root && root.querySelectorAll ? root : document;
-                if (scope.matches && scope.matches(selector)) {
-                    scope.classList.add('cover-img');
-                }
-
-                scope.querySelectorAll(selector).forEach(function(img) {
-                    img.classList.add('cover-img');
-                });
-            };
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    applyCoverClass(document);
-                });
-            } else {
-                applyCoverClass(document);
-            }
-
-            if (window.MutationObserver) {
-                var observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        mutation.addedNodes.forEach(function(node) {
-                            if (!node || node.nodeType !== 1) {
-                                return;
-                            }
-
-                            applyCoverClass(node);
-                        });
-                    });
-                });
-
-                observer.observe(document.documentElement, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-        })();
-        </script>
-        <?php
-    }
-
-    public function render_masonry_gallery_layout_script() {
-        if (is_admin() || $this->get_setting('masonry_gallery_enabled', '0') !== '1' || $this->get_setting('masonry_gallery_layout', 'square') !== 'asymetric') {
-            return;
-        }
-
-        ?>
-        <script id="oneplugin-light-masonry-gallery-layout">
-        (function() {
-            var selector = '.dipi_masonry_gallery_container img';
-            var applyMasonryIndexClasses = function() {
-                document.querySelectorAll(selector).forEach(function(img, index) {
-                    var position = index % 4;
-                    var isOuterPair = position === 0 || position === 3;
-                    img.classList.toggle('oneplugin-masonry-outer-pair', isOuterPair);
-                    img.classList.toggle('oneplugin-masonry-inner-pair', !isOuterPair);
-                });
-            };
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', applyMasonryIndexClasses);
-            } else {
-                applyMasonryIndexClasses();
-            }
-
-            if (window.MutationObserver) {
-                var observer = new MutationObserver(applyMasonryIndexClasses);
-                observer.observe(document.documentElement, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-        })();
-        </script>
-        <?php
-    }
-
-    public function render_active_menu_item_by_section_script() {
-        if (is_admin() || $this->get_setting('active_menu_item_by_section', '0') !== '1') {
-            return;
-        }
-
-        ?>
-        <script id="oneplugin-light-active-menu-item-by-section">
-        (function() {
-            var menuSelector = '#top-menu';
-            var activeClasses = ['current_page_item', 'current-menu-item'];
-            var items = [];
-            var menuItems = [];
-            var ticking = false;
-
-            var decodeHash = function(hash) {
-                if (!hash || hash === '#') {
-                    return '';
-                }
-
-                try {
-                    return decodeURIComponent(hash.slice(1));
-                } catch (e) {
-                    return hash.slice(1);
-                }
-            };
-
-            var getHeaderOffset = function() {
-                var header = document.querySelector('#main-header, header#main-header, .et-l--header, header');
-                if (!header) {
-                    return 0;
-                }
-
-                var styles = window.getComputedStyle(header);
-                if (styles.position !== 'fixed' && styles.position !== 'sticky') {
-                    return 0;
-                }
-
-                return Math.max(0, Math.round(header.getBoundingClientRect().height));
-            };
-
-            var collectItems = function() {
-                var menu = document.querySelector(menuSelector);
-                if (!menu) {
-                    return [];
-                }
-
-                menuItems = Array.prototype.slice.call(menu.querySelectorAll('.menu-item'));
-
-                return Array.prototype.slice.call(menu.querySelectorAll('a[href*="#"]')).map(function(link) {
-                    var url;
-                    try {
-                        url = new URL(link.getAttribute('href'), window.location.href);
-                    } catch (e) {
-                        return null;
-                    }
-
-                    if (!url.hash || url.pathname.replace(/\/$/, '') !== window.location.pathname.replace(/\/$/, '') || url.hostname !== window.location.hostname) {
-                        return null;
-                    }
-
-                    var targetId = decodeHash(url.hash);
-                    if (!targetId) {
-                        return null;
-                    }
-
-                    var section = document.getElementById(targetId);
-                    var menuItem = link.closest('li.menu-item') || link.parentElement;
-                    if (!section || !menuItem) {
-                        return null;
-                    }
-
-                    return {
-                        link: link,
-                        menuItem: menuItem,
-                        section: section
-                    };
-                }).filter(Boolean);
-            };
-
-            var setActiveItem = function(activeItem) {
-                menuItems.forEach(function(menuItem) {
-                    activeClasses.forEach(function(activeClass) {
-                        menuItem.classList.remove(activeClass);
-                    });
-                });
-
-                if (!activeItem) {
-                    return;
-                }
-
-                activeClasses.forEach(function(activeClass) {
-                    activeItem.menuItem.classList.add(activeClass);
-                });
-            };
-
-            var clearActiveItems = function() {
-                menuItems.forEach(function(menuItem) {
-                    activeClasses.forEach(function(activeClass) {
-                        menuItem.classList.remove(activeClass);
-                    });
-                });
-            };
-
-            var updateActiveItem = function() {
-                ticking = false;
-
-                if (!items.length) {
-                    return;
-                }
-
-                var offset = getHeaderOffset();
-                var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-                var activationLine = offset + Math.max(80, Math.round((viewportHeight - offset) * 0.35));
-                var bestItem = null;
-                var bestDistance = Infinity;
-
-                items.forEach(function(item) {
-                    var rect = item.section.getBoundingClientRect();
-                    var isVisible = rect.bottom > offset && rect.top < viewportHeight;
-                    if (!isVisible) {
-                        return;
-                    }
-
-                    var distance = Math.abs(rect.top - activationLine);
-                    if (rect.top <= activationLine && rect.bottom >= activationLine) {
-                        distance = 0;
-                    }
-
-                    if (distance < bestDistance) {
-                        bestDistance = distance;
-                        bestItem = item;
-                    }
-                });
-
-                if (bestItem) {
-                    setActiveItem(bestItem);
-                } else {
-                    clearActiveItems();
-                }
-            };
-
-            var requestUpdate = function() {
-                if (ticking) {
-                    return;
-                }
-
-                ticking = true;
-                window.requestAnimationFrame(updateActiveItem);
-            };
-
-            var init = function() {
-                items = collectItems();
-                if (!items.length) {
-                    return;
-                }
-
-                window.addEventListener('scroll', requestUpdate, { passive: true });
-                window.addEventListener('resize', requestUpdate);
-                window.addEventListener('hashchange', requestUpdate);
-                requestUpdate();
-            };
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
-        })();
-        </script>
-        <?php
-    }
-
     private function get_fixed_image_alt_text_value() {
         return trim((string) $this->get_setting('company_name', ''));
     }
@@ -3156,7 +1844,14 @@ img.cover-img {
             return;
         }
 
-        echo '<div class="oneplugin-mobile-footer" role="navigation" aria-label="' . esc_attr__('Mobile footer', 'oneplugin-light-site-tools') . '">';
+        $footer_style = sprintf(
+            '--oneplugin-mobile-footer-bg:%s;--oneplugin-mobile-footer-icon:%s;--oneplugin-mobile-footer-text:%s;',
+            esc_attr($this->get_setting('sticky_bg_color', '#0f0f0f')),
+            esc_attr($this->get_setting('sticky_icon_color', '#ffffff')),
+            esc_attr($this->get_setting('sticky_text_color', '#ffffff'))
+        );
+
+        echo '<div class="oneplugin-mobile-footer" role="navigation" aria-label="' . esc_attr__('Mobile footer', 'oneplugin-light-site-tools') . '" style="' . $footer_style . '">';
         echo '<div class="oneplugin-mobile-footer__inner">';
 
         foreach ($items as $item) {
@@ -3233,231 +1928,5 @@ img.cover-img {
             'icon' => $item['icon'],
             'target' => ' target="_blank" rel="noopener"',
         ];
-    }
-
-    public function remove_divi_test_cookies() {
-        if ($this->is_async_editor_request() || headers_sent()) {
-            return;
-        }
-
-        $cookies = [
-            'et_pb_ab_read_page_1521false',
-            'et_pb_ab_view_page_244384',
-            'et_pb_ab_read_page_244384false',
-        ];
-
-        foreach ($cookies as $cookie_name) {
-            if (isset($_COOKIE[$cookie_name])) {
-                unset($_COOKIE[$cookie_name]);
-                setcookie($cookie_name, '', time() - 3600, COOKIEPATH ? COOKIEPATH : '/');
-            }
-        }
-    }
-
-    public function register_keyword_meta_box() {
-        add_meta_box(
-            'oneplugin_keyword_meta_box',
-            __('Sokordens falt', 'oneplugin-light-site-tools'),
-            [$this, 'render_keyword_meta_box'],
-            'page',
-            'normal',
-            'high'
-        );
-    }
-
-    public function render_keyword_meta_box($post) {
-        wp_nonce_field('oneplugin_keyword_meta_box', 'oneplugin_keyword_meta_box_nonce');
-
-        $fields = [
-            'sokordets_tjanst_rubrik' => 'Sokordets Tjanst (Rubrik) [sokordets_tjanst_rubrik]',
-            'sokordets_ort_rubrik' => 'Sokordets Ort (Rubrik) [sokordets_ort_rubrik]',
-            'sokordets_tjanst_brodtext' => 'Sokordets Tjanst (Brodtext) [sokordets_tjanst_brodtext]',
-            'sokordets_ort_brodtext' => 'Sokordets Ort (Brodtext) [sokordets_ort_brodtext]',
-        ];
-
-        foreach ($fields as $meta_key => $label) {
-            $value = get_post_meta($post->ID, $meta_key, true);
-            ?>
-            <p>
-                <label for="<?php echo esc_attr($meta_key); ?>"><?php echo esc_html($label); ?></label><br />
-                <input type="text" class="widefat" name="<?php echo esc_attr($meta_key); ?>" id="<?php echo esc_attr($meta_key); ?>" value="<?php echo esc_attr($value); ?>" />
-            </p>
-            <?php
-        }
-    }
-
-    public function save_keyword_meta_box($post_id) {
-        if (!isset($_POST['oneplugin_keyword_meta_box_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['oneplugin_keyword_meta_box_nonce'])), 'oneplugin_keyword_meta_box')) {
-            return;
-        }
-
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-
-        if (!current_user_can('edit_post', $post_id)) {
-            return;
-        }
-
-        $fields = [
-            'sokordets_tjanst_rubrik',
-            'sokordets_ort_rubrik',
-            'sokordets_tjanst_brodtext',
-            'sokordets_ort_brodtext',
-        ];
-
-        foreach ($fields as $field) {
-            $value = isset($_POST[$field]) ? sanitize_text_field(wp_unslash($_POST[$field])) : '';
-            update_post_meta($post_id, $field, $value);
-        }
-    }
-
-    public function shortcode_keyword_service_title() {
-        return esc_html((string) get_post_meta(get_the_ID(), 'sokordets_tjanst_rubrik', true));
-    }
-
-    public function shortcode_keyword_city_title() {
-        return esc_html((string) get_post_meta(get_the_ID(), 'sokordets_ort_rubrik', true));
-    }
-
-    public function shortcode_keyword_service_text() {
-        return esc_html((string) get_post_meta(get_the_ID(), 'sokordets_tjanst_brodtext', true));
-    }
-
-    public function shortcode_keyword_city_text() {
-        return esc_html((string) get_post_meta(get_the_ID(), 'sokordets_ort_brodtext', true));
-    }
-
-    public function filter_global_modules($posts) {
-        if (!$this->is_frontend() || empty($posts) || count($posts) !== 1 || empty($posts[0]->post_type) || empty($posts[0]->post_content)) {
-            return $posts;
-        }
-
-        if ($posts[0]->post_type === 'et_pb_layout') {
-            $posts[0]->post_content = apply_filters('dbdse_et_pb_layout_content', $posts[0]->post_content);
-        }
-
-        return $posts;
-    }
-
-    private function is_frontend() {
-        return !is_admin() && !$this->is_async_editor_request();
-    }
-
-    private function is_async_editor_request() {
-        if ((function_exists('wp_doing_ajax') && wp_doing_ajax()) || (defined('DOING_AJAX') && DOING_AJAX)) {
-            return true;
-        }
-
-        if ((defined('REST_REQUEST') && REST_REQUEST) || (function_exists('wp_is_json_request') && wp_is_json_request())) {
-            return true;
-        }
-
-        if (!empty($_REQUEST['action']) && is_string($_REQUEST['action']) && strpos((string) $_REQUEST['action'], 'et_fb') !== false) {
-            return true;
-        }
-
-        return false;
-    }
-}
-
-final class OnePlugin_Light_Divi_Shortcode_Support {
-    public static function supported_fields() {
-        return apply_filters(
-            'dbdsp_fields_to_process',
-            [
-                'et_pb_accordion_item' => ['title'],
-                'et_pb_blurb' => ['title', 'url', 'image', 'alt'],
-                'et_pb_button' => ['button_url', 'button_text'],
-                'et_pb_circle_counter' => ['title', 'number'],
-                'et_pb_cta' => ['title', 'button_text', 'button_url'],
-                'et_pb_image' => ['url', 'src', 'title_text', 'alt'],
-                'et_pb_number_counter' => ['title', 'number'],
-                'et_pb_counter' => ['percent'],
-                'et_pb_pricing_table' => ['title', 'subtitle', 'currency', 'sum', 'button_text', 'button_url'],
-                'et_pb_tab' => ['title'],
-                'et_pb_toggle' => ['title'],
-                'et_pb_slide' => ['heading', 'button_text', 'button_link', 'image_alt', 'title_text'],
-                'db_pb_slide' => ['button_text_2', 'button_link_2'],
-                'et_pb_fullwidth_header' => ['title', 'subhead', 'button_one_text', 'button_two_text', 'button_one_url', 'button_two_url'],
-                'et_pb_fullwidth_image' => ['src', 'title_text', 'alt'],
-                'et_pb_contact_field' => ['field_title'],
-                'dipi_dual_heading' => ['first_heading', 'second_heading'],
-                'dipi_text_highlighter' => ['text_highlighter_prefix', 'text_highlighter_text', 'text_highlighter_suffix'],
-            ]
-        );
-    }
-
-    public function init() {
-        add_filter('the_content', [$this, 'process_shortcodes']);
-        add_filter('et_builder_render_layout', [$this, 'process_shortcodes']);
-        add_filter('dbdse_et_pb_layout_content', [$this, 'process_shortcodes']);
-        add_filter('et_pb_module_shortcode_attributes', [$this, 'prevent_shortcode_encoding_in_module_settings'], 11, 3);
-    }
-
-    public function process_shortcodes($content) {
-        if (!is_string($content) || $this->is_async_editor_request()) {
-            return $content;
-        }
-
-        do_action('dbdsp_pre_shortcode_processing');
-
-        foreach ((array) self::supported_fields() as $module => $fields) {
-            foreach ($fields as $field) {
-                $regex = '#[' . preg_quote($module) . ' [^]]*?\b' . preg_quote($field) . '="([^"]+)"#';
-                $content = preg_replace_callback($regex, [$this, 'process_matched_attribute'], $content);
-            }
-        }
-
-        do_action('dbdsp_post_shortcode_processing');
-
-        return $content;
-    }
-
-    protected function process_matched_attribute($matches) {
-        if (!is_array($matches) || !isset($matches[0])) {
-            return '';
-        }
-
-        if (!isset($matches[1])) {
-            return $matches[0];
-        }
-
-        $encoded = ['%22', '%91', '%93'];
-        $decoded = ['"', '[', ']'];
-
-        $value = str_replace($encoded, $decoded, $matches[1]);
-        $value = do_shortcode($value);
-        $value = str_replace($decoded, $encoded, $value);
-
-        return str_replace($matches[1], $value, $matches[0]);
-    }
-
-    public function prevent_shortcode_encoding_in_module_settings($props, $attrs, $render_slug) {
-        if (!is_array($props)) {
-            return $props;
-        }
-
-        if (!empty($_REQUEST['et_fb']) && $render_slug === 'et_pb_image' && !empty($attrs['url']) && strpos($attrs['url'], '[') !== false && strpos($attrs['url'], ']') !== false) {
-            $props['url'] = $attrs['url'];
-        }
-
-        return $props;
-    }
-
-    private function is_async_editor_request() {
-        if ((function_exists('wp_doing_ajax') && wp_doing_ajax()) || (defined('DOING_AJAX') && DOING_AJAX)) {
-            return true;
-        }
-
-        if ((defined('REST_REQUEST') && REST_REQUEST) || (function_exists('wp_is_json_request') && wp_is_json_request())) {
-            return true;
-        }
-
-        if (!empty($_REQUEST['action']) && is_string($_REQUEST['action']) && strpos((string) $_REQUEST['action'], 'et_fb') !== false) {
-            return true;
-        }
-
-        return false;
     }
 }
