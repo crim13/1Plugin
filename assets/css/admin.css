@@ -111,10 +111,63 @@
             .oneplugin-project-identity__top > div {
                 margin-bottom: 0 !important;
             }
-            .oneplugin-project-identity__top > div:last-child {
-                flex: 1 1 320px;
-                min-width: 260px;
-            }
+.oneplugin-project-identity__top > div:has(#site_title) {
+    flex: 1 1 320px;
+    min-width: 260px;
+}
+
+.oneplugin-palette-fields {
+    flex: 1 1 520px;
+    min-width: 420px;
+}
+
+.oneplugin-palette-fields__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.oneplugin-palette-field {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 8px;
+    border: 1px solid #d7dee8;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.oneplugin-palette-field input[type="color"] {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.oneplugin-palette-field span,
+.oneplugin-palette-field code {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.oneplugin-palette-field span {
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.oneplugin-palette-field code {
+    margin-top: 2px;
+    color: #64748b;
+    font-size: 10px;
+}
             .oneplugin-project-identity__details {
                 min-width: 0;
             }
@@ -482,6 +535,10 @@
                 .oneplugin-project-field-grid {
                     grid-template-columns: repeat(2, minmax(0, 1fr));
                 }
+                .oneplugin-palette-fields {
+                    flex-basis: 100%;
+                    min-width: 0;
+                }
                 .oneplugin-tabs--sidebar {
                     grid-template-columns: 1fr;
                 }
@@ -520,7 +577,8 @@
             }
             @media (max-width: 782px) {
                 .oneplugin-project-field-grid,
-                .oneplugin-social-fields {
+                .oneplugin-social-fields,
+                .oneplugin-palette-fields__grid {
                     grid-template-columns: 1fr;
                 }
                 .oneplugin-social-panel__header {

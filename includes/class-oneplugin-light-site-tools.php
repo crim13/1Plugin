@@ -324,6 +324,7 @@ final class OnePlugin_Light_Site_Tools {
                                 $this->render_site_icon_field($settings);
                                 $this->render_site_logo_field($settings);
                                 $this->render_compact_field('site_title', __('Site title', 'oneplugin-light-site-tools'), $settings);
+                                $this->render_project_palette_fields($settings);
                                 ?>
                             </div>
                             <div class="oneplugin-project-identity__details">
@@ -727,6 +728,10 @@ final class OnePlugin_Light_Site_Tools {
 
     private function get_css_variable_color_choices() {
         return [
+            '--1pcv-primary',
+            '--1pcv-secondary',
+            '--1pcv-background',
+            '--1pcv-background-alt',
             '--gcid-primary-color',
             '--gcid-secondary-color',
             '--gcid-heading-color',
@@ -774,28 +779,33 @@ final class OnePlugin_Light_Site_Tools {
         <?php
     }
 
-    private function render_project_palette_swatches() {
-        $palette = $this->get_project_color_palette();
+    private function render_project_palette_fields($settings) {
+        $palette = $this->get_project_color_palette_from_settings($settings);
+        $fields = $this->get_project_palette_fields();
         ?>
-        <div style="margin-top:18px;">
-            <h3 style="margin-bottom:8px;"><?php esc_html_e('Project Color Palette', 'oneplugin-light-site-tools'); ?></h3>
-            <?php if (empty($palette)) : ?>
-                <p><?php esc_html_e('No project colors detected yet.', 'oneplugin-light-site-tools'); ?></p>
-            <?php else : ?>
-                <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                    <?php foreach ($palette as $swatch) : ?>
-                        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-                            <span style="display:block; width:34px; height:34px; border-radius:999px; border:1px solid rgba(15,23,42,.12); background:<?php echo esc_attr($swatch['value']); ?>;"></span>
-                            <code style="font-size:11px;"><?php echo esc_html($swatch['value']); ?></code>
+        <div class="oneplugin-palette-fields" style="margin-bottom:14px;">
+            <label style="display:block; margin-bottom:6px; font-weight:600;"><?php esc_html_e('Color palette', 'oneplugin-light-site-tools'); ?></label>
+            <div class="oneplugin-palette-fields__grid">
+                <?php foreach ($fields as $key => $field) : ?>
+                    <?php
+                    $value = isset($palette[$key]['value']) ? $palette[$key]['value'] : $field['default'];
+                    ?>
+                    <label class="oneplugin-palette-field" title="<?php echo esc_attr($field['variable']); ?>">
+                        <input
+                            type="color"
+                            name="<?php echo esc_attr(self::OPTION_KEY . '[project_palette][' . $key . '][value]'); ?>"
+                            value="<?php echo esc_attr($value); ?>"
+                        />
+                        <div>
+                            <span><?php echo esc_html($field['label']); ?></span>
+                            <code><?php echo esc_html($field['variable']); ?></code>
                         </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+                    </label>
+                <?php endforeach; ?>
+            </div>
         </div>
         <?php
     }
-
-
 
     private function get_social_media_choices() {
         return [
@@ -855,10 +865,40 @@ final class OnePlugin_Light_Site_Tools {
         }
 
         if (!is_array($saved) || empty($saved['project_palette']) || !is_array($saved['project_palette'])) {
-            return [];
+            return $this->sanitize_project_palette([]);
         }
 
         return $this->sanitize_project_palette($saved['project_palette']);
+    }
+
+    private function get_project_color_palette_from_settings($settings) {
+        $settings = is_array($settings) ? $settings : [];
+        return $this->sanitize_project_palette(isset($settings['project_palette']) ? $settings['project_palette'] : []);
+    }
+
+    private function get_project_palette_fields() {
+        return [
+            'primary' => [
+                'label' => __('Primary', 'oneplugin-light-site-tools'),
+                'variable' => '--1pcv-primary',
+                'default' => '#fa1e9a',
+            ],
+            'secondary' => [
+                'label' => __('Secondary', 'oneplugin-light-site-tools'),
+                'variable' => '--1pcv-secondary',
+                'default' => '#111827',
+            ],
+            'background' => [
+                'label' => __('Background', 'oneplugin-light-site-tools'),
+                'variable' => '--1pcv-background',
+                'default' => '#ffffff',
+            ],
+            'background_alt' => [
+                'label' => __('Background alt', 'oneplugin-light-site-tools'),
+                'variable' => '--1pcv-background-alt',
+                'default' => '#f3f4f6',
+            ],
+        ];
     }
 
     private function sanitize_code_snippet($value) {
@@ -875,33 +915,54 @@ final class OnePlugin_Light_Site_Tools {
             return [];
         }
 
-        $sanitized = [];
-        foreach ($palette as $swatch) {
-            if (is_string($swatch)) {
-                $swatch = [
-                    'name' => '',
-                    'value' => $swatch,
-                ];
-            }
-
-            if (!is_array($swatch)) {
-                continue;
-            }
-
-            $value = isset($swatch['value']) ? strtolower(trim((string) $swatch['value'])) : '';
-            if (!preg_match('/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/', $value)) {
-                continue;
-            }
-
-            $name = isset($swatch['name']) ? sanitize_text_field($swatch['name']) : strtoupper($value);
-            $sanitized[] = [
-                'name' => $name !== '' ? $name : strtoupper($value),
-                'value' => $value,
-            ];
-
-            if (count($sanitized) >= 12) {
+        $fields = $this->get_project_palette_fields();
+        $has_fixed_keys = false;
+        foreach (array_keys($fields) as $key) {
+            if (array_key_exists($key, $palette)) {
+                $has_fixed_keys = true;
                 break;
             }
+        }
+
+        if (!$has_fixed_keys && !empty($palette)) {
+            $legacy_values = array_values($palette);
+            $palette = [];
+            $index = 0;
+            foreach (array_keys($fields) as $key) {
+                if (!isset($legacy_values[$index])) {
+                    break;
+                }
+
+                $legacy_value = $legacy_values[$index];
+                $palette[$key] = is_array($legacy_value) && isset($legacy_value['value']) ? $legacy_value['value'] : $legacy_value;
+                $index++;
+            }
+        }
+
+        $sanitized = [];
+        foreach ($fields as $key => $field) {
+            $swatch = isset($palette[$key]) ? $palette[$key] : null;
+            $value = '';
+
+            if (is_array($swatch) && isset($swatch['value'])) {
+                $value = strtolower(trim((string) $swatch['value']));
+            } elseif (is_string($swatch)) {
+                $value = strtolower(trim($swatch));
+            }
+
+            if (!preg_match('/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/', $value)) {
+                $value = $field['default'];
+            }
+
+            if (strlen($value) === 4) {
+                $value = '#' . $value[1] . $value[1] . $value[2] . $value[2] . $value[3] . $value[3];
+            }
+
+            $sanitized[$key] = [
+                'name' => $field['label'],
+                'variable' => $field['variable'],
+                'value' => $value,
+            ];
         }
 
         return $sanitized;
@@ -1584,6 +1645,11 @@ final class OnePlugin_Light_Site_Tools {
         }
 
         $generated_css = [];
+        $palette_css = $this->build_project_palette_css();
+        if ($palette_css !== '') {
+            $generated_css[] = $palette_css;
+        }
+
         if ($this->get_setting('hide_image_alt_text', '0') === '1') {
             $generated_css[] = 'img {pointer-events: none!important;}';
         }
@@ -1698,6 +1764,28 @@ img.cover-img {
         }
 
         echo "<style id=\"oneplugin-custom-css\">\n" . $css . "\n</style>\n";
+    }
+
+    private function build_project_palette_css() {
+        $palette = $this->get_project_color_palette();
+        if (empty($palette)) {
+            return '';
+        }
+
+        $variables = [];
+        foreach ($palette as $swatch) {
+            if (empty($swatch['variable']) || empty($swatch['value'])) {
+                continue;
+            }
+
+            $variables[] = '    ' . $swatch['variable'] . ': ' . $swatch['value'] . ';';
+        }
+
+        if (empty($variables)) {
+            return '';
+        }
+
+        return ":root {\n" . implode("\n", $variables) . "\n}";
     }
 
     public function filter_attachment_image_alt($attr, $attachment) {
