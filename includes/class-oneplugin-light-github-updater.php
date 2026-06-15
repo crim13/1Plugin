@@ -30,7 +30,6 @@ final class OnePlugin_Light_GitHub_Updater {
         add_filter('plugins_api', [$this, 'filter_plugins_api'], 20, 3);
         add_filter('http_request_args', [$this, 'add_github_auth_header'], 10, 2);
         add_action('upgrader_process_complete', [$this, 'clear_release_cache'], 10, 2);
-        add_action('admin_init', [$this, 'ensure_native_auto_updates_enabled'], 1);
         add_action('admin_init', [$this, 'clear_cache_on_forced_update_check']);
     }
 
@@ -80,7 +79,7 @@ final class OnePlugin_Light_GitHub_Updater {
             'requires_php' => isset($release['requires_php']) ? $release['requires_php'] : '',
             'last_updated' => isset($release['published_at']) ? $release['published_at'] : '',
             'sections' => [
-                'description' => 'Site tools plugin with company data, shortcodes, sticky mobile footer, page keyword fields, and custom code tools.',
+                'description' => 'Site tools plugin with company data, shortcodes, Divi 5 modules, sticky mobile footer, page keyword fields, and custom code tools.',
                 'changelog' => !empty($release['body']) ? wp_kses_post(wpautop($release['body'])) : 'See the latest GitHub release for changes.',
             ],
         ];
@@ -121,20 +120,33 @@ final class OnePlugin_Light_GitHub_Updater {
             return;
         }
 
+        $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+        if (!wp_verify_nonce($nonce, 'upgrade-core')) {
+            return;
+        }
+
         delete_site_transient(self::TRANSIENT_KEY);
     }
 
-    public function ensure_native_auto_updates_enabled() {
-        if (!current_user_can('update_plugins')) {
-            return;
-        }
-
+    public function set_native_auto_updates_enabled($enabled) {
         $auto_updates = (array) get_site_option('auto_update_plugins', []);
-        if (in_array($this->plugin_basename, $auto_updates, true)) {
+        $has_plugin = in_array($this->plugin_basename, $auto_updates, true);
+        $enabled = (bool) $enabled;
+
+        if ($enabled && $has_plugin) {
             return;
         }
 
-        $auto_updates[] = $this->plugin_basename;
+        if (!$enabled && !$has_plugin) {
+            return;
+        }
+
+        if ($enabled) {
+            $auto_updates[] = $this->plugin_basename;
+        } else {
+            $auto_updates = array_values(array_diff($auto_updates, [$this->plugin_basename]));
+        }
+
         $auto_updates = array_values(array_unique(array_filter($auto_updates)));
 
         update_site_option('auto_update_plugins', $auto_updates);

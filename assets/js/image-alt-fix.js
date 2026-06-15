@@ -5,14 +5,22 @@
         return;
     }
 
+    var updateImage = function(img) {
+        img.setAttribute('alt', companyName);
+        img.setAttribute('title', companyName);
+        if (img.closest('a')) {
+            img.closest('a').setAttribute('title', companyName);
+        }
+    };
+
     var applyAltText = function(root) {
         var scope = root && root.querySelectorAll ? root : document;
+        if (scope.matches && scope.matches('img')) {
+            updateImage(scope);
+        }
+
         scope.querySelectorAll('img').forEach(function(img) {
-            img.setAttribute('alt', companyName);
-            img.setAttribute('title', companyName);
-            if (img.closest('a')) {
-                img.closest('a').setAttribute('title', companyName);
-            }
+            updateImage(img);
         });
     };
 
@@ -33,7 +41,7 @@
                     }
 
                     if (node.tagName && node.tagName.toLowerCase() === 'img') {
-                        node.setAttribute('alt', companyName);
+                        updateImage(node);
                     }
 
                     applyAltText(node);

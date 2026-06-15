@@ -37,6 +37,9 @@ final class OnePlugin_Light_Menu_Module {
             'hover_effect' => 'underline',
             'show_submenu_indicator' => 'on',
             'close_on_outside_click' => 'on',
+            'close_on_link_click' => 'on',
+            'toggle_label' => 'Menu',
+            'aria_label' => 'Primary menu',
             'menu_bg_color' => 'transparent',
             'menu_text_color' => '#111827',
             'menu_hover_text_color' => '#111827',
@@ -48,7 +51,7 @@ final class OnePlugin_Light_Menu_Module {
             'submenu_hover_text_color' => '#111827',
             'submenu_hover_bg_color' => 'rgba(17,24,39,.08)',
             'toggle_color' => '#111827',
-            'toggle_bg_color' => '#ffffff',
+            'toggle_bg_color' => 'transparent',
             'border_color' => 'rgba(17,24,39,.10)',
             'shadow_color' => 'rgba(17,24,39,.16)',
             'menu_gap' => '24',
@@ -58,7 +61,13 @@ final class OnePlugin_Light_Menu_Module {
             'item_padding_x' => '18',
             'submenu_padding_y' => '12',
             'submenu_padding_x' => '16',
+            'mobile_panel_width' => '360',
+            'mobile_panel_offset' => '16',
+            'mobile_overlay_color' => 'rgba(17,24,39,.5)',
+            'submenu_indicator_icon' => '▾',
+            'list_class' => '',
             'class' => '',
+            'use_native_layout' => '0',
         ];
 
         $atts = shortcode_atts($defaults, is_array($atts) ? $atts : [], 'oneplugin2_menu');
@@ -82,12 +91,17 @@ final class OnePlugin_Light_Menu_Module {
 
         $wrapper_classes = [
             'oneplugin-menu',
-            'oneplugin-menu--' . $atts['layout'],
-            'oneplugin-menu--align-' . $atts['align'],
             'oneplugin-menu--mobile-' . $atts['mobile_style'],
             'oneplugin-menu--mobile-side-' . $atts['mobile_side'],
             'oneplugin-menu--hover-' . $atts['hover_effect'],
         ];
+
+        if ($atts['use_native_layout'] === '1') {
+            $wrapper_classes[] = 'oneplugin-menu--native-layout';
+        } else {
+            $wrapper_classes[] = 'oneplugin-menu--' . $atts['layout'];
+            $wrapper_classes[] = 'oneplugin-menu--align-' . $atts['align'];
+        }
 
         if ($atts['class'] !== '') {
             $wrapper_classes[] = $atts['class'];
@@ -109,8 +123,9 @@ final class OnePlugin_Light_Menu_Module {
             data-mobile-side="<?php echo esc_attr($atts['mobile_side']); ?>"
             data-mobile-breakpoint="<?php echo esc_attr((string) $atts['mobile_breakpoint']); ?>"
             data-close-outside="<?php echo esc_attr($atts['close_on_outside_click']); ?>"
+            data-close-on-link-click="<?php echo esc_attr($atts['close_on_link_click']); ?>"
             data-show-indicator="<?php echo esc_attr($atts['show_submenu_indicator']); ?>"
-            aria-label="<?php echo esc_attr__('Primary menu', 'oneplugin-light-site-tools'); ?>"
+            aria-label="<?php echo esc_attr($atts['aria_label']); ?>"
             style="<?php echo esc_attr($style); ?>"
         >
             <div class="oneplugin-menu__bar">
@@ -118,6 +133,7 @@ final class OnePlugin_Light_Menu_Module {
                     id="<?php echo esc_attr($toggle_id); ?>"
                     type="button"
                     class="oneplugin-menu__toggle"
+                    aria-label="<?php echo esc_attr($atts['toggle_label']); ?>"
                     aria-expanded="false"
                     aria-controls="<?php echo esc_attr($panel_id); ?>"
                 >
@@ -126,10 +142,9 @@ final class OnePlugin_Light_Menu_Module {
                         <span></span>
                         <span></span>
                     </span>
-                    <span class="oneplugin-menu__toggle-label"><?php esc_html_e('Menu', 'oneplugin-light-site-tools'); ?></span>
                 </button>
             </div>
-            <button type="button" class="oneplugin-menu__overlay" tabindex="-1" aria-hidden="true"></button>
+            <button type="button" class="oneplugin-menu__overlay" tabindex="-1" aria-hidden="true" aria-label="<?php esc_attr_e('Close menu', 'oneplugin-light-site-tools'); ?>"></button>
             <div
                 id="<?php echo esc_attr($panel_id); ?>"
                 class="oneplugin-menu__panel"
@@ -154,8 +169,8 @@ final class OnePlugin_Light_Menu_Module {
             'mobile_side',
             'submenu_trigger',
             'hover_effect',
-            'show_submenu_indicator',
-            'close_on_outside_click',
+            'toggle_label',
+            'aria_label',
         ];
 
         $color_fields = [
@@ -173,6 +188,7 @@ final class OnePlugin_Light_Menu_Module {
             'toggle_bg_color' => '#ffffff',
             'border_color' => 'rgba(17,24,39,.10)',
             'shadow_color' => 'rgba(17,24,39,.16)',
+            'mobile_overlay_color' => 'rgba(17,24,39,.5)',
         ];
 
         foreach ($text_fields as $field) {
@@ -191,7 +207,12 @@ final class OnePlugin_Light_Menu_Module {
         $atts['item_padding_x'] = $this->sanitize_number($atts['item_padding_x'], 18, 4, 48);
         $atts['submenu_padding_y'] = $this->sanitize_number($atts['submenu_padding_y'], 12, 4, 40);
         $atts['submenu_padding_x'] = $this->sanitize_number($atts['submenu_padding_x'], 16, 4, 48);
+        $atts['mobile_panel_width'] = $this->sanitize_number($atts['mobile_panel_width'], 360, 220, 720);
+        $atts['mobile_panel_offset'] = $this->sanitize_number($atts['mobile_panel_offset'], 16, 0, 80);
+        $atts['submenu_indicator_icon'] = $this->normalize_indicator_icon_value(isset($atts['submenu_indicator_icon']) ? $atts['submenu_indicator_icon'] : '', '▾');
+        $atts['list_class'] = isset($atts['list_class']) ? $this->sanitize_class_names((string) $atts['list_class']) : '';
         $atts['class'] = isset($atts['class']) ? $this->sanitize_class_names((string) $atts['class']) : '';
+        $atts['use_native_layout'] = $this->normalize_on_off_value(isset($atts['use_native_layout']) ? $atts['use_native_layout'] : '0', 'off') === 'on' ? '1' : '0';
 
         if (!in_array($atts['source_type'], ['location', 'menu'], true)) {
             $atts['source_type'] = 'location';
@@ -221,10 +242,55 @@ final class OnePlugin_Light_Menu_Module {
             $atts['hover_effect'] = 'underline';
         }
 
-        $atts['show_submenu_indicator'] = $atts['show_submenu_indicator'] === 'off' ? 'off' : 'on';
-        $atts['close_on_outside_click'] = $atts['close_on_outside_click'] === 'off' ? 'off' : 'on';
+        $atts['show_submenu_indicator'] = $this->normalize_on_off_value($atts['show_submenu_indicator'], 'on');
+        $atts['close_on_outside_click'] = $this->normalize_on_off_value($atts['close_on_outside_click'], 'on');
+        $atts['close_on_link_click'] = $this->normalize_on_off_value($atts['close_on_link_click'], 'on');
+        $atts['toggle_label'] = $atts['toggle_label'] !== '' ? $atts['toggle_label'] : __('Menu', 'oneplugin-light-site-tools');
+        $atts['aria_label'] = $atts['aria_label'] !== '' ? $atts['aria_label'] : __('Primary menu', 'oneplugin-light-site-tools');
 
         return $atts;
+    }
+
+    private function normalize_on_off_value($value, $default = 'on') {
+        if (is_bool($value)) {
+            return $value ? 'on' : 'off';
+        }
+
+        if (is_numeric($value)) {
+            return ((int) $value) === 0 ? 'off' : 'on';
+        }
+
+        $normalized = strtolower(trim((string) $value));
+        if (in_array($normalized, ['off', 'false', 'no', '0'], true)) {
+            return 'off';
+        }
+
+        if (in_array($normalized, ['on', 'true', 'yes', '1'], true)) {
+            return 'on';
+        }
+
+        return $default === 'off' ? 'off' : 'on';
+    }
+
+    private function normalize_indicator_icon_value($value, $fallback) {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return $fallback;
+        }
+
+        if ($value[0] === '{' || $value[0] === '[') {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        return wp_html_excerpt(wp_strip_all_tags($value), 16, '');
     }
 
     private function sanitize_number($value, $default, $min, $max) {
@@ -255,6 +321,10 @@ final class OnePlugin_Light_Menu_Module {
             return preg_replace('/^var\(\s*(--[a-zA-Z0-9_-]+)\s*\)$/', 'var($1)', $value);
         }
 
+        if (preg_match('/^var\(\s*(--[a-zA-Z0-9_-]+)\s*,\s*(transparent|#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})|rgba?\(\s*(?:\d{1,3}\s*,\s*){2}\d{1,3}(?:\s*,\s*(?:0|1|0?\.\d+))?\s*\))\s*\)$/', $value, $matches)) {
+            return 'var(' . $matches[1] . ', ' . $matches[2] . ')';
+        }
+
         if (preg_match('/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $value)) {
             return $value;
         }
@@ -278,12 +348,12 @@ final class OnePlugin_Light_Menu_Module {
             'container' => false,
             'echo' => false,
             'fallback_cb' => false,
-            'menu_class' => 'oneplugin-menu__list',
-            'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+            'menu_class' => trim('oneplugin-menu__list ' . $atts['list_class']),
+            'items_wrap' => '<ul class="%2$s">%3$s</ul>',
         ];
 
         if (class_exists('OnePlugin_Menu_Walker')) {
-            $args['walker'] = new OnePlugin_Menu_Walker();
+            $args['walker'] = new OnePlugin_Menu_Walker($atts['submenu_indicator_icon']);
         }
 
         if ($atts['source_type'] === 'location') {
@@ -321,14 +391,20 @@ final class OnePlugin_Light_Menu_Module {
             '--oneplugin-toggle-bg:' . $atts['toggle_bg_color'],
             '--oneplugin-border-color:' . $atts['border_color'],
             '--oneplugin-shadow-color:' . $atts['shadow_color'],
-            '--oneplugin-menu-gap:' . $atts['menu_gap'] . 'px',
             '--oneplugin-submenu-width:' . $atts['submenu_width'] . 'px',
             '--oneplugin-submenu-radius:' . $atts['submenu_radius'] . 'px',
             '--oneplugin-item-padding-y:' . $atts['item_padding_y'] . 'px',
             '--oneplugin-item-padding-x:' . $atts['item_padding_x'] . 'px',
             '--oneplugin-submenu-padding-y:' . $atts['submenu_padding_y'] . 'px',
             '--oneplugin-submenu-padding-x:' . $atts['submenu_padding_x'] . 'px',
+            '--oneplugin-mobile-panel-width:' . $atts['mobile_panel_width'] . 'px',
+            '--oneplugin-mobile-panel-offset:' . $atts['mobile_panel_offset'] . 'px',
+            '--oneplugin-overlay-bg:' . $atts['mobile_overlay_color'],
         ];
+
+        if ($atts['use_native_layout'] !== '1') {
+            $vars[] = '--oneplugin-menu-gap:' . $atts['menu_gap'] . 'px';
+        }
 
         return implode(';', $vars);
     }
@@ -367,6 +443,20 @@ final class OnePlugin_Light_Menu_Module {
 
 if (class_exists('Walker_Nav_Menu')) {
     final class OnePlugin_Menu_Walker extends Walker_Nav_Menu {
+        private $submenu_indicator_icon = '▾';
+
+        public function __construct($icon_value = '▾') {
+            if (is_array($icon_value)) {
+                $this->submenu_indicator_icon = $icon_value;
+                return;
+            }
+
+            $icon_value = trim((string) $icon_value);
+            if ($icon_value !== '') {
+                $this->submenu_indicator_icon = $icon_value;
+            }
+        }
+
         public function display_element($element, &$children_elements, $max_depth, $depth, $args, &$output) {
             if (!$element) {
                 return;
@@ -408,6 +498,12 @@ if (class_exists('Walker_Nav_Menu')) {
                 $atts['class'] .= ' oneplugin-menu__link--submenu';
             }
 
+            if (!empty($item->oneplugin_has_children)) {
+                $atts['aria-haspopup'] = 'true';
+                $atts['aria-expanded'] = 'false';
+                $atts['data-oneplugin-submenu-link'] = 'true';
+            }
+
             $attributes = '';
             foreach ($atts as $attr => $value) {
                 if ($value === '') {
@@ -422,14 +518,19 @@ if (class_exists('Walker_Nav_Menu')) {
             $title = apply_filters('nav_menu_item_title', $title, $item, $args, $depth);
             $label = wp_strip_all_tags($title);
 
-            $item_output = '<div class="oneplugin-menu__item-inner">';
+            $item_inner_class = 'oneplugin-menu__item-inner';
+            if (!empty($item->oneplugin_has_children)) {
+                $item_inner_class .= ' oneplugin-menu__item-inner--has-submenu';
+            }
+
+            $item_output = '<div class="' . esc_attr($item_inner_class) . '">';
             $item_output .= '<a' . $attributes . '>';
             $item_output .= '<span class="oneplugin-menu__link-text">' . esc_html($label) . '</span>';
             $item_output .= '</a>';
 
             if (!empty($item->oneplugin_has_children)) {
                 $item_output .= '<button type="button" class="oneplugin-menu__submenu-toggle" aria-expanded="false" aria-label="' . esc_attr(sprintf(__('Toggle submenu for %s', 'oneplugin-light-site-tools'), $label)) . '">';
-                $item_output .= '<span class="oneplugin-menu__submenu-toggle-icon" aria-hidden="true"></span>';
+                $item_output .= '<span class="oneplugin-menu__submenu-toggle-icon" aria-hidden="true">' . $this->render_indicator_icon_inner() . '</span>';
                 $item_output .= '</button>';
             }
 
@@ -439,6 +540,131 @@ if (class_exists('Walker_Nav_Menu')) {
 
         public function end_el(&$output, $item, $depth = 0, $args = null) {
             $output .= "</li>\n";
+        }
+
+        private function render_indicator_icon_inner() {
+            if (is_array($this->submenu_indicator_icon)) {
+                return $this->render_divi_icon_inner($this->submenu_indicator_icon);
+            }
+
+            $icon_value = trim((string) $this->submenu_indicator_icon);
+            if ($icon_value === '') {
+                return '';
+            }
+
+            if ($this->looks_like_icon_class($icon_value)) {
+                $icon_class = $this->sanitize_icon_class($icon_value);
+                if ($icon_class !== '') {
+                    return '<i class="' . esc_attr($icon_class) . '" aria-hidden="true"></i>';
+                }
+            }
+
+            return '<span class="oneplugin-menu__submenu-toggle-icon-text">' . esc_html($icon_value) . '</span>';
+        }
+
+        private function render_divi_icon_inner($icon_value) {
+            $glyph = '';
+            if (class_exists('\ET\Builder\Packages\IconLibrary\IconFont\Utils')) {
+                $glyph = \ET\Builder\Packages\IconLibrary\IconFont\Utils::process_font_icon($icon_value);
+            }
+
+            if ($glyph === '') {
+                $glyph = $this->extract_divi_icon_glyph($icon_value);
+            }
+
+            if ($glyph === '') {
+                return '';
+            }
+
+            $font_family = $this->get_divi_icon_font_family($icon_value);
+            $font_weight = strpos(strtolower($font_family), 'awesome') !== false ? 'font-weight:900;' : '';
+
+            return sprintf(
+                '<span class="oneplugin-menu__submenu-toggle-icon-glyph et-pb-icon" style="%1$s">%2$s</span>',
+                esc_attr('font-family:' . $font_family . ' !important;' . $font_weight),
+                esc_html($glyph)
+            );
+        }
+
+        private function extract_divi_icon_glyph($icon_value) {
+            if (is_scalar($icon_value)) {
+                return $this->normalize_divi_icon_glyph((string) $icon_value);
+            }
+
+            if (!is_array($icon_value)) {
+                return '';
+            }
+
+            foreach (['unicode', 'iconUnicode', 'icon_unicode', 'code', 'content', 'glyph', 'icon'] as $key) {
+                if (isset($icon_value[$key]) && is_scalar($icon_value[$key])) {
+                    $glyph = $this->normalize_divi_icon_glyph((string) $icon_value[$key]);
+                    if ($glyph !== '') {
+                        return $glyph;
+                    }
+                }
+            }
+
+            foreach ($icon_value as $value) {
+                if (!is_array($value)) {
+                    continue;
+                }
+
+                $glyph = $this->extract_divi_icon_glyph($value);
+                if ($glyph !== '') {
+                    return $glyph;
+                }
+            }
+
+            return '';
+        }
+
+        private function normalize_divi_icon_glyph($value) {
+            $value = trim($value);
+            if ($value === '') {
+                return '';
+            }
+
+            $decoded = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+            if ($decoded !== $value && $decoded !== '') {
+                return $decoded;
+            }
+
+            if (preg_match('/^\\\\?([a-fA-F0-9]{4,6})$/', $value, $matches)) {
+                return html_entity_decode('&#x' . $matches[1] . ';', ENT_QUOTES, 'UTF-8');
+            }
+
+            if (preg_match('/^u\\+([a-fA-F0-9]{4,6})$/i', $value, $matches)) {
+                return html_entity_decode('&#x' . $matches[1] . ';', ENT_QUOTES, 'UTF-8');
+            }
+
+            return preg_match('/^.{1,3}$/us', $value) === 1 ? $value : '';
+        }
+
+        private function get_divi_icon_font_family($icon_value) {
+            if (is_array($icon_value)) {
+                foreach (['fontFamily', 'font_family', 'iconFontFamily', 'icon_font_family', 'family'] as $key) {
+                    if (isset($icon_value[$key]) && is_scalar($icon_value[$key]) && trim((string) $icon_value[$key]) !== '') {
+                        return (string) $icon_value[$key];
+                    }
+                }
+
+                if (isset($icon_value['type']) && is_scalar($icon_value['type']) && strtolower((string) $icon_value['type']) === 'fa') {
+                    return 'Font Awesome 6 Free';
+                }
+            }
+
+            return 'ETmodules';
+        }
+
+        private function looks_like_icon_class($value) {
+            return $value !== '' && preg_match('/(^|\s)(fa-|fa[srldb]?|fa-solid|fa-regular|fa-brands|et-pb-icon)(\s|$)/', $value) === 1;
+        }
+
+        private function sanitize_icon_class($value) {
+            $classes = preg_split('/\s+/', trim((string) $value));
+            $classes = array_filter(array_map('sanitize_html_class', is_array($classes) ? $classes : []));
+
+            return implode(' ', $classes);
         }
     }
 }

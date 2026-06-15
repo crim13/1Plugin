@@ -1,0 +1,148 @@
+.post-type-oneplugin2_faq .inline-edit-password-input,
+.post-type-oneplugin2_faq .inline-edit-private {
+  display: none !important;
+}
+
+.post-type-oneplugin2_faq #visibility-radio-password,
+.post-type-oneplugin2_faq label[for="visibility-radio-password"],
+.post-type-oneplugin2_faq #password-span,
+.post-type-oneplugin2_faq #visibility-radio-private,
+.post-type-oneplugin2_faq label[for="visibility-radio-private"] {
+  display: none !important;
+}
+
+.taxonomy-oneplugin2_faq_group .form-field .description,
+.taxonomy-oneplugin2_faq_group .form-table .description {
+  display: none !important;
+}
+
+.oneplugin-faq-admin-tools {
+  padding: 12px 14px;
+}
+
+.oneplugin-faq-admin-tools__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.oneplugin-faq-export-selected-form,
+.oneplugin-faq-import-form {
+  margin: 0;
+}
+
+.oneplugin-faq-admin-tools .button {
+  border-radius: 6px;
+}
+
+.oneplugin-faq-admin-tools .button.is-dragover {
+  border-color: #2271b1;
+  background: #e7f2fb;
+  color: #0a4b78;
+}
+
+.tablenav .oneplugin-faq-admin-filter {
+  max-width: 180px;
+  margin-right: 6px;
+}
+
+.oneplugin-faq-quick-add {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid #dcdcde;
+}
+
+.oneplugin-faq-quick-add[hidden] {
+  display: none !important;
+}
+
+.oneplugin-faq-quick-add-toggle {
+  min-height: 34px;
+}
+
+.oneplugin-faq-quick-add__fields {
+  display: grid;
+  grid-template-columns: minmax(260px, 500px) minmax(240px, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.oneplugin-faq-quick-add__main,
+.oneplugin-faq-quick-add__side {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.oneplugin-faq-quick-add__main {
+  max-width: 500px;
+}
+
+.oneplugin-faq-quick-add label,
+.oneplugin-faq-quick-add fieldset {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+.oneplugin-faq-quick-add label > span,
+.oneplugin-faq-quick-add legend {
+  color: #1d2327;
+  font-weight: 600;
+}
+
+.oneplugin-faq-quick-add input[type="text"],
+.oneplugin-faq-quick-add textarea {
+  width: 100%;
+  margin: 0;
+}
+
+.oneplugin-faq-quick-add textarea {
+  resize: vertical;
+}
+
+.oneplugin-faq-group-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-height: 32px;
+  max-height: 154px;
+  overflow: auto;
+  padding: 5px 8px;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.oneplugin-faq-group-checklist label {
+  display: inline-flex;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.oneplugin-faq-group-checklist__empty {
+  color: #646970;
+}
+
+.oneplugin-faq-inline-edit-fields textarea {
+  width: 100%;
+  min-height: 108px;
+  resize: vertical;
+}
+
+@media (max-width: 1120px) {
+  .oneplugin-faq-quick-add__fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 782px) {
+  .oneplugin-faq-quick-add__fields {
+    grid-template-columns: 1fr;
+  }
+}

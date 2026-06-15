@@ -48,9 +48,7 @@ final class OnePlugin_Light_Shortcodes {
         }
 
         add_shortcode('kontakt', [$this, 'shortcode_contact']);
-        add_shortcode('formular', [$this, 'shortcode_form']);
         add_shortcode('kundens_mail', [$this, 'shortcode_customer_mail']);
-        add_shortcode('kundens_epost', [$this, 'shortcode_form_email']);
         add_shortcode('kundens_foretag', [$this, 'shortcode_company']);
         add_shortcode('kundens_adress', [$this, 'shortcode_address']);
         add_shortcode('kundens_telefon', [$this, 'shortcode_phone']);
@@ -111,17 +109,6 @@ final class OnePlugin_Light_Shortcodes {
         return trim(ob_get_clean());
     }
 
-    public function shortcode_form($atts) {
-        $atts = shortcode_atts(['id' => ''], $atts, 'formular');
-        $email = $this->get_setting('email');
-
-        if (empty($email) || empty($atts['id'])) {
-            return '';
-        }
-
-        return do_shortcode('[formidable id="' . sanitize_text_field($atts['id']) . '"]');
-    }
-
     public function shortcode_customer_mail() {
         $email = $this->get_setting('email');
         if (!$email) {
@@ -129,10 +116,6 @@ final class OnePlugin_Light_Shortcodes {
         }
 
         return '<a href="' . esc_url('mailto:' . $email) . '">' . esc_html($email) . '</a>';
-    }
-
-    public function shortcode_form_email() {
-        return esc_html($this->get_setting('form_email'));
     }
 
     public function shortcode_company() {

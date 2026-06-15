@@ -1,0 +1,29 @@
+/* ============================================================
+   1Plugin Logo Module — base styles
+   ============================================================ */
+
+.oneplugin_divi5_logo_module {
+    line-height: 0; /* collapse inline-block whitespace */
+}
+
+.oneplugin_divi5_logo_module .oneplugin-logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    line-height: 0;
+}
+
+.oneplugin_divi5_logo_module .oneplugin-logo-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/*
+ * White logo filter — toggled by the global logo-behavior JS
+ * (class: oneplugin-logo-filter-white) when sticky/transparent
+ * header state requires an inverted logo.
+ */
+.oneplugin-logo-filter-white {
+    filter: brightness(0) invert(1);
+}
