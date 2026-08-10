@@ -43,11 +43,20 @@ final class OnePlugin_Light_Divi_Shortcode_Support {
             return $content;
         }
 
+        if ($content === '' || strpos($content, '[') === false || strpos($content, '="') === false) {
+            return $content;
+        }
+
+        $supported_fields = (array) self::supported_fields();
+        if (!$this->content_has_supported_module($content, $supported_fields)) {
+            return $content;
+        }
+
         do_action('dbdsp_pre_shortcode_processing');
 
-        foreach ((array) self::supported_fields() as $module => $fields) {
+        foreach ($supported_fields as $module => $fields) {
             foreach ($fields as $field) {
-                $regex = '#[' . preg_quote($module) . ' [^]]*?\b' . preg_quote($field) . '="([^"]+)"#';
+                $regex = '#\[' . preg_quote($module, '#') . '\s+[^]]*?\b' . preg_quote($field, '#') . '="([^"]+)"#';
                 $content = preg_replace_callback($regex, [$this, 'process_matched_attribute'], $content);
             }
         }
@@ -55,6 +64,16 @@ final class OnePlugin_Light_Divi_Shortcode_Support {
         do_action('dbdsp_post_shortcode_processing');
 
         return $content;
+    }
+
+    private function content_has_supported_module($content, $supported_fields) {
+        foreach (array_keys($supported_fields) as $module) {
+            if (is_string($module) && $module !== '' && strpos($content, '[' . $module) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function process_matched_attribute($matches) {

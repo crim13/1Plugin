@@ -8,6 +8,18 @@
             img.classList.toggle('oneplugin-masonry-inner-pair', !isOuterPair);
         });
     };
+    var updateQueued = false;
+    var scheduleUpdate = function() {
+        if (updateQueued) {
+            return;
+        }
+
+        updateQueued = true;
+        window.requestAnimationFrame(function() {
+            updateQueued = false;
+            applyMasonryIndexClasses();
+        });
+    };
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', applyMasonryIndexClasses);
@@ -16,7 +28,7 @@
     }
 
     if (window.MutationObserver) {
-        var observer = new MutationObserver(applyMasonryIndexClasses);
+        var observer = new MutationObserver(scheduleUpdate);
         observer.observe(document.documentElement, {
             childList: true,
             subtree: true

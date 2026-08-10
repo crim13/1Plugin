@@ -23,9 +23,25 @@ final class OnePlugin_Light_Keyword_Meta {
     }
 
     public function init() {
+        add_action('init', [$this, 'register_meta_fields'], 0);
         add_action('add_meta_boxes', [$this, 'register_meta_box']);
         add_action('save_post', [$this, 'save_meta_box']);
         add_action('init', [$this, 'register_shortcodes']);
+    }
+
+    public function register_meta_fields() {
+        foreach (array_keys($this->fields) as $field) {
+            register_post_meta('page', $field, [
+                'type' => 'string',
+                'single' => true,
+                'default' => '',
+                'show_in_rest' => true,
+                'sanitize_callback' => 'sanitize_text_field',
+                'auth_callback' => function ($allowed, $meta_key, $post_id) {
+                    return current_user_can('edit_post', $post_id);
+                },
+            ]);
+        }
     }
 
     public function register_shortcodes() {
@@ -42,7 +58,10 @@ final class OnePlugin_Light_Keyword_Meta {
             [$this, 'render_meta_box'],
             'page',
             'normal',
-            'high'
+            'high',
+            [
+                '__block_editor_compatible_meta_box' => true,
+            ]
         );
     }
 
@@ -61,11 +80,11 @@ final class OnePlugin_Light_Keyword_Meta {
     }
 
     public function save_meta_box($post_id) {
-        if (!isset($_POST['oneplugin_keyword_meta_box_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['oneplugin_keyword_meta_box_nonce'])), 'oneplugin_keyword_meta_box')) {
+        if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
             return;
         }
 
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        if (get_post_type($post_id) !== 'page') {
             return;
         }
 
@@ -73,9 +92,16 @@ final class OnePlugin_Light_Keyword_Meta {
             return;
         }
 
+        if (!isset($_POST['oneplugin_keyword_meta_box_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['oneplugin_keyword_meta_box_nonce'])), 'oneplugin_keyword_meta_box')) {
+            return;
+        }
+
         foreach (array_keys($this->fields) as $field) {
-            $value = isset($_POST[$field]) ? sanitize_text_field(wp_unslash($_POST[$field])) : '';
-            update_post_meta($post_id, $field, $value);
+            if (!array_key_exists($field, $_POST)) {
+                continue;
+            }
+
+            update_post_meta($post_id, $field, sanitize_text_field(wp_unslash($_POST[$field])));
         }
     }
 
@@ -96,6 +122,40 @@ final class OnePlugin_Light_Keyword_Meta {
     }
 
     private function render_field_shortcode($field) {
-        return esc_html((string) get_post_meta(get_the_ID(), $field, true));
+        $post_id = $this->resolve_shortcode_post_id($field);
+
+        if (!$post_id) {
+            return '';
+        }
+
+        return esc_html((string) get_post_meta($post_id, $field, true));
+    }
+
+    private function resolve_shortcode_post_id($field) {
+        $post_id = absint(get_the_ID());
+
+        if ($post_id && get_post_type($post_id) === 'page' && get_post_meta($post_id, $field, true) !== '') {
+            return $post_id;
+        }
+
+        $queried_id = absint(get_queried_object_id());
+        if ($queried_id && get_post_type($queried_id) === 'page') {
+            return $queried_id;
+        }
+
+        if ($post_id && get_post_type($post_id) === 'page') {
+            return $post_id;
+        }
+
+        foreach (['post_id', 'post', 'page_id', 'p'] as $request_key) {
+            if (isset($_REQUEST[$request_key]) && is_scalar($_REQUEST[$request_key])) {
+                $request_post_id = absint(wp_unslash($_REQUEST[$request_key]));
+                if ($request_post_id && get_post_type($request_post_id) === 'page') {
+                    return $request_post_id;
+                }
+            }
+        }
+
+        return 0;
     }
 }

@@ -1,0 +1,132 @@
+.oneplugin2-faq {
+    width: 100%;
+}
+
+.oneplugin2-faq--columns-2,
+.oneplugin2-faq--columns-3 {
+    display: grid;
+    align-items: start;
+    gap: 16px;
+}
+
+.oneplugin2-faq--columns-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.oneplugin2-faq--columns-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.oneplugin2-faq__column {
+    min-width: 0;
+    width: 100%;
+}
+
+.oneplugin2-faq--columns-2 .oneplugin2-faq__column,
+.oneplugin2-faq--columns-3 .oneplugin2-faq__column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.oneplugin2-faq,
+.oneplugin2-faq__column,
+.oneplugin2-faq__item,
+.oneplugin2-faq__heading,
+.oneplugin2-faq__trigger,
+.oneplugin2-faq__panel,
+.oneplugin2-faq__answer {
+    box-sizing: border-box;
+}
+
+.oneplugin2-faq__item {
+    width: 100%;
+}
+
+.oneplugin2-faq__heading {
+    margin: 0;
+    padding: 0;
+}
+
+.oneplugin2-faq__trigger {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    cursor: pointer;
+}
+
+.oneplugin2-faq__question {
+    display: inline-block;
+}
+
+.oneplugin2-faq__icon,
+.oneplugin2-faq__icon-state {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1;
+}
+
+.oneplugin2-faq__icon {
+    flex: 0 0 auto;
+}
+
+.oneplugin2-faq__icon-state[hidden] {
+    display: none !important;
+}
+
+.oneplugin2-faq__icon-glyph,
+.oneplugin2-faq__icon-text,
+.oneplugin2-faq__icon i {
+    color: inherit;
+    font-size: inherit;
+    line-height: 1;
+}
+
+.oneplugin2-faq__panel {
+    overflow: hidden;
+}
+
+.oneplugin2-faq__answer {
+    color: inherit;
+}
+
+.oneplugin2-faq__answer > *:first-child {
+    margin-top: 0;
+}
+
+.oneplugin2-faq__answer > *:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+    .oneplugin2-faq--columns-2,
+    .oneplugin2-faq--columns-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .oneplugin2-faq--columns-2 .oneplugin2-faq__column,
+    .oneplugin2-faq--columns-3 .oneplugin2-faq__column {
+        display: contents;
+    }
+
+    .oneplugin2-faq--columns-2 .oneplugin2-faq__item,
+    .oneplugin2-faq--columns-3 .oneplugin2-faq__item {
+        order: var(--oneplugin-faq-index, 0);
+    }
+}
