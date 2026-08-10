@@ -15,6 +15,9 @@ final class OnePlugin_Light_Site_Tools {
     const DIVI_LOGO_ATTACHMENT_TRANSIENT = 'oneplugin_light_divi_logo_attachment_id';
     const DASHBOARD_REPORT_HOOK = 'oneplugin_light_dashboard_report';
     const DASHBOARD_LAST_REPORT_OPTION = 'oneplugin_light_dashboard_last_report';
+    const DASHBOARD_COMMAND_LOG_OPTION = 'oneplugin_light_dashboard_command_log';
+    const DASHBOARD_COMMAND_RESULTS_OPTION = 'oneplugin_light_dashboard_command_results';
+    const DASHBOARD_RECENT_ERRORS_OPTION = 'oneplugin_light_dashboard_recent_errors';
     const DASHBOARD_DEFAULT_ENDPOINT = 'https://one-tool-dashboard.morosanu-cristian98.chatgpt.site/api/plugin-sites/report';
 
     private static $instance = null;
@@ -164,6 +167,7 @@ final class OnePlugin_Light_Site_Tools {
         add_action('update_option_' . self::OPTION_KEY, [$this, 'mirror_legacy_option'], 10, 2);
         add_action('add_option_' . self::OPTION_KEY, [$this, 'mirror_legacy_option_on_add'], 10, 2);
         add_action(self::DASHBOARD_REPORT_HOOK, [$this, 'send_dashboard_report']);
+        add_filter('cron_schedules', [$this, 'add_dashboard_cron_schedules']);
         add_action('init', [$this, 'enable_shortcodes_in_divi_modules']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
@@ -177,6 +181,7 @@ final class OnePlugin_Light_Site_Tools {
         add_filter('wp_get_attachment_image_attributes', [$this, 'filter_attachment_image_alt'], 20, 2);
         add_filter('the_content', [$this, 'replace_image_alt_in_html'], 20);
         add_filter('post_thumbnail_html', [$this, 'replace_image_alt_in_html'], 20);
+        register_shutdown_function([$this, 'capture_shutdown_error']);
 
         $this->menu_module = OnePlugin_Light_Menu_Module::instance();
         $this->menu_module->init();
@@ -2776,9 +2781,32 @@ final class OnePlugin_Light_Site_Tools {
             return;
         }
 
-        if (!wp_next_scheduled(self::DASHBOARD_REPORT_HOOK)) {
-            wp_schedule_event(time() + 5 * MINUTE_IN_SECONDS, 'twicedaily', self::DASHBOARD_REPORT_HOOK);
+        $next_scheduled = wp_next_scheduled(self::DASHBOARD_REPORT_HOOK);
+        $current_schedule = $next_scheduled ? wp_get_schedule(self::DASHBOARD_REPORT_HOOK) : false;
+
+        if ($next_scheduled && $current_schedule !== 'oneplugin_light_every_15_minutes') {
+            wp_clear_scheduled_hook(self::DASHBOARD_REPORT_HOOK);
+            $next_scheduled = false;
         }
+
+        if (!$next_scheduled) {
+            wp_schedule_event(time() + MINUTE_IN_SECONDS, 'oneplugin_light_every_15_minutes', self::DASHBOARD_REPORT_HOOK);
+        }
+    }
+
+    public function add_dashboard_cron_schedules($schedules) {
+        if (!is_array($schedules)) {
+            $schedules = [];
+        }
+
+        if (empty($schedules['oneplugin_light_every_15_minutes'])) {
+            $schedules['oneplugin_light_every_15_minutes'] = [
+                'interval' => 15 * MINUTE_IN_SECONDS,
+                'display' => __('Every 15 minutes - 1Plugin dashboard reporting', 'oneplugin-light-site-tools'),
+            ];
+        }
+
+        return $schedules;
     }
 
     private function is_dashboard_reporting_enabled() {
@@ -2856,13 +2884,170 @@ final class OnePlugin_Light_Site_Tools {
         $report['ok'] = $status_code >= 200 && $status_code < 300;
         $report['message'] = (string) wp_remote_retrieve_response_message($response);
 
+        if ($report['ok']) {
+            $command_results = $this->process_dashboard_response(wp_remote_retrieve_body($response));
+            if (!empty($command_results)) {
+                $report['command_results'] = $command_results;
+            }
+        }
+
         update_option(self::DASHBOARD_LAST_REPORT_OPTION, $report, false);
+    }
+
+    private function process_dashboard_response($body) {
+        $body = is_string($body) ? trim($body) : '';
+        if ($body === '') {
+            return [];
+        }
+
+        $data = json_decode($body, true);
+        if (!is_array($data)) {
+            return [];
+        }
+
+        $commands = [];
+        if (isset($data['commands']) && is_array($data['commands'])) {
+            $commands = $data['commands'];
+        } elseif (isset($data['data']['commands']) && is_array($data['data']['commands'])) {
+            $commands = $data['data']['commands'];
+        }
+
+        if (empty($commands)) {
+            return [];
+        }
+
+        $results = [];
+        foreach ($commands as $command) {
+            $results[] = $this->apply_dashboard_command($command);
+        }
+
+        $this->store_dashboard_command_results($results);
+
+        return $results;
+    }
+
+    private function apply_dashboard_command($command) {
+        $command = is_array($command) ? $command : [];
+        $command_id = isset($command['id']) ? sanitize_key((string) $command['id']) : '';
+        $type = isset($command['type']) ? sanitize_key((string) $command['type']) : '';
+
+        $result = [
+            'id' => $command_id,
+            'type' => $type,
+            'status' => 'rejected',
+            'message' => '',
+            'applied_at' => gmdate('c'),
+            'changed_fields' => [],
+        ];
+
+        if ($command_id === '') {
+            $result['message'] = 'Missing command id.';
+            return $result;
+        }
+
+        if ($this->is_dashboard_command_processed($command_id)) {
+            $result['status'] = 'skipped';
+            $result['message'] = 'Command was already processed.';
+            return $result;
+        }
+
+        if (!in_array($type, ['update_company_data', 'update_contact_data'], true)) {
+            $result['message'] = 'Unsupported command type.';
+            $this->remember_dashboard_command($command_id, $result);
+            return $result;
+        }
+
+        $payload = isset($command['payload']) && is_array($command['payload']) ? $command['payload'] : [];
+        $allowed_fields = $this->get_dashboard_writable_settings_fields();
+        $updates = array_intersect_key($payload, array_flip($allowed_fields));
+
+        if (empty($updates)) {
+            $result['message'] = 'No writable fields in payload.';
+            $this->remember_dashboard_command($command_id, $result);
+            return $result;
+        }
+
+        $current_settings = $this->get_settings();
+        $merged_settings = array_replace($current_settings, $updates);
+        $sanitized_settings = $this->sanitize_settings($merged_settings);
+        $changed_fields = [];
+
+        foreach ($updates as $field => $value) {
+            $old_value = isset($current_settings[$field]) ? (string) $current_settings[$field] : '';
+            $new_value = isset($sanitized_settings[$field]) ? (string) $sanitized_settings[$field] : '';
+            if ($old_value !== $new_value) {
+                $changed_fields[] = $field;
+            }
+        }
+
+        if (!empty($changed_fields)) {
+            $this->persist_settings($sanitized_settings);
+        }
+
+        $result['status'] = 'applied';
+        $result['message'] = empty($changed_fields) ? 'No setting values changed.' : 'Settings updated.';
+        $result['changed_fields'] = $changed_fields;
+
+        $this->remember_dashboard_command($command_id, $result);
+
+        return $result;
+    }
+
+    private function get_dashboard_writable_settings_fields() {
+        return [
+            'company_name',
+            'street_address',
+            'postal_code',
+            'city',
+            'phone_primary',
+            'organization_number',
+            'email',
+            'form_email',
+            'website',
+            'facebook_url',
+            'instagram_url',
+            'linkedin_url',
+            'youtube_url',
+            'x_url',
+            'reddit_url',
+            'booking_url',
+        ];
+    }
+
+    private function is_dashboard_command_processed($command_id) {
+        $log = get_option(self::DASHBOARD_COMMAND_LOG_OPTION, []);
+        return is_array($log) && isset($log[$command_id]);
+    }
+
+    private function remember_dashboard_command($command_id, $result) {
+        $log = get_option(self::DASHBOARD_COMMAND_LOG_OPTION, []);
+        $log = is_array($log) ? $log : [];
+        $log[$command_id] = $result;
+
+        if (count($log) > 50) {
+            $log = array_slice($log, -50, null, true);
+        }
+
+        update_option(self::DASHBOARD_COMMAND_LOG_OPTION, $log, false);
+    }
+
+    private function store_dashboard_command_results($results) {
+        $existing = get_option(self::DASHBOARD_COMMAND_RESULTS_OPTION, []);
+        $existing = is_array($existing) ? $existing : [];
+        $results = array_merge($existing, is_array($results) ? $results : []);
+
+        if (count($results) > 50) {
+            $results = array_slice($results, -50);
+        }
+
+        update_option(self::DASHBOARD_COMMAND_RESULTS_OPTION, $results, false);
     }
 
     private function get_dashboard_report_payload() {
         $theme = wp_get_theme();
         $settings = $this->get_settings();
         $last_report = get_option(self::DASHBOARD_LAST_REPORT_OPTION, []);
+        $command_results = get_option(self::DASHBOARD_COMMAND_RESULTS_OPTION, []);
 
         return [
             'schema_version' => 1,
@@ -2905,8 +3090,207 @@ final class OnePlugin_Light_Site_Tools {
             'health' => [
                 'status' => 'ok',
                 'last_dashboard_report' => is_array($last_report) ? $last_report : [],
+                'dashboard_command_results' => is_array($command_results) ? $command_results : [],
+                'internal' => $this->get_dashboard_internal_health($last_report),
             ],
+            'updates' => $this->get_dashboard_update_notifications(),
+            'dashboard_commands' => [
+                'enabled' => true,
+                'supported_types' => [
+                    'update_company_data',
+                    'update_contact_data',
+                ],
+                'writable_settings' => $this->get_dashboard_writable_settings_fields(),
+            ],
+            'company_data' => $this->get_dashboard_company_data_snapshot($settings),
+            'capabilities' => $this->get_capabilities(),
         ];
+    }
+
+    private function get_dashboard_company_data_snapshot($settings = null) {
+        $settings = is_array($settings) ? $settings : $this->get_settings();
+        $snapshot = [];
+
+        foreach ($this->get_dashboard_writable_settings_fields() as $field) {
+            $snapshot[$field] = isset($settings[$field]) ? (string) $settings[$field] : '';
+        }
+
+        return $snapshot;
+    }
+
+    private function get_dashboard_internal_health($last_report = null) {
+        $last_report = is_array($last_report) ? $last_report : get_option(self::DASHBOARD_LAST_REPORT_OPTION, []);
+        $next_heartbeat = wp_next_scheduled(self::DASHBOARD_REPORT_HOOK);
+
+        return [
+            'wp_cron' => [
+                'disabled' => defined('DISABLE_WP_CRON') && DISABLE_WP_CRON,
+                'next_dashboard_heartbeat_at' => $next_heartbeat ? gmdate('c', $next_heartbeat) : null,
+                'schedule' => $next_heartbeat ? wp_get_schedule(self::DASHBOARD_REPORT_HOOK) : null,
+            ],
+            'memory' => [
+                'limit' => ini_get('memory_limit'),
+                'usage_mb' => round(memory_get_usage(true) / 1048576, 2),
+                'peak_usage_mb' => round(memory_get_peak_usage(true) / 1048576, 2),
+            ],
+            'debug' => [
+                'wp_debug' => defined('WP_DEBUG') && WP_DEBUG,
+                'wp_debug_log' => defined('WP_DEBUG_LOG') && WP_DEBUG_LOG,
+                'wp_debug_display' => defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY,
+            ],
+            'outbound_http' => [
+                'last_dashboard_report_ok' => !empty($last_report['ok']),
+                'last_dashboard_status_code' => isset($last_report['status_code']) ? (int) $last_report['status_code'] : null,
+                'last_dashboard_message' => isset($last_report['message']) ? (string) $last_report['message'] : '',
+            ],
+            'recent_errors' => $this->get_dashboard_recent_errors(),
+        ];
+    }
+
+    private function get_dashboard_update_notifications() {
+        $plugin_updates = $this->get_dashboard_plugin_updates();
+        $theme_updates = $this->get_dashboard_theme_updates();
+        $core_update = $this->get_dashboard_core_update();
+
+        return [
+            'plugins' => [
+                'available_count' => count($plugin_updates),
+                'items' => $plugin_updates,
+            ],
+            'themes' => [
+                'available_count' => count($theme_updates),
+                'items' => $theme_updates,
+            ],
+            'core' => $core_update,
+        ];
+    }
+
+    private function get_dashboard_plugin_updates() {
+        if (!function_exists('get_plugins')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        $installed_plugins = function_exists('get_plugins') ? get_plugins() : [];
+        $active_plugins = (array) get_option('active_plugins', []);
+        $updates = get_site_transient('update_plugins');
+        $responses = is_object($updates) && isset($updates->response) && is_array($updates->response) ? $updates->response : [];
+        $items = [];
+
+        foreach ($responses as $plugin_file => $update) {
+            if (!isset($installed_plugins[$plugin_file])) {
+                continue;
+            }
+
+            $plugin_data = $installed_plugins[$plugin_file];
+            $items[] = [
+                'plugin' => $plugin_file,
+                'name' => isset($plugin_data['Name']) ? (string) $plugin_data['Name'] : $plugin_file,
+                'version' => isset($plugin_data['Version']) ? (string) $plugin_data['Version'] : '',
+                'new_version' => isset($update->new_version) ? (string) $update->new_version : '',
+                'active' => in_array($plugin_file, $active_plugins, true) || (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network($plugin_file)),
+            ];
+        }
+
+        return array_values($items);
+    }
+
+    private function get_dashboard_theme_updates() {
+        $updates = get_site_transient('update_themes');
+        $responses = is_object($updates) && isset($updates->response) && is_array($updates->response) ? $updates->response : [];
+        $items = [];
+
+        foreach ($responses as $stylesheet => $update) {
+            $theme = wp_get_theme($stylesheet);
+            $items[] = [
+                'stylesheet' => (string) $stylesheet,
+                'name' => $theme->exists() ? (string) $theme->get('Name') : (string) $stylesheet,
+                'version' => $theme->exists() ? (string) $theme->get('Version') : '',
+                'new_version' => isset($update['new_version']) ? (string) $update['new_version'] : '',
+                'active' => get_stylesheet() === $stylesheet,
+            ];
+        }
+
+        return array_values($items);
+    }
+
+    private function get_dashboard_core_update() {
+        $updates = get_site_transient('update_core');
+        $core_updates = is_object($updates) && isset($updates->updates) && is_array($updates->updates) ? $updates->updates : [];
+
+        foreach ($core_updates as $update) {
+            if (!is_object($update) || empty($update->response) || $update->response === 'latest') {
+                continue;
+            }
+
+            return [
+                'update_available' => true,
+                'version' => get_bloginfo('version'),
+                'new_version' => isset($update->current) ? (string) $update->current : '',
+                'response' => (string) $update->response,
+            ];
+        }
+
+        return [
+            'update_available' => false,
+            'version' => get_bloginfo('version'),
+            'new_version' => '',
+            'response' => 'latest',
+        ];
+    }
+
+    private function get_dashboard_recent_errors() {
+        $errors = get_option(self::DASHBOARD_RECENT_ERRORS_OPTION, []);
+        return is_array($errors) ? array_values($errors) : [];
+    }
+
+    public function capture_shutdown_error() {
+        $error = error_get_last();
+        if (!is_array($error) || empty($error['type'])) {
+            return;
+        }
+
+        $fatal_types = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR];
+        if (!in_array((int) $error['type'], $fatal_types, true)) {
+            return;
+        }
+
+        $errors = $this->get_dashboard_recent_errors();
+        $errors[] = [
+            'type' => (int) $error['type'],
+            'message' => $this->sanitize_dashboard_error_message(isset($error['message']) ? $error['message'] : ''),
+            'file' => $this->sanitize_dashboard_error_file(isset($error['file']) ? $error['file'] : ''),
+            'line' => isset($error['line']) ? absint($error['line']) : 0,
+            'captured_at' => gmdate('c'),
+        ];
+
+        if (count($errors) > 10) {
+            $errors = array_slice($errors, -10);
+        }
+
+        update_option(self::DASHBOARD_RECENT_ERRORS_OPTION, $errors, false);
+    }
+
+    private function sanitize_dashboard_error_message($message) {
+        $message = wp_strip_all_tags((string) $message);
+        $message = preg_replace('/[A-Z]:\\\\[^\\s]+/i', '[path]', $message);
+        $message = preg_replace('#/[^\\s]+#', '[path]', $message);
+
+        if (function_exists('mb_substr')) {
+            return mb_substr($message, 0, 240);
+        }
+
+        return substr($message, 0, 240);
+    }
+
+    private function sanitize_dashboard_error_file($file) {
+        $file = wp_normalize_path((string) $file);
+        $content_dir = defined('WP_CONTENT_DIR') ? wp_normalize_path(WP_CONTENT_DIR) : '';
+
+        if ($content_dir !== '' && strpos($file, $content_dir) === 0) {
+            return 'wp-content' . substr($file, strlen($content_dir));
+        }
+
+        return basename($file);
     }
 
     private function get_capabilities() {
@@ -2916,6 +3300,10 @@ final class OnePlugin_Light_Site_Tools {
             'divi_sync' => true,
             'keyword_meta' => true,
             'dashboard_reporting' => true,
+            'dashboard_commands' => true,
+            'dashboard_writable_settings' => $this->get_dashboard_writable_settings_fields(),
+            'internal_health' => true,
+            'update_notifications' => true,
         ];
     }
 

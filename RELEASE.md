@@ -5,7 +5,7 @@ This repository has two ZIP formats with different purposes. Do not mix them.
 ## Current stable baseline
 
 - Last known stable public release: `v2.8.0`
-- Current release target: `v2.9.79`
+- Current release target: `v2.9.80`
 - GitHub repository: `crim13/1Plugin`
 - GitHub updater asset name: `1plugin-light.zip`
 
@@ -14,10 +14,10 @@ This repository has two ZIP formats with different purposes. Do not mix them.
 Before building a public release:
 
 1. `1plugin-light.php` plugin header must use the final stable version:
-   `Version: 2.9.79`
+   `Version: 2.9.80`
 2. `ONEPLUGIN_LIGHT_VERSION` must match exactly:
-   `define('ONEPLUGIN_LIGHT_VERSION', '2.9.79');`
-3. The GitHub tag must be `v2.9.79`.
+   `define('ONEPLUGIN_LIGHT_VERSION', '2.9.80');`
+3. The GitHub tag must be `v2.9.80`.
 4. Do not publish a `-dev`, `-test`, or `-rc` version as the stable latest release.
 
 ## ZIP formats
@@ -88,7 +88,7 @@ Exclude:
 - Visual Builder source files unless intentionally needed for runtime
 - package lock files unless intentionally needed for runtime
 
-## Compatibility rules for 2.8 -> 2.9.79
+## Compatibility rules for 2.8 -> 2.9.80
 
 - Keep legacy shortcodes registered:
   - `[formular]`
@@ -106,7 +106,7 @@ Before creating the GitHub release:
 1. Build the final flat `1plugin-light.zip`.
 2. Inspect ZIP entries and confirm there is no top-level folder.
 3. Confirm there are no excluded dev files.
-4. Confirm `1plugin-light.php` inside the ZIP has version `2.9.79`.
+4. Confirm `1plugin-light.php` inside the ZIP has version `2.9.80`.
 5. Confirm PHP files parse with the available parser or `php -l`.
 6. Test update from `v2.8.0` on at least one real site.
 7. Verify admin, frontend, sticky footer, menu, shortcodes, and Divi compatibility.
@@ -116,11 +116,11 @@ Before creating the GitHub release:
 
 1. Commit the exact source used to build the release ZIP.
 2. Push the commit.
-3. Create tag `v2.9.79` on that commit.
-4. Create a GitHub release for `v2.9.79`.
+3. Create tag `v2.9.80` on that commit.
+4. Create a GitHub release for `v2.9.80`.
 5. Upload exactly one updater asset named `1plugin-light.zip`.
 6. Publish it as a stable release and mark it as Latest.
-7. Verify GitHub latest release returns `v2.9.79`.
+7. Verify GitHub latest release returns `v2.9.80`.
 8. Verify the release asset list contains `1plugin-light.zip`.
 
 ## Post-release verification
@@ -129,7 +129,7 @@ After publishing:
 
 1. Open a site running `v2.8.0`.
 2. Force WordPress update check.
-3. Confirm WordPress sees `2.9.79`.
+3. Confirm WordPress sees `2.9.80`.
 4. Update through the plugin updater.
 5. Confirm the plugin stays in the same installed plugin folder.
 6. Confirm the site still works.

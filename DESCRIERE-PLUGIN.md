@@ -4,7 +4,7 @@
 
 `1Plugin` este un plugin WordPress orientat spre site-uri construite cu Divi. Pluginul centralizeaza datele de identitate ale clientului/site-ului, expune aceste date prin shortcodes, adauga instrumente vizuale pentru front-end, introduce module native Divi 5 pentru meniu si FAQ, permite injectarea controlata de cod custom si include un mecanism de update din GitHub Releases.
 
-Versiunea curenta din repo este `2.9.79`, definita atat in header-ul pluginului din `1plugin-light.php`, cat si in constanta `ONEPLUGIN_LIGHT_VERSION`.
+Versiunea curenta din repo este `2.9.80`, definita atat in header-ul pluginului din `1plugin-light.php`, cat si in constanta `ONEPLUGIN_LIGHT_VERSION`.
 
 Pluginul este incarcat din fisierul principal `1plugin-light.php`. Acesta defineste constantele de baza, include clasele din `includes/`, incarca serverele modulelor Divi 5 din `modules/` daca sunt activate si initializeaza updaterul GitHub, sistemul FAQ si pagina principala de administrare.
 
