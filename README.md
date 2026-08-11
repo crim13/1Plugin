@@ -2,7 +2,7 @@
 
 `1Plugin` este un plugin WordPress pentru site-uri construite in principal cu Divi. Centralizeaza datele companiei/site-ului, le expune prin shortcodes, adauga instrumente front-end utile, include module native Divi 5 pentru meniu si FAQ si se poate actualiza din GitHub Releases.
 
-Versiunea curenta din acest repo este `2.9.80`.
+Versiunea curenta din acest repo este `2.9.81`.
 
 Pentru descrierea completa a implementarii existente, vezi [DESCRIERE-PLUGIN.md](DESCRIERE-PLUGIN.md).
 

@@ -72,7 +72,7 @@ X-OnePlugin-Version: <plugin-version>
   },
   "plugin": {
     "name": "1Plugin",
-    "version": "2.9.80",
+    "version": "2.9.81",
     "api_version": "1",
     "update_uri": "https://github.com/crim13/1Plugin"
   },
@@ -232,7 +232,7 @@ Recommended fields:
 Suggested dashboard status:
 
 - `ok`: latest report received and `health.status = ok`
-- `updated`: `plugin.version >= 2.9.80`
+- `updated`: `plugin.version >= 2.9.81`
 - `needs_update`: report received but plugin version is below target
 - `stale`: no report for more than 48 hours
 - `unknown`: site exists in dashboard but has not reported yet

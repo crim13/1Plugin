@@ -2,7 +2,7 @@
 /**
  * Plugin Name: 1Plugin
  * Description: Site tools plugin with company data, shortcodes, Divi 5 modules, sticky mobile footer, page keyword fields, and custom code tools.
- * Version: 2.9.80
+ * Version: 2.9.81
  * Author: Cristian
  * Text Domain: oneplugin-light-site-tools
  * Update URI: https://github.com/crim13/1Plugin
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('ONEPLUGIN_LIGHT_VERSION', '2.9.80');
+define('ONEPLUGIN_LIGHT_VERSION', '2.9.81');
 define('ONEPLUGIN_LIGHT_PATH', plugin_dir_path(__FILE__));
 define('ONEPLUGIN_LIGHT_URL', plugin_dir_url(__FILE__));
 if (!defined('ONEPLUGIN_LIGHT_GITHUB_OWNER')) {
@@ -26,6 +26,22 @@ if (!defined('ONEPLUGIN_LIGHT_GITHUB_REPO')) {
 if (!defined('ONEPLUGIN_LIGHT_GITHUB_ASSET')) {
     define('ONEPLUGIN_LIGHT_GITHUB_ASSET', '1plugin-light.zip');
 }
+
+/**
+ * Disable WordPress update-related notification emails while preserving normal site emails.
+ *
+ * This only suppresses automatic update/debug/core update notification emails and does not
+ * disable wp_mail(), contact forms, password resets, WooCommerce emails, or SMTP plugins.
+ */
+function oneplugin_light_disable_update_notification_emails() {
+    return false;
+}
+
+add_filter('auto_core_update_send_email', 'oneplugin_light_disable_update_notification_emails');
+add_filter('auto_plugin_update_send_email', 'oneplugin_light_disable_update_notification_emails');
+add_filter('auto_theme_update_send_email', 'oneplugin_light_disable_update_notification_emails');
+add_filter('automatic_updates_send_debug_email', 'oneplugin_light_disable_update_notification_emails');
+add_filter('send_core_update_notification_email', 'oneplugin_light_disable_update_notification_emails');
 
 function oneplugin_light_is_divi5_module_enabled($module_key) {
     $defaults = [
