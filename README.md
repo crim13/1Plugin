@@ -2,7 +2,7 @@
 
 `1Plugin` este un plugin WordPress pentru site-uri construite in principal cu Divi. Centralizeaza datele companiei/site-ului, le expune prin shortcodes, adauga instrumente front-end utile, include module native Divi 5 pentru meniu si FAQ si se poate actualiza din GitHub Releases.
 
-Versiunea curenta din acest repo este `2.9.81`.
+Versiunea curenta din acest repo este `2.9.82`.
 
 Pentru descrierea completa a implementarii existente, vezi [DESCRIERE-PLUGIN.md](DESCRIERE-PLUGIN.md).
 
@@ -14,6 +14,7 @@ Pentru descrierea completa a implementarii existente, vezi [DESCRIERE-PLUGIN.md]
 - campuri keyword/SEO pe pagini, cu shortcodes dedicate;
 - sticky mobile footer cu pana la trei actiuni configurabile;
 - optiuni front-end pentru imagini, galerii masonry, header, footer, Formidable Forms si meniu activ dupa sectiune;
+- extensie activa implicit pentru raportarea prin heartbeat a submiturilor Formidable pe formular/pagina si a emailurilor esuate, fara date personale; poate fi dezactivata din tab-ul Extensions;
 - paleta de culori salvata in admin si exportata ca variabile CSS;
 - cod custom CSS, JavaScript si PHP pentru `head`, `body` si `footer`;
 - sistem FAQ cu custom post type, grupuri, import/export JSON, quick add si schema FAQPage;

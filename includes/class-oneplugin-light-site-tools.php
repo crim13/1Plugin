@@ -106,6 +106,7 @@ final class OnePlugin_Light_Site_Tools {
         'scrollbar_radius' => '10px',
         'scrollbar_width' => '10px',
         'extension_faq_enabled' => '0',
+        'extension_form_performance_enabled' => '1',
         'module_menu_enabled' => '1',
         'module_faq_enabled' => '0',
         'github_auto_updates_enabled' => '0',
@@ -411,6 +412,7 @@ final class OnePlugin_Light_Site_Tools {
         $output['scrollbar_radius'] = $this->sanitize_css_length_value(isset($input['scrollbar_radius']) ? $input['scrollbar_radius'] : '', $this->defaults['scrollbar_radius'], true);
         $output['scrollbar_width'] = $this->sanitize_css_length_value(isset($input['scrollbar_width']) ? $input['scrollbar_width'] : '', $this->defaults['scrollbar_width']);
         $output['extension_faq_enabled'] = !empty($input['extension_faq_enabled']) ? '1' : '0';
+        $output['extension_form_performance_enabled'] = !empty($input['extension_form_performance_enabled']) ? '1' : '0';
         $output['module_menu_enabled'] = !empty($input['module_menu_enabled']) ? '1' : '0';
         $output['module_faq_enabled'] = !empty($input['module_faq_enabled']) ? '1' : '0';
         $output['github_auto_updates_enabled'] = !empty($input['github_auto_updates_enabled']) ? '1' : '0';
@@ -1119,6 +1121,10 @@ final class OnePlugin_Light_Site_Tools {
             'faq' => [
                 'title' => __('FAQ', 'oneplugin-light-site-tools'),
                 'description' => __('FAQ posts, groups, schema output, shortcode rendering, and FAQ module data.', 'oneplugin-light-site-tools'),
+            ],
+            'form_performance' => [
+                'title' => __('Form & email performance', 'oneplugin-light-site-tools'),
+                'description' => __('Count successful Formidable submissions by form/page and failed WordPress/SMTP emails, then include privacy-safe daily totals in the dashboard heartbeat. No form values, recipients, email content, visitors, cookies, or IP addresses are collected.', 'oneplugin-light-site-tools'),
             ],
         ];
     }
@@ -3049,7 +3055,7 @@ final class OnePlugin_Light_Site_Tools {
         $last_report = get_option(self::DASHBOARD_LAST_REPORT_OPTION, []);
         $command_results = get_option(self::DASHBOARD_COMMAND_RESULTS_OPTION, []);
 
-        return [
+        $payload = [
             'schema_version' => 1,
             'reported_at' => gmdate('c'),
             'site_uuid' => $this->ensure_site_uuid(),
@@ -3082,6 +3088,7 @@ final class OnePlugin_Light_Site_Tools {
             ],
             'features' => [
                 'faq_extension_enabled' => !empty($settings['extension_faq_enabled']),
+                'form_performance_enabled' => !empty($settings['extension_form_performance_enabled']),
                 'module_menu_enabled' => !empty($settings['module_menu_enabled']),
                 'module_faq_enabled' => !empty($settings['module_faq_enabled']),
                 'github_auto_updates_setting_enabled' => !empty($settings['github_auto_updates_enabled']),
@@ -3105,6 +3112,12 @@ final class OnePlugin_Light_Site_Tools {
             'company_data' => $this->get_dashboard_company_data_snapshot($settings),
             'capabilities' => $this->get_capabilities(),
         ];
+
+        if (!empty($settings['extension_form_performance_enabled'])) {
+            $payload['form_performance'] = OnePlugin_Light_Form_Performance::instance()->get_report_payload();
+        }
+
+        return $payload;
     }
 
     private function get_dashboard_company_data_snapshot($settings = null) {
@@ -3304,6 +3317,9 @@ final class OnePlugin_Light_Site_Tools {
             'dashboard_writable_settings' => $this->get_dashboard_writable_settings_fields(),
             'internal_health' => true,
             'update_notifications' => true,
+            'form_performance_reporting' => true,
+            'formidable_submission_reporting' => true,
+            'email_failure_reporting' => true,
         ];
     }
 

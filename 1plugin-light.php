@@ -2,7 +2,7 @@
 /**
  * Plugin Name: 1Plugin
  * Description: Site tools plugin with company data, shortcodes, Divi 5 modules, sticky mobile footer, page keyword fields, and custom code tools.
- * Version: 2.9.81
+ * Version: 2.9.82
  * Author: Cristian
  * Text Domain: oneplugin-light-site-tools
  * Update URI: https://github.com/crim13/1Plugin
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('ONEPLUGIN_LIGHT_VERSION', '2.9.81');
+define('ONEPLUGIN_LIGHT_VERSION', '2.9.82');
 define('ONEPLUGIN_LIGHT_PATH', plugin_dir_path(__FILE__));
 define('ONEPLUGIN_LIGHT_URL', plugin_dir_url(__FILE__));
 if (!defined('ONEPLUGIN_LIGHT_GITHUB_OWNER')) {
@@ -75,6 +75,7 @@ function oneplugin_light_is_divi5_module_enabled($module_key) {
 function oneplugin_light_is_extension_enabled($extension_key) {
     $defaults = [
         'faq' => '0',
+        'form_performance' => '1',
     ];
 
     $extension_key = sanitize_key($extension_key);
@@ -99,6 +100,7 @@ require_once __DIR__ . '/includes/class-oneplugin-light-divi-compatibility.php';
 require_once __DIR__ . '/includes/class-oneplugin-light-keyword-meta.php';
 require_once __DIR__ . '/includes/class-oneplugin-light-shortcodes.php';
 require_once __DIR__ . '/includes/class-oneplugin-light-faq.php';
+require_once __DIR__ . '/includes/class-oneplugin-light-form-performance.php';
 require_once __DIR__ . '/includes/class-oneplugin-light-site-tools.php';
 require_once __DIR__ . '/includes/class-oneplugin-light-github-updater.php';
 $oneplugin_light_divi5_server = __DIR__ . '/modules/menu/server/index.php';
@@ -190,6 +192,7 @@ add_action('divi_visual_builder_assets_before_enqueue_scripts', 'oneplugin_light
 add_action('divi_visual_builder_assets_before_enqueue_scripts', 'oneplugin_light_enqueue_divi5_faq_visual_builder_assets');
 
 register_activation_hook(__FILE__, ['OnePlugin_Light_Site_Tools', 'activate']);
+register_activation_hook(__FILE__, ['OnePlugin_Light_Form_Performance', 'activate']);
 register_deactivation_hook(__FILE__, ['OnePlugin_Light_Site_Tools', 'deactivate']);
 
 OnePlugin_Light_GitHub_Updater::instance(__FILE__);
@@ -197,3 +200,4 @@ if (oneplugin_light_is_extension_enabled('faq')) {
     OnePlugin_Light_FAQ::instance()->init();
 }
 OnePlugin_Light_Site_Tools::instance();
+OnePlugin_Light_Form_Performance::instance();

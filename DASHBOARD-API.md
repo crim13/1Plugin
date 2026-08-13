@@ -72,7 +72,7 @@ X-OnePlugin-Version: <plugin-version>
   },
   "plugin": {
     "name": "1Plugin",
-    "version": "2.9.81",
+    "version": "2.9.82",
     "api_version": "1",
     "update_uri": "https://github.com/crim13/1Plugin"
   },
@@ -90,6 +90,7 @@ X-OnePlugin-Version: <plugin-version>
   },
   "features": {
     "faq_extension_enabled": false,
+    "form_performance_enabled": true,
     "module_menu_enabled": true,
     "module_faq_enabled": false,
     "github_auto_updates_setting_enabled": false,
@@ -190,6 +191,39 @@ X-OnePlugin-Version: <plugin-version>
     "reddit_url": "",
     "booking_url": ""
   },
+  "form_performance": {
+    "schema_version": 1,
+    "generated_at": "2026-08-13T10:15:00+00:00",
+    "timezone": "Europe/Stockholm",
+    "period_start": "2026-05-16",
+    "period_end": "2026-08-13",
+    "reporting_window_days": 90,
+    "retention_days": 90,
+    "contains_personal_data": false,
+    "integrations": {
+      "formidable_active": true,
+      "fluent_smtp_active": true
+    },
+    "retained_totals": {
+      "submissions": 37,
+      "email_failures": 3,
+      "attributed_email_failures": 2,
+      "unattributed_email_failures": 1
+    },
+    "records": [
+      {
+        "record_key": "md5-key",
+        "date": "2026-08-13",
+        "form_id": 12,
+        "form_name": "Contact",
+        "page_id": 84,
+        "page_title": "Contact",
+        "page_path": "/contact/",
+        "submissions": 15,
+        "email_failures": 2
+      }
+    ]
+  },
   "capabilities": {
     "settings_read": true,
     "settings_write": true,
@@ -198,10 +232,43 @@ X-OnePlugin-Version: <plugin-version>
     "dashboard_reporting": true,
     "dashboard_commands": true,
     "internal_health": true,
-    "update_notifications": true
+    "update_notifications": true,
+    "form_performance_reporting": true,
+    "formidable_submission_reporting": true,
+    "email_failure_reporting": true
   }
 }
 ```
+
+## Form performance reporting
+
+Starting with plugin version `2.9.82`, the heartbeat includes privacy-safe daily counters under `form_performance`.
+
+Collection and transmission are controlled by the `Form & email performance` switch in the plugin's Extensions tab. It is enabled by default. When disabled, `features.form_performance_enabled` is `false` and the `form_performance` section is omitted from the heartbeat; previously collected local aggregates are retained until normal expiry and are not deleted.
+
+The plugin records:
+
+- successful new Formidable submissions, grouped by form and source page;
+- final `wp_mail_failed` events;
+- whether an email failure was attributable to a Formidable email action.
+
+It does not record or send visitor identifiers, IP addresses, cookies, form field values, recipients, subjects, email bodies, SMTP credentials, or raw SMTP errors.
+
+`records` are absolute daily snapshots, not deltas. The dashboard must upsert each record and replace the stored counter values when the same record is received again. Recommended unique key:
+
+```text
+site_uuid + record_key
+```
+
+Alternatively, use:
+
+```text
+site_uuid + date + form_id + page_id + page_path
+```
+
+The rolling reporting window and local retention are both 90 days. The dashboard should retain accepted records permanently even after they leave the plugin's rolling window. `retained_totals` describes only the data still retained locally and must not overwrite dashboard lifetime totals.
+
+A record with `form_id = 0` represents an email failure that could not be attributed to a Formidable form. A record with a known form but `page_id = 0` represents a Formidable email action whose source page was unavailable, for example a manual resend.
 
 ## Dashboard storage model
 
@@ -232,7 +299,7 @@ Recommended fields:
 Suggested dashboard status:
 
 - `ok`: latest report received and `health.status = ok`
-- `updated`: `plugin.version >= 2.9.81`
+- `updated`: `plugin.version >= 2.9.82`
 - `needs_update`: report received but plugin version is below target
 - `stale`: no report for more than 48 hours
 - `unknown`: site exists in dashboard but has not reported yet

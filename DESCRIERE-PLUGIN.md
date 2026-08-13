@@ -4,7 +4,7 @@
 
 `1Plugin` este un plugin WordPress orientat spre site-uri construite cu Divi. Pluginul centralizeaza datele de identitate ale clientului/site-ului, expune aceste date prin shortcodes, adauga instrumente vizuale pentru front-end, introduce module native Divi 5 pentru meniu si FAQ, permite injectarea controlata de cod custom si include un mecanism de update din GitHub Releases.
 
-Versiunea curenta din repo este `2.9.81`, definita atat in header-ul pluginului din `1plugin-light.php`, cat si in constanta `ONEPLUGIN_LIGHT_VERSION`.
+Versiunea curenta din repo este `2.9.82`, definita atat in header-ul pluginului din `1plugin-light.php`, cat si in constanta `ONEPLUGIN_LIGHT_VERSION`.
 
 Pluginul este incarcat din fisierul principal `1plugin-light.php`. Acesta defineste constantele de baza, include clasele din `includes/`, incarca serverele modulelor Divi 5 din `modules/` daca sunt activate si initializeaza updaterul GitHub, sistemul FAQ si pagina principala de administrare.
 
@@ -555,6 +555,7 @@ Pluginul depinde functional de WordPress. Anumite functionalitati sunt condition
 - Font Awesome 6.5.1 este incarcat de pe CDN pentru footerul mobil si iconite FAQ cand este necesar;
 - Google Maps este folosit prin iframe in shortcode-ul `[karta]`;
 - Formidable Forms este vizat de CSS-ul optional pentru checkbox-uri;
+- extensia Form & email performance este activa implicit; submiturile Formidable si emailurile esuate sunt agregate zilnic pe formular/pagina si raportate catre dashboard fara continutul formularelor sau alte date personale, iar colectarea poate fi oprita din tab-ul Extensions;
 - Divi Pixel pare vizat de unele ajustari pentru masonry gallery si module specifice.
 
 ## Observatii importante

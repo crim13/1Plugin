@@ -5,7 +5,7 @@ This repository has two ZIP formats with different purposes. Do not mix them.
 ## Current stable baseline
 
 - Last known stable public release: `v2.8.0`
-- Current release target: `v2.9.81`
+- Current release target: `v2.9.82`
 - GitHub repository: `crim13/1Plugin`
 - GitHub updater asset name: `1plugin-light.zip`
 
@@ -14,10 +14,10 @@ This repository has two ZIP formats with different purposes. Do not mix them.
 Before building a public release:
 
 1. `1plugin-light.php` plugin header must use the final stable version:
-   `Version: 2.9.81`
+   `Version: 2.9.82`
 2. `ONEPLUGIN_LIGHT_VERSION` must match exactly:
-   `define('ONEPLUGIN_LIGHT_VERSION', '2.9.81');`
-3. The GitHub tag must be `v2.9.81`.
+   `define('ONEPLUGIN_LIGHT_VERSION', '2.9.82');`
+3. The GitHub tag must be `v2.9.82`.
 4. Do not publish a `-dev`, `-test`, or `-rc` version as the stable latest release.
 
 ## ZIP formats
@@ -88,7 +88,7 @@ Exclude:
 - Visual Builder source files unless intentionally needed for runtime
 - package lock files unless intentionally needed for runtime
 
-## Compatibility rules for 2.8 -> 2.9.81
+## Compatibility rules for 2.8 -> 2.9.82
 
 - Keep legacy shortcodes registered:
   - `[formular]`
