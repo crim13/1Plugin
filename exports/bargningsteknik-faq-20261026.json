@@ -1,0 +1,1753 @@
+{
+  "plugin": "oneplugin-light-site-tools",
+  "type": "faq",
+  "version": "2.9.72-dev",
+  "exported_at": "2026-10-26 08:00:00",
+  "selection": "all",
+  "faq": {
+    "groups": [
+      {
+        "name": "Integritetspolicy",
+        "slug": "faq-integritetspolicy",
+        "description": "Sida: https://www.bargningsteknik.nu/integritetspolicy/ | WordPress ID: 25953491",
+        "parent_slug": ""
+      },
+      {
+        "name": "Om oss",
+        "slug": "faq-om-oss",
+        "description": "Sida: https://www.bargningsteknik.nu/om-oss/ | WordPress ID: 25957314",
+        "parent_slug": ""
+      },
+      {
+        "name": "Kontakt",
+        "slug": "faq-kontakt",
+        "description": "Sida: https://www.bargningsteknik.nu/kontakt/ | WordPress ID: 25957419",
+        "parent_slug": ""
+      },
+      {
+        "name": "Område",
+        "slug": "faq-omrade",
+        "description": "Sida: https://www.bargningsteknik.nu/omrade/ | WordPress ID: 25957434",
+        "parent_slug": ""
+      },
+      {
+        "name": "Bärgning",
+        "slug": "faq-bargning",
+        "description": "Sida: https://www.bargningsteknik.nu/bargning/ | WordPress ID: 25957447",
+        "parent_slug": ""
+      },
+      {
+        "name": "TMA-bil",
+        "slug": "faq-tma-bil",
+        "description": "Sida: https://www.bargningsteknik.nu/tma-bil/ | WordPress ID: 25957493",
+        "parent_slug": ""
+      },
+      {
+        "name": "Vägassistans",
+        "slug": "faq-vagassistans",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/ | WordPress ID: 25957501",
+        "parent_slug": ""
+      },
+      {
+        "name": "Starthjälp",
+        "slug": "faq-starthjalp",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/starthjalp/ | WordPress ID: 25957509",
+        "parent_slug": ""
+      },
+      {
+        "name": "Låsöppning fordon",
+        "slug": "faq-lasoppning-fordon",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/lasoppning-fordon/ | WordPress ID: 25957518",
+        "parent_slug": ""
+      },
+      {
+        "name": "Driftstopp",
+        "slug": "faq-driftstopp",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/driftstopp/ | WordPress ID: 25957523",
+        "parent_slug": ""
+      },
+      {
+        "name": "Feltankning",
+        "slug": "faq-feltankning",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/feltankning/ | WordPress ID: 25957528",
+        "parent_slug": ""
+      },
+      {
+        "name": "Tung däckjour",
+        "slug": "faq-tung-dackjour",
+        "description": "Sida: https://www.bargningsteknik.nu/tung-dackjour/ | WordPress ID: 25957536",
+        "parent_slug": ""
+      },
+      {
+        "name": "Punktering",
+        "slug": "faq-punktering",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/punktering/ | WordPress ID: 25957540",
+        "parent_slug": ""
+      },
+      {
+        "name": "Elbilsstopp",
+        "slug": "faq-elbilsstopp",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/elbilsstopp/ | WordPress ID: 25957544",
+        "parent_slug": ""
+      },
+      {
+        "name": "Akuta reparationer",
+        "slug": "faq-akuta-reparationer",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/akuta-reparationer/ | WordPress ID: 25957548",
+        "parent_slug": ""
+      },
+      {
+        "name": "Batteribyte",
+        "slug": "faq-batteribyte",
+        "description": "Sida: https://www.bargningsteknik.nu/vagassistans/batteribyte/ | WordPress ID: 25957552",
+        "parent_slug": ""
+      },
+      {
+        "name": "Bilbärgning",
+        "slug": "faq-bilbargning",
+        "description": "Sida: https://www.bargningsteknik.nu/bargning/bilbargning/ | WordPress ID: 25957561",
+        "parent_slug": ""
+      },
+      {
+        "name": "Tungbärgning",
+        "slug": "faq-tungbargning",
+        "description": "Sida: https://www.bargningsteknik.nu/tungbargning/ | WordPress ID: 25957565",
+        "parent_slug": ""
+      },
+      {
+        "name": "Vinschning",
+        "slug": "faq-vinschning",
+        "description": "Sida: https://www.bargningsteknik.nu/bargning/vinschning/ | WordPress ID: 25957569",
+        "parent_slug": ""
+      },
+      {
+        "name": "Transport",
+        "slug": "faq-transport",
+        "description": "Sida: https://www.bargningsteknik.nu/transport/ | WordPress ID: 25957576",
+        "parent_slug": ""
+      },
+      {
+        "name": "Biltransport",
+        "slug": "faq-biltransport",
+        "description": "Sida: https://www.bargningsteknik.nu/transport/biltransport/ | WordPress ID: 25957583",
+        "parent_slug": ""
+      },
+      {
+        "name": "Maskintransport",
+        "slug": "faq-maskintransport",
+        "description": "Sida: https://www.bargningsteknik.nu/transport/maskintransport/ | WordPress ID: 25957587",
+        "parent_slug": ""
+      },
+      {
+        "name": "Omlastning",
+        "slug": "faq-omlastning",
+        "description": "Sida: https://www.bargningsteknik.nu/transport/omlastning/ | WordPress ID: 25957592",
+        "parent_slug": ""
+      },
+      {
+        "name": "Prisförfrågan",
+        "slug": "faq-prisforfragan",
+        "description": "Sida: https://www.bargningsteknik.nu/transport/prisforfragan/ | WordPress ID: 25957599",
+        "parent_slug": ""
+      },
+      {
+        "name": "Digitalt visitkort",
+        "slug": "faq-digitalt-visitkort",
+        "description": "Sida: https://www.bargningsteknik.nu/om-oss/digitalt-visitkort/ | WordPress ID: 25957666",
+        "parent_slug": ""
+      },
+      {
+        "name": "Lediga jobb",
+        "slug": "faq-lediga-jobb",
+        "description": "Sida: https://www.bargningsteknik.nu/om-oss/lediga-jobb/ | WordPress ID: 25957683",
+        "parent_slug": ""
+      },
+      {
+        "name": "Partners",
+        "slug": "faq-partners",
+        "description": "Sida: https://www.bargningsteknik.nu/om-oss/partners/ | WordPress ID: 25957689",
+        "parent_slug": ""
+      },
+      {
+        "name": "Borås",
+        "slug": "faq-boras",
+        "description": "Sida: https://www.bargningsteknik.nu/kontakt/boras/ | WordPress ID: 25957739",
+        "parent_slug": ""
+      },
+      {
+        "name": "Alingsås",
+        "slug": "faq-alingsas",
+        "description": "Sida: https://www.bargningsteknik.nu/kontakt/alingsas/ | WordPress ID: 25957750",
+        "parent_slug": ""
+      },
+      {
+        "name": "Hem",
+        "slug": "faq-hem",
+        "description": "Sida: https://www.bargningsteknik.nu/ | WordPress ID: 25957853",
+        "parent_slug": ""
+      }
+    ],
+    "items": [
+      {
+        "title": "Vilka personuppgifter kan behandlas när jag kontaktar Bärgningsteknik?",
+        "slug": "faq-integritetspolicy-1",
+        "content": "<p>När du kontaktar oss kan uppgifter som namn, telefonnummer, e-postadress och information om ditt ärende behöva behandlas för att vi ska kunna svara och hjälpa dig. Läs integritetspolicyn för mer information.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-integritetspolicy"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Varför behöver ni mina kontaktuppgifter?",
+        "slug": "faq-integritetspolicy-2",
+        "content": "<p>Kontaktuppgifterna används för att kunna hantera din förfrågan och återkomma till dig. Vilken information som behövs beror på ärendets natur.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-integritetspolicy"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Använder webbplatsen cookies?",
+        "slug": "faq-integritetspolicy-3",
+        "content": "<p>Webbplatsen kan använda nödvändiga cookies och, efter samtycke där det krävs, funktioner från externa tjänster. Mer information finns i integritetspolicyn och webbplatsens cookieinställningar.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-integritetspolicy"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur kan jag ställa frågor om mina personuppgifter?",
+        "slug": "faq-integritetspolicy-4",
+        "content": "<p>Kontakta Bärgningsteknik via kontaktuppgifterna på webbplatsen och beskriv din fråga. Vi hjälper dig vidare med frågor om hur uppgifter behandlas.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-integritetspolicy"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad arbetar Bärgningsteknik med?",
+        "slug": "faq-om-oss-1",
+        "content": "<p>Bärgningsteknik arbetar med bärgning, vägassistans och fordonstransport. Vi hjälper både privatpersoner och yrkestrafik vid problem på vägen.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-om-oss"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Var finns Bärgningsteknik?",
+        "slug": "faq-om-oss-2",
+        "content": "<p>Vi har verksamhet i Borås och Alingsås och hjälper kunder i Sjuhärad och omkringliggande områden.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-om-oss"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hjälper ni både privatpersoner och företag?",
+        "slug": "faq-om-oss-3",
+        "content": "<p>Ja, vi hjälper privatbilister, företag och åkerier med tjänster anpassade efter fordonet och situationen.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-om-oss"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Går det att få hjälp av er på natten?",
+        "slug": "faq-om-oss-4",
+        "content": "<p>Ja, våra jourtjänster för bärgning och vägassistans är tillgängliga dygnet runt. Ring vid akuta ärenden.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-om-oss"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur når jag Bärgningsteknik vid ett akut fordonsstopp?",
+        "slug": "faq-kontakt-1",
+        "content": "<p>Ring vår jour direkt. Välj numret för Borås eller Alingsås beroende på var du behöver hjälp.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-kontakt"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilket nummer ringer jag i Borås?",
+        "slug": "faq-kontakt-2",
+        "content": "<p>För akuta ärenden i Borås kan du ringa 033-340 20 00.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-kontakt"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilket nummer ringer jag i Alingsås?",
+        "slug": "faq-kontakt-3",
+        "content": "<p>För akuta ärenden i Alingsås kan du ringa 0322-62 48 00.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-kontakt"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad ska jag berätta när jag kontaktar er?",
+        "slug": "faq-kontakt-4",
+        "content": "<p>Ange var fordonet står, registreringsnummer, fordonstyp och vad som har hänt. Då kan vi lättare bedöma vilken hjälp du behöver.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-kontakt"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka områden täcker Bärgningsteknik?",
+        "slug": "faq-omrade-1",
+        "content": "<p>Vi utgår från Borås och Alingsås och arbetar i Sjuhärad och omkringliggande områden. Kontakta oss om du är osäker på om din plats ingår.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-omrade"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Har ni stationer i både Borås och Alingsås?",
+        "slug": "faq-omrade-2",
+        "content": "<p>Ja, våra kontakt- och stationsuppgifter finns på respektive ortssida.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-omrade"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan jag få hjälp utanför tätorterna?",
+        "slug": "faq-omrade-3",
+        "content": "<p>Vi hjälper även förare på vägarna runt Borås och Alingsås. Ring och uppge din position så bedömer vi uppdraget.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-omrade"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur beskriver jag min position om jag har fått stopp?",
+        "slug": "faq-omrade-4",
+        "content": "<p>Ange gärna vägnummer, färdriktning, närmaste avfart eller en kartposition från mobilen. Din exakta plats hjälper oss att planera insatsen.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-omrade"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "När behöver ett fordon bärgas?",
+        "slug": "faq-bargning-1",
+        "content": "<p>Bärgning kan behövas när fordonet inte kan köras vidare säkert, till exempel vid motorstopp, olycka eller fastkörning.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-bargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka typer av bärgning kan ni hjälpa med?",
+        "slug": "faq-bargning-2",
+        "content": "<p>Vi arbetar med bilbärgning, tungbärgning och vinschning. Val av metod beror på fordonet och situationen.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-bargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni bärga ett fordon dygnet runt?",
+        "slug": "faq-bargning-3",
+        "content": "<p>Ja, du kan kontakta vår jour för akuta bärgningsärenden både dag och natt.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-bargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vart transporteras fordonet efter bärgning?",
+        "slug": "faq-bargning-4",
+        "content": "<p>Destinationen bestäms utifrån ditt behov, fordonets skick och eventuella anvisningar från försäkringsbolag eller verkstad.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-bargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad är en TMA-bil?",
+        "slug": "faq-tma-bil-1",
+        "content": "<p>En TMA-bil har ett energiupptagande påkörningsskydd som används för att minska riskerna vid arbete och insatser i trafikerade vägmiljöer.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-tma-bil"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "När kan TMA-skydd behövas?",
+        "slug": "faq-tma-bil-2",
+        "content": "<p>TMA-skydd kan behövas vid exempelvis vägarbeten, bärgning eller arbete på och intill trafikerade vägar. Behovet avgörs av platsen och tillämpliga säkerhetskrav.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-tma-bil"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan företag fråga om TMA-bil för planerade arbeten?",
+        "slug": "faq-tma-bil-3",
+        "content": "<p>Ja, kontakta oss med plats, tidpunkt och typ av arbete så kan vi diskutera förutsättningarna för uppdraget.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-tma-bil"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka uppgifter behövs vid en förfrågan om TMA-bil?",
+        "slug": "faq-tma-bil-4",
+        "content": "<p>Ange vägsträcka, arbetsmoment, önskat datum och tidsperiod samt eventuella trafikanordningskrav. Det gör det lättare att bedöma behovet.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-tma-bil"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad ingår i vägassistans?",
+        "slug": "faq-vagassistans-1",
+        "content": "<p>Vägassistans kan omfatta hjälp vid exempelvis startproblem, punktering, feltankning, driftstopp och låsproblem. Vi bedömer vad som går att åtgärda på plats.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-vagassistans"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa mig utan att bilen behöver bärgas?",
+        "slug": "faq-vagassistans-2",
+        "content": "<p>Ja, vissa problem kan lösas direkt där bilen står. Om det inte är möjligt hjälper vi till med nästa steg, till exempel bärgning.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-vagassistans"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Erbjuder ni vägassistans dygnet runt?",
+        "slug": "faq-vagassistans-3",
+        "content": "<p>Ja, vår vägassistansjour går att kontakta dygnet runt i Borås, Alingsås och omkringliggande områden.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-vagassistans"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad behöver ni veta när jag ringer?",
+        "slug": "faq-vagassistans-4",
+        "content": "<p>Uppge fordonets plats, registreringsnummer och en kort beskrivning av felet. Berätta också om bilen står trafikfarligt.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-vagassistans"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad gör jag om bilen inte startar?",
+        "slug": "faq-starthjalp-1",
+        "content": "<p>Kontrollera först att bilen står säkert och försök undvika upprepade startförsök om batteriet verkar urladdat. Ring oss om du behöver starthjälp.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-starthjalp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni ge starthjälp på plats?",
+        "slug": "faq-starthjalp-2",
+        "content": "<p>Ja, vi kan komma till bilen och bedöma om problemet kan lösas med starthjälp. Det beror på fordonets skick och orsaken till startproblemet.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-starthjalp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur vet jag om det är batteriet som orsakar startproblemen?",
+        "slug": "faq-starthjalp-3",
+        "content": "<p>Ett svagt batteri kan ge långsam startmotor eller svag instrumentbelysning, men även andra fel kan hindra bilen från att starta. En bedömning på plats kan klargöra nästa steg.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-starthjalp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad händer om bilen inte startar efter starthjälpen?",
+        "slug": "faq-starthjalp-4",
+        "content": "<p>Om problemet inte kan lösas på plats hjälper vi dig att bedöma behovet av ytterligare åtgärd eller bärgning till verkstad.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-starthjalp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa mig om bilnyckeln är inlåst i bilen?",
+        "slug": "faq-lasoppning-fordon-1",
+        "content": "<p>Ja, kontakta oss om nyckeln har blivit inlåst. Vi bedömer möjligheterna till skonsam låsöppning utifrån bilmodell och låssystem.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-lasoppning-fordon"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa även om nyckeln är borttappad?",
+        "slug": "faq-lasoppning-fordon-2",
+        "content": "<p>Hör av dig och beskriv situationen. Vilken hjälp som är möjlig beror på bilen och vilken åtkomstlösning som behövs.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-lasoppning-fordon"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Behöver jag visa att bilen är min?",
+        "slug": "faq-lasoppning-fordon-3",
+        "content": "<p>Du bör kunna styrka att du har rätt att få tillgång till fordonet, till exempel med legitimation och fordonsuppgifter.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-lasoppning-fordon"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan låsöppningen göras utan skador?",
+        "slug": "faq-lasoppning-fordon-4",
+        "content": "<p>Målet är alltid att använda en så skonsam metod som möjligt. Förutsättningarna varierar mellan olika fordon och låssystem.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-lasoppning-fordon"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad ska jag göra vid ett plötsligt driftstopp?",
+        "slug": "faq-driftstopp-1",
+        "content": "<p>Stanna på en säker plats om det går, slå på varningsblinkers och lämna fordonet bara när det är säkert. Kontakta vägassistans och uppge din position.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-driftstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa mig om motorn stannar under körning?",
+        "slug": "faq-driftstopp-2",
+        "content": "<p>Ja, vi hjälper vid driftstopp och bedömer om fordonet kan få hjälp på plats eller behöver bärgas.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-driftstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Går alla driftstopp att åtgärda på plats?",
+        "slug": "faq-driftstopp-3",
+        "content": "<p>Nej, möjligheten beror på felets orsak och vilka åtgärder som kan utföras säkert. I andra fall behövs verkstad eller bärgning.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-driftstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad händer om bilen inte kan köras vidare?",
+        "slug": "faq-driftstopp-4",
+        "content": "<p>Vi kan hjälpa till att ordna bärgning till en lämplig destination utifrån situationen och dina önskemål.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-driftstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad gör jag direkt om jag har tankat fel bränsle?",
+        "slug": "faq-feltankning-1",
+        "content": "<p>Starta inte motorn och slå helst inte på tändningen. Kontakta oss för råd om hur bilen ska hanteras vidare.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-feltankning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad händer om jag redan har kört efter feltankningen?",
+        "slug": "faq-feltankning-2",
+        "content": "<p>Stanna säkert så snart du kan och undvik att köra vidare. Berätta vilket bränsle du tankat och om motorn redan har varit igång.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-feltankning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa mig vid feltankning på en bensinstation?",
+        "slug": "faq-feltankning-3",
+        "content": "<p>Ja, ring oss och beskriv var bilen står och vad som har hänt. Vi bedömer vilken åtgärd eller transport som behövs.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-feltankning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Behöver bilen till verkstad efter feltankning?",
+        "slug": "faq-feltankning-4",
+        "content": "<p>Det beror på fordonet, bränslet och om motorn har startats. I vissa fall behöver bränslesystemet hanteras av verkstad.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-feltankning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka fordon kan ni hjälpa vid tung däckjour?",
+        "slug": "faq-tung-dackjour-1",
+        "content": "<p>Vi hjälper yrkestrafik vid däckproblem på exempelvis lastbilar, bussar och trailers. Kontakta oss med fordonstyp och position så bedömer vi uppdraget.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-tung-dackjour"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni utföra däckskifte direkt på plats?",
+        "slug": "faq-tung-dackjour-2",
+        "content": "<p>När utrustning, däck och platsens förutsättningar tillåter kan däckskifte göras på plats. Säkerheten avgör alltid hur arbetet utförs.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-tung-dackjour"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad händer om däcket inte kan bytas där fordonet står?",
+        "slug": "faq-tung-dackjour-3",
+        "content": "<p>Om däckskifte inte är möjligt eller säkert på plats hjälper vi till att bedöma behovet av bärgning eller vidare åtgärder.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-tung-dackjour"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan åkerier få hjälp med tung däckjour på natten?",
+        "slug": "faq-tung-dackjour-4",
+        "content": "<p>Ja, vår jour går att kontakta dygnet runt. Ange gärna registreringsnummer, däckproblem och exakt position när du ringer.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-tung-dackjour"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad ska jag göra om jag får punktering?",
+        "slug": "faq-punktering-1",
+        "content": "<p>Sänk farten lugnt och stanna på en säker plats. Undvik att fortsätta köra på ett skadat däck och kontakta vägassistans om du behöver hjälp.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-punktering"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa mig att byta till reservhjul?",
+        "slug": "faq-punktering-2",
+        "content": "<p>Ja, om bilen har ett lämpligt reservhjul och bytet kan genomföras säkert kan vi hjälpa till på plats.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-punktering"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ett punkterat däck repareras direkt på vägen?",
+        "slug": "faq-punktering-3",
+        "content": "<p>Det beror på skadans typ och omfattning. Vi bedömer om en åtgärd på plats är möjlig eller om en däckverkstad behöver ta över.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-punktering"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad händer om jag saknar reservhjul?",
+        "slug": "faq-punktering-4",
+        "content": "<p>Kontakta oss och beskriv däckskadan. Vi hjälper dig att bedöma alternativet för att få bilen vidare, vid behov genom bärgning.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-punktering"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad gör jag om elbilen får slut på batteri?",
+        "slug": "faq-elbilsstopp-1",
+        "content": "<p>Stanna säkert och kontakta vägassistans. Uppge bilmodell, plats och vad bilens instrument visar så kan vi bedöma lämplig hjälp.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-elbilsstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa till vid tekniska fel på elbilar?",
+        "slug": "faq-elbilsstopp-2",
+        "content": "<p>Ja, vi hjälper vid elbilsstopp och bedömer om problemet kan hanteras på plats eller om bilen behöver transporteras.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-elbilsstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan en elbil bärgas som en vanlig bil?",
+        "slug": "faq-elbilsstopp-3",
+        "content": "<p>En elbil behöver hanteras enligt fordonstillverkarens anvisningar. Rätt transportmetod beror på modell och feltyp.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-elbilsstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan elbilen transporteras till en laddstation eller verkstad?",
+        "slug": "faq-elbilsstopp-4",
+        "content": "<p>Ja, vid behov kan vi hjälpa till att ordna transport till en lämplig destination. Berätta vart du vill komma och vilken situation bilen befinner sig i.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-elbilsstopp"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka akuta reparationer kan göras på plats?",
+        "slug": "faq-akuta-reparationer-1",
+        "content": "<p>Mindre fel kan ibland åtgärdas där fordonet står. Vi bedömer felet, åtkomsten och om arbetet kan utföras säkert utan verkstad.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-akuta-reparationer"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa både personbilar och tunga fordon?",
+        "slug": "faq-akuta-reparationer-2",
+        "content": "<p>Vi hjälper vid akuta problem på flera typer av fordon, inklusive personbilar och yrkestrafik. Beskriv fordonstyp och fel när du kontaktar oss.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-akuta-reparationer"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa vid problem med slangar eller kopplingar?",
+        "slug": "faq-akuta-reparationer-3",
+        "content": "<p>Kontakta oss med en beskrivning av problemet. Vilken åtgärd som är möjlig beror på systemet, skadans omfattning och säkerheten på platsen.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-akuta-reparationer"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad gör ni om felet inte kan repareras direkt?",
+        "slug": "faq-akuta-reparationer-4",
+        "content": "<p>Om problemet kräver verkstadsarbete hjälper vi dig att bedöma nästa steg, till exempel bärgning eller transport.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-akuta-reparationer"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur märker jag att bilbatteriet behöver bytas?",
+        "slug": "faq-batteribyte-1",
+        "content": "<p>Trög startmotor, återkommande startproblem och svag elutrustning kan tyda på ett dåligt batteri. En kontroll behövs för att bedöma orsaken.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-batteribyte"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa med batteribyte där bilen står?",
+        "slug": "faq-batteribyte-2",
+        "content": "<p>Vi hjälper med batteriproblem och bedömer om batteribyte kan utföras på plats utifrån bilmodell och tillgång till rätt batteri.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-batteribyte"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Är starthjälp eller batteribyte bäst?",
+        "slug": "faq-batteribyte-3",
+        "content": "<p>Det beror på batteriets skick och varför det blivit urladdat. Ibland räcker starthjälp, medan ett uttjänt batteri kan behöva bytas.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-batteribyte"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad händer om bilen fortfarande inte startar med ett fungerande batteri?",
+        "slug": "faq-batteribyte-4",
+        "content": "<p>Då kan startproblemen bero på något annat fel. Vi hjälper till att bedöma om ytterligare felsökning eller bärgning behövs.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-batteribyte"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "När behöver jag beställa bilbärgning?",
+        "slug": "faq-bilbargning-1",
+        "content": "<p>Bilbärgning kan behövas när bilen inte är körbar eller säker att fortsätta med, exempelvis efter motorstopp, olycka eller avåkning.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-bilbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni bärga en bil som inte startar?",
+        "slug": "faq-bilbargning-2",
+        "content": "<p>Ja, vi hjälper även när bilen är helt stillastående. Beskriv gärna om hjulen kan rulla och var bilen står.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-bilbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan jag välja vilken verkstad bilen ska köras till?",
+        "slug": "faq-bilbargning-3",
+        "content": "<p>Berätta vart du vill få bilen transporterad. Valet kan även påverkas av bilens skick, uppdraget och eventuella försäkringsvillkor.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-bilbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Erbjuder ni bilbärgning kvällar och helger?",
+        "slug": "faq-bilbargning-4",
+        "content": "<p>Ja, vår jour för bilbärgning går att kontakta dygnet runt i Borås, Alingsås och omkringliggande områden.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-bilbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka tunga fordon kan ni hjälpa att bärga?",
+        "slug": "faq-tungbargning-1",
+        "content": "<p>Vi arbetar med tungbärgning av exempelvis lastbilar, bussar och trailers. Insatsen planeras efter fordonets vikt, skick och placering.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-tungbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa en lastbil som har kört fast eller hamnat i diket?",
+        "slug": "faq-tungbargning-2",
+        "content": "<p>Ja, kontakta oss med uppgifter om fordonet och platsen. Vi bedömer vilken utrustning och metod som behövs för säker bärgning.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-tungbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur hjälper ni åkerier vid ett driftstopp?",
+        "slug": "faq-tungbargning-3",
+        "content": "<p>Vi hjälper åkerier och transportföretag att bedöma bärgningsbehovet och planera en lösning som begränsar onödiga stillestånd.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-tungbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan jag få tungbärgning mitt i natten?",
+        "slug": "faq-tungbargning-4",
+        "content": "<p>Ja, vår jour går att kontakta dygnet runt. Ange fordonstyp, last, position och vad som har hänt så att vi kan bedöma uppdraget.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-tungbargning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "När behövs vinschning av ett fordon?",
+        "slug": "faq-vinschning-1",
+        "content": "<p>Vinschning kan behövas när ett fordon har fastnat i exempelvis ett dike, på halt underlag eller i terräng och inte kan ta sig loss själv.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-vinschning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni vinscha upp en bil som hamnat utanför vägen?",
+        "slug": "faq-vinschning-2",
+        "content": "<p>Ja, vi kan bedöma vinschning vid avåkning eller fastkörning. Metoden beror på fordonets läge och säkerheten runt platsen.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-vinschning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa även med tunga objekt och maskiner?",
+        "slug": "faq-vinschning-3",
+        "content": "<p>Vi hanterar förfrågningar om vinschning av bland annat fordon, maskiner och andra tunga objekt. Kontakta oss med vikt, plats och beskrivning.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-vinschning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad behöver ni veta inför en vinschning?",
+        "slug": "faq-vinschning-4",
+        "content": "<p>Uppge ungefärlig vikt, hur föremålet sitter fast och vilken åtkomst som finns. Bilder och kartposition kan underlätta bedömningen.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-vinschning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka transporter erbjuder Bärgningsteknik?",
+        "slug": "faq-transport-1",
+        "content": "<p>Vi erbjuder fordonstransport, biltransport, maskintransport och hjälp vid omlastning. Vi bedömer upplägget utifrån vad som ska flyttas.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-transport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni utföra transporter utanför Borås och Alingsås?",
+        "slug": "faq-transport-2",
+        "content": "<p>Ja, vi utgår från Borås och Alingsås och erbjuder transporter till destinationer i hela Sverige enligt överenskommelse.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-transport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan privatpersoner och företag boka transport?",
+        "slug": "faq-transport-3",
+        "content": "<p>Ja, både privatpersoner och företag kan kontakta oss med en transportförfrågan.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-transport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur får jag pris på en transport?",
+        "slug": "faq-transport-4",
+        "content": "<p>Skicka en prisförfrågan med information om vad som ska transporteras samt hämt- och leveransadress. Då kan vi bedöma uppdraget och lämna ett förslag.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-transport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka bilar kan ni transportera?",
+        "slug": "faq-biltransport-1",
+        "content": "<p>Vi hanterar förfrågningar om transport av bland annat personbilar, veteranbilar, husbilar och lätta lastbilar. Förutsättningarna beror på bilens mått och vikt.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-biltransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni transportera en bil som inte är körbar?",
+        "slug": "faq-biltransport-2",
+        "content": "<p>Ja, uppge om bilen inte startar, kan rulla eller har andra skador. Det påverkar hur lastning och transport behöver planeras.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-biltransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni köra bilen till en annan ort i Sverige?",
+        "slug": "faq-biltransport-3",
+        "content": "<p>Ja, vi erbjuder biltransporter till destinationer i hela Sverige enligt överenskommelse.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-biltransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka uppgifter behövs för en offert på biltransport?",
+        "slug": "faq-biltransport-4",
+        "content": "<p>Ange bilmodell, bilens skick, hämtadress, destination och önskad tidpunkt via vår prisförfrågan.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-biltransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka maskiner kan ni transportera?",
+        "slug": "faq-maskintransport-1",
+        "content": "<p>Vi tar emot förfrågningar om transport av exempelvis grävmaskiner, entreprenadmaskiner och annan utrustning. Mått och vikt avgör vilken lösning som passar.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-maskintransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan maskinen hämtas på en arbetsplats?",
+        "slug": "faq-maskintransport-2",
+        "content": "<p>Beskriv platsen och åtkomsten i din förfrågan. Vi bedömer om lastning och hämtning kan göras där maskinen står.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-maskintransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad behöver jag uppge inför maskintransport?",
+        "slug": "faq-maskintransport-3",
+        "content": "<p>Ange maskintyp, vikt, mått, om maskinen är körbar samt hämtnings- och leveransadress.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-maskintransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur får jag ett pris på maskintransport?",
+        "slug": "faq-maskintransport-4",
+        "content": "<p>Skicka en prisförfrågan med transportens förutsättningar. Vi återkommer med ett förslag när uppdraget kan bedömas.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-maskintransport"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad innebär omlastning?",
+        "slug": "faq-omlastning-1",
+        "content": "<p>Omlastning innebär att gods flyttas från ett fordon till ett annat, exempelvis när en lastbil inte kan fortsätta efter ett driftstopp.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-omlastning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "När kan åkerier behöva hjälp med omlastning?",
+        "slug": "faq-omlastning-2",
+        "content": "<p>Vid haveri, olycka eller andra hinder kan omlastning vara ett sätt att få godset vidare utan att invänta reparation av det ursprungliga fordonet.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-omlastning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa till med omlastning efter ett lastbilshaveri?",
+        "slug": "faq-omlastning-3",
+        "content": "<p>Ja, kontakta oss med information om fordon, last och plats. Vi bedömer möjligheterna och vilken utrustning som kan behövas.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-omlastning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka uppgifter behövs inför omlastning?",
+        "slug": "faq-omlastning-4",
+        "content": "<p>Berätta vilken typ av gods det gäller, ungefärlig mängd eller vikt, fordonets position och om det finns särskilda krav på hanteringen.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-omlastning"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur begär jag pris på en biltransport?",
+        "slug": "faq-prisforfragan-1",
+        "content": "<p>Fyll i prisförfrågan med uppgifter om bilen, dess skick och var den ska hämtas och lämnas. Ju mer komplett information, desto lättare är det att bedöma uppdraget.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-prisforfragan"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan jag få offert på maskintransport också?",
+        "slug": "faq-prisforfragan-2",
+        "content": "<p>Ja, prisförfrågan kan användas för både bil- och maskintransport. Ange maskinens mått, vikt och förutsättningar för lastning.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-prisforfragan"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad påverkar priset på transporten?",
+        "slug": "faq-prisforfragan-3",
+        "content": "<p>Priset påverkas bland annat av avstånd, fordonets eller maskinens storlek och vikt, lastningsförhållanden och önskad tidpunkt.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-prisforfragan"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad gör jag om transportbehovet är akut?",
+        "slug": "faq-prisforfragan-4",
+        "content": "<p>Om du behöver omedelbar hjälp är det bättre att ringa oss direkt än att enbart skicka ett formulär.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-prisforfragan"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad är Bärgningstekniks digitala visitkort?",
+        "slug": "faq-digitalt-visitkort-1",
+        "content": "<p>Det digitala visitkortet gör det enkelt att spara våra kontaktuppgifter i din mobil för framtida behov.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-digitalt-visitkort"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur sparar jag kontaktuppgifterna i telefonen?",
+        "slug": "faq-digitalt-visitkort-2",
+        "content": "<p>Använd knappen för att ladda ner visitkortet och öppna kontaktfilen på din telefon. Följ sedan telefonens instruktioner för att spara kontakten.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-digitalt-visitkort"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan jag dela visitkortet med någon annan?",
+        "slug": "faq-digitalt-visitkort-3",
+        "content": "<p>Ja, sidan har en funktion för att dela kontaktuppgifterna. Om delning inte stöds av din enhet kan du använda de övriga kontaktalternativen.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-digitalt-visitkort"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka telefonnummer finns på visitkortet?",
+        "slug": "faq-digitalt-visitkort-4",
+        "content": "<p>Visitkortet innehåller våra kontaktuppgifter för Borås och Alingsås, så att du lätt kan nå rätt journummer.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-digitalt-visitkort"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Var hittar jag lediga jobb hos Bärgningsteknik?",
+        "slug": "faq-lediga-jobb-1",
+        "content": "<p>Se sidan Lediga jobb för information om aktuella tjänster och hur du går vidare med en ansökan.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-lediga-jobb"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan jag skicka en spontanansökan?",
+        "slug": "faq-lediga-jobb-2",
+        "content": "<p>Ja, sidan innehåller information om spontanansökan. Berätta gärna om din erfarenhet och vad du vill arbeta med.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-lediga-jobb"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilken typ av arbete finns hos Bärgningsteknik?",
+        "slug": "faq-lediga-jobb-3",
+        "content": "<p>Vår verksamhet omfattar bärgning, vägassistans och fordonsrelaterade uppdrag. Vilka roller som är aktuella framgår av annonser eller genom kontakt med oss.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-lediga-jobb"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur får jag veta om en tjänst är ledig just nu?",
+        "slug": "faq-lediga-jobb-4",
+        "content": "<p>Kontrollera den senaste informationen på sidan Lediga jobb. Kontakta oss om du har frågor om rekrytering.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-lediga-jobb"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka samarbetspartners har Bärgningsteknik?",
+        "slug": "faq-partners-1",
+        "content": "<p>Du hittar en presentation av våra samarbetspartners på den här sidan, bland annat aktörer inom vägassistans och bärgning.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-partners"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Varför samarbetar ni med andra bärgningsföretag?",
+        "slug": "faq-partners-2",
+        "content": "<p>Samarbeten kan göra det lättare att samordna hjälp och hitta lämpliga lösningar när ett uppdrag kräver fler resurser eller täcker ett större område.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-partners"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan företag kontakta er om samarbete?",
+        "slug": "faq-partners-3",
+        "content": "<p>Ja, företag som vill diskutera ett möjligt samarbete är välkomna att kontakta oss och beskriva sitt upplägg.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-partners"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Gäller era tjänster även för försäkringsärenden?",
+        "slug": "faq-partners-4",
+        "content": "<p>Vi hanterar förfrågningar om bärgning och vägassistans även när försäkring kan vara aktuell. Kontakta ditt försäkringsbolag för villkoren i just din försäkring.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-partners"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur når jag bärgning i Borås dygnet runt?",
+        "slug": "faq-boras-1",
+        "content": "<p>Ring Bärgningsteknik i Borås på 033-340 20 00 vid akuta behov av bärgning eller vägassistans.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-boras"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Var ligger er station i Borås?",
+        "slug": "faq-boras-2",
+        "content": "<p>Du hittar vår station på Hultagatan 51, 507 52 Borås.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-boras"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilken hjälp erbjuder ni i Borås?",
+        "slug": "faq-boras-3",
+        "content": "<p>Vi hjälper bland annat vid driftstopp, punktering, startproblem och behov av bilbärgning. Vi kan även ta emot förfrågningar om tunga fordon och transporter.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-boras"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa mig på vägarna utanför centrala Borås?",
+        "slug": "faq-boras-4",
+        "content": "<p>Ja, vi arbetar även i omkringliggande områden. Ring och uppge din position så kan vi bedöma insatsen.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-boras"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hur kontaktar jag en bärgare i Alingsås?",
+        "slug": "faq-alingsas-1",
+        "content": "<p>Ring Bärgningsteknik i Alingsås på 0322-62 48 00 för akut bärgning eller vägassistans.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-alingsas"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Var finns er station i Alingsås?",
+        "slug": "faq-alingsas-2",
+        "content": "<p>Vår station finns på Ängsvaktaregatan 3, 441 38 Alingsås.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-alingsas"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Erbjuder ni vägassistans i Alingsås även på natten?",
+        "slug": "faq-alingsas-3",
+        "content": "<p>Ja, vår jour är tillgänglig dygnet runt för akuta ärenden.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-alingsas"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan ni hjälpa mig om bilen stannar utanför Alingsås?",
+        "slug": "faq-alingsas-4",
+        "content": "<p>Ja, vi hjälper även på vägarna runt Alingsås. Uppge vägnummer och exakt position så underlättas planeringen.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-alingsas"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vilka tjänster erbjuder Bärgningsteknik?",
+        "slug": "faq-hem-1",
+        "content": "<p>Vi erbjuder vägassistans, bilbärgning, tungbärgning och fordonstransport. Tjänsterna kan kombineras till en helhetslösning efter situationen.</p>",
+        "status": "publish",
+        "menu_order": 1,
+        "groups": [
+          "faq-hem"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Kan jag få bärgning eller vägassistans dygnet runt?",
+        "slug": "faq-hem-2",
+        "content": "<p>Ja, våra jourtjänster går att kontakta dygnet runt i Borås, Alingsås och Sjuhärad.</p>",
+        "status": "publish",
+        "menu_order": 2,
+        "groups": [
+          "faq-hem"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Hjälper ni både privatpersoner och åkerier?",
+        "slug": "faq-hem-3",
+        "content": "<p>Ja, vi hjälper privatbilister, företag och yrkestrafik. Det kan gälla allt från ett startproblem till tungbärgning eller transport.</p>",
+        "status": "publish",
+        "menu_order": 3,
+        "groups": [
+          "faq-hem"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      },
+      {
+        "title": "Vad gör jag först om bilen stannar längs vägen?",
+        "slug": "faq-hem-4",
+        "content": "<p>Sätt säkerheten först, varna andra trafikanter och kontakta vår jour. Berätta var du står och vad som hänt så hjälper vi dig att bedöma nästa steg.</p>",
+        "status": "publish",
+        "menu_order": 4,
+        "groups": [
+          "faq-hem"
+        ],
+        "meta": {
+          "include_schema": "1"
+        }
+      }
+    ]
+  }
+}
